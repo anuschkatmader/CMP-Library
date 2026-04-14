@@ -4,97 +4,101 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>DNB – Personal Banking</title>
+
 <style>
-/* ========= RESET ========= */
 *,
 *::before,
-*::after{box-sizing:border-box}
-html,body{margin:0;padding:0}
-img{max-width:100%;display:block}
-a{text-decoration:none;color:inherit}
-button,input{font:inherit}
-
-/* ========= TOKENS ========= */
-:root{
-  --page:#f6f5f3;
-  --surface:#ffffff;
-  --ink:#2d2f2f;
-  --muted:#5d686a;
-  --line:#dde3de;
-  --line-soft:#e9ece7;
-  --teal:#0d666a;
-  --teal-dark:#09585b;
-  --teal-text:#0c7a80;
-  --hero-text:#f5f7f5;
-  --container:1060px;
-  --header-h:66px;
-  --radius-pill:999px;
+*::after{
+  box-sizing:border-box;
 }
-
-/* ========= BASE ========= */
+html,body{
+  margin:0;
+  padding:0;
+}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  background:var(--page);
-  color:var(--ink);
+  background:#f6f5f3;
+  color:#2d3233;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
-  line-height:1.35;
+}
+img{
+  display:block;
+  max-width:100%;
+}
+a{
+  color:inherit;
+  text-decoration:none;
 }
 
-.container{
+:root{
+  --bg:#f6f5f3;
+  --surface:#ffffff;
+  --ink:#2b3132;
+  --muted:#5f6d70;
+  --line:#dde3de;
+  --line-soft:#e8ede9;
+  --teal:#0e666b;
+  --teal-dark:#0a595d;
+  --teal-text:#0b7b81;
+  --hero-text:#f7f8f7;
+  --container:1080px;
+  --header-height:66px;
+}
+
+/* HEADER */
+.site-header{
+  background:#fff;
+  border-top:1px solid #d8d5d1;
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
   max-width:calc(var(--container) + 64px);
   margin:0 auto;
   padding:0 32px;
-}
-
-/* ========= HEADER ========= */
-.site-header{
-  background:var(--surface);
-  border-top:1px solid #d8d5d1;
-  border-bottom:1px solid var(--line);
-  position:sticky;
-  top:0;
-  z-index:20;
-}
-
-.header-inner{
-  height:var(--header-h);
+  height:var(--header-height);
   display:grid;
   grid-template-columns:1fr auto 1fr;
   align-items:center;
 }
-
-.header-side{
+.header-left,
+.header-right{
   display:flex;
   align-items:center;
-  gap:28px;
-  min-width:0;
 }
-
-.header-side.right{
+.header-right{
   justify-content:flex-end;
+  gap:26px;
 }
-
-.header-link{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
+.menu-link,
+.icon-link{
   color:var(--teal-text);
   font-size:14px;
+  line-height:1.1;
   font-weight:400;
-  letter-spacing:0;
-  white-space:nowrap;
 }
-
-.header-link .stack{
-  display:flex;
+.menu-link{
+  display:inline-flex;
   flex-direction:column;
   align-items:center;
-  line-height:1.05;
   gap:2px;
 }
-
-.header-link svg{
+.icon-link{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+}
+.logo{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.logo img{
+  height:38px;
+  width:auto;
+}
+.icon{
   width:24px;
   height:24px;
   stroke:currentColor;
@@ -102,172 +106,123 @@ body{
   stroke-width:1.7;
   stroke-linecap:round;
   stroke-linejoin:round;
-  flex:none;
 }
 
-.header-link.menu-link{
-  gap:0;
+/* MAIN WRAP */
+.page{
+  max-width:calc(var(--container) + 64px);
+  margin:0 auto;
+  padding:42px 32px 70px;
 }
 
-.brand{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-.brand img{
-  height:38px;
-  width:auto;
-}
-
-/* ========= MAIN ========= */
-main{
-  padding:40px 0 72px;
-}
-
-/* ========= INTRO ROW ========= */
-.intro-row{
+/* TOP ROW */
+.top-row{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:24px;
-  margin:0 0 28px;
+  margin-bottom:28px;
 }
-
-.intro-left{
+.top-row-left{
   display:flex;
   align-items:center;
   gap:34px;
-  min-width:0;
 }
-
-.intro-primary{
+.top-personal{
   font-size:24px;
-  line-height:1.1;
   font-weight:600;
   color:var(--ink);
+  line-height:1.1;
 }
-
-.intro-business{
+.top-business{
   display:inline-flex;
   align-items:center;
-  gap:10px;
+  gap:9px;
   color:var(--teal-text);
-  font-size:18px;
+  font-size:17px;
   font-weight:400;
 }
-
-.intro-business svg,
-.arrow-link svg,
-.hero-cta svg{
-  width:16px;
-  height:16px;
-  stroke:currentColor;
-  fill:none;
-  stroke-width:1.7;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
-
 .contact-btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   min-height:44px;
-  padding:0 22px;
-  border-radius:var(--radius-pill);
-  background:#f8faf8;
+  padding:0 20px;
+  border-radius:999px;
+  border:1px solid #e6ebe7;
+  background:#fafbfa;
   color:var(--teal-text);
-  border:1px solid #e7ece8;
-  box-shadow:0 2px 8px rgba(22,34,34,.05);
-  font-size:18px;
-  font-weight:400;
+  font-size:17px;
+  box-shadow:0 2px 10px rgba(0,0,0,.04);
 }
 
-/* ========= HERO ========= */
-.hero-wrap{
-  margin-bottom:64px;
+/* HERO */
+.hero-shell{
+  margin-bottom:68px;
 }
-
 .hero{
   background:var(--teal);
-  color:var(--hero-text);
-  padding:30px 30px 30px 42px;
   display:grid;
-  grid-template-columns:minmax(0,1.05fr) minmax(380px,.88fr);
-  align-items:stretch;
-  gap:28px;
+  grid-template-columns:1.05fr .88fr;
+  gap:34px;
+  padding:30px 30px 30px 44px;
 }
-
 .hero-copy{
   display:flex;
   flex-direction:column;
   justify-content:center;
-  min-height:386px;
-  padding:16px 0 8px;
+  min-height:390px;
 }
-
 .hero h1{
   margin:0 0 30px;
   max-width:470px;
-  font-size:40px;
-  line-height:1.28;
+  color:var(--hero-text);
+  font-size:58px;
+  line-height:1.12;
   font-weight:300;
-  letter-spacing:-0.02em;
-  color:#f4f7f6;
+  letter-spacing:-0.03em;
 }
-
 .hero-cta{
-  align-self:flex-start;
   display:inline-flex;
   align-items:center;
   gap:12px;
+  align-self:flex-start;
   min-height:36px;
   padding:0 18px 0 20px;
-  border-radius:var(--radius-pill);
-  background:#fbfcfb;
+  border-radius:999px;
+  background:#fff;
   color:var(--teal-text);
-  border:1px solid rgba(255,255,255,.18);
   font-size:15px;
   font-weight:400;
-  margin-bottom:40px;
+  margin-bottom:42px;
 }
-
 .hero-disclaimer{
   max-width:470px;
   margin:0;
+  color:rgba(255,255,255,.93);
   font-size:12px;
-  line-height:1.42;
-  color:rgba(245,247,245,.94);
+  line-height:1.4;
   font-weight:400;
 }
-
 .hero-media{
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:386px;
+  min-height:390px;
 }
-
 .hero-media img{
   width:100%;
   height:338px;
   object-fit:cover;
   object-position:center;
-  background:#d9dfdb;
 }
 
-/* ========= CATEGORY NAV ========= */
-.category-nav{
+/* LOWER NAV */
+.category-grid{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:34px;
 }
-
-.category{
-  min-width:0;
-}
-
 .category-title{
   display:inline-block;
   color:var(--teal-text);
@@ -278,201 +233,91 @@ main{
   border-bottom:2px solid currentColor;
   margin-bottom:78px;
 }
-
-.arrow-link{
+.support-link{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:18px;
+  gap:16px;
   color:var(--teal-text);
-  font-size:19px;
+  font-size:18px;
   line-height:1.25;
-  font-weight:400;
   padding-bottom:14px;
-  border-bottom:1px solid #cfd9d4;
-  min-height:58px;
+  border-bottom:1px solid #cad7d1;
+  min-height:56px;
 }
 
-.arrow-link span:first-child{
-  min-width:0;
-}
-
-/* ========= KEEP EXISTING CONSENT/UTILITY CLASSES SAFE ========= */
-.hero-actions,
+/* old sections hidden so layout matches reference more closely */
 .strip,
 .section,
-.grid,
-.card,
-.consent,
-.consent-box{
-  all:unset;
+.consent{
+  display:none !important;
 }
 
-/* ========= RESPONSIVE ========= */
-@media (max-width: 1100px){
-  .hero{
-    grid-template-columns:minmax(0,1fr) minmax(320px,.88fr);
-    padding:28px;
-  }
-
-  .hero h1{
-    font-size:36px;
-    max-width:420px;
-  }
-
-  .hero-media img{
-    height:320px;
-  }
-
-  .category-nav{
-    gap:24px;
-  }
-
-  .arrow-link{
-    font-size:17px;
-  }
-}
-
-@media (max-width: 900px){
-  .container{
-    padding:0 20px;
-  }
-
-  .header-inner{
-    grid-template-columns:1fr auto 1fr;
-  }
-
-  .header-side{
-    gap:16px;
-  }
-
-  .header-link{
-    font-size:12px;
-  }
-
-  .brand img{
-    height:32px;
-  }
-
-  .intro-row{
-    margin-bottom:20px;
-  }
-
-  .intro-left{
-    gap:20px;
-    flex-wrap:wrap;
-  }
-
-  .intro-primary{
-    font-size:22px;
-  }
-
-  .intro-business,
-  .contact-btn{
-    font-size:16px;
-  }
-
+@media (max-width: 1000px){
   .hero{
     grid-template-columns:1fr;
-    gap:22px;
-    padding:24px;
+    gap:24px;
+    padding:26px;
   }
-
   .hero-copy{
     min-height:auto;
-    padding:4px 0 0;
   }
-
   .hero h1{
-    font-size:34px;
+    font-size:46px;
     max-width:100%;
-    margin-bottom:24px;
   }
-
-  .hero-cta{
-    margin-bottom:26px;
-  }
-
   .hero-media{
     min-height:auto;
   }
-
   .hero-media img{
-    height:300px;
+    height:320px;
   }
-
-  .category-nav{
+  .category-grid{
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:28px 22px;
   }
-
   .category-title{
-    margin-bottom:34px;
+    margin-bottom:30px;
   }
 }
 
-@media (max-width: 620px){
-  :root{
-    --header-h:62px;
+@media (max-width: 700px){
+  .header-inner{
+    padding:0 18px;
   }
-
-  main{
-    padding:28px 0 52px;
+  .page{
+    padding:28px 18px 52px;
   }
-
-  .header-link .label{
-    display:none;
-  }
-
-  .header-link .stack .label{
-    display:block;
-    font-size:11px;
-  }
-
-  .intro-row{
+  .top-row{
     flex-direction:column;
     align-items:flex-start;
     gap:16px;
   }
-
-  .intro-left{
-    width:100%;
-    justify-content:flex-start;
+  .top-row-left{
+    gap:20px;
+    flex-wrap:wrap;
   }
-
-  .contact-btn{
-    min-height:42px;
-    padding:0 18px;
+  .top-personal{
+    font-size:22px;
   }
-
   .hero{
     padding:20px;
   }
-
   .hero h1{
-    font-size:30px;
-    line-height:1.22;
+    font-size:36px;
+    line-height:1.14;
   }
-
-  .hero-disclaimer{
-    font-size:11px;
-  }
-
   .hero-media img{
     height:250px;
   }
-
-  .category-nav{
+  .category-grid{
     grid-template-columns:1fr;
     gap:24px;
   }
-
   .category-title{
     margin-bottom:18px;
   }
-
-  .arrow-link{
-    min-height:50px;
+  .support-link{
     font-size:18px;
   }
 }
@@ -481,140 +326,179 @@ main{
 <body>
 
 <header class="site-header">
-  <div class="container">
-    <div class="header-inner">
-      <div class="header-side left">
-        <a href="#" class="header-link menu-link" aria-label="Menu">
-          <span class="stack">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 6.5h16"></path>
-              <path d="M4 12h16"></path>
-              <path d="M4 17.5h16"></path>
-            </svg>
-            <span class="label">Menu</span>
-          </span>
-        </a>
-      </div>
+  <div class="header-inner">
+    <div class="header-left">
+      <a href="#" class="menu-link" aria-label="Menu">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 6.5h16"></path>
+          <path d="M4 12h16"></path>
+          <path d="M4 17.5h16"></path>
+        </svg>
+        <span>Menu</span>
+      </a>
+    </div>
 
-      <div class="brand">
-        <img src="https://www.dnb.no/etc.clientlibs/dnb/clientlibs/clientlib-base/resources/images/logo/dnb-logo.svg" alt="DNB" />
-      </div>
+    <div class="logo">
+      <img src="https://www.dnb.no/etc.clientlibs/dnb/clientlibs/clientlib-base/resources/images/logo/dnb-logo.svg" alt="DNB" />
+    </div>
 
-      <div class="header-side right">
-        <a href="#" class="header-link" aria-label="Search">
-          <span class="stack">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="10.5" cy="10.5" r="6.5"></circle>
-              <path d="M16 16l4 4"></path>
-            </svg>
-            <span class="label">Search</span>
-          </span>
-        </a>
-        <a href="#" class="header-link" aria-label="Log in">
-          <span class="stack">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M15 4h2.5A1.5 1.5 0 0 1 19 5.5v13A1.5 1.5 0 0 1 17.5 20H15"></path>
-              <path d="M10 8l-4 4 4 4"></path>
-              <path d="M6 12h9"></path>
-            </svg>
-            <span class="label">Log in</span>
-          </span>
-        </a>
-      </div>
+    <div class="header-right">
+      <a href="#" class="icon-link" aria-label="Search">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5"></circle>
+          <path d="M16 16l4 4"></path>
+        </svg>
+        <span>Search</span>
+      </a>
+
+      <a href="#" class="icon-link" aria-label="Log in">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 4h2.5A1.5 1.5 0 0 1 19 5.5v13A1.5 1.5 0 0 1 17.5 20H15"></path>
+          <path d="M10 8l-4 4 4 4"></path>
+          <path d="M6 12h9"></path>
+        </svg>
+        <span>Log in</span>
+      </a>
     </div>
   </div>
 </header>
 
-<main>
-  <div class="container">
-    <div class="intro-row">
-      <div class="intro-left">
-        <div class="intro-primary">Personal</div>
-        <a href="#" class="intro-business">
-          <span>Go to Business</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
+<main class="page">
+  <div class="top-row">
+    <div class="top-row-left">
+      <div class="top-personal">Personal</div>
+      <a href="#" class="top-business">
+        <span>Go to Business</span>
+        <svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+
+    <a href="#" class="contact-btn">Contact</a>
+  </div>
+
+  <section class="hero-shell">
+    <div class="hero">
+      <div class="hero-copy">
+        <h1>We believe your<br>mortgage will be<br>better off with us</h1>
+
+        <a href="#" class="hero-cta">
+          <span>Request a mortgage offer</span>
+          <svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M8 5l7 7-7 7"></path>
           </svg>
         </a>
+
+        <p class="hero-disclaimer">
+          Nominal floating interest rate from 4.99 %, annual percentage rate of charge (APRC) from 5.18 %. Annuity loan NOK 2 000 000 o/25 years with monthly payment NOK 11 745. The total amount payable would be NOK 3 526 690 made up of the loan amount plus interest of NOK 1 526 690. Presupposes a mortgage on the home.
+        </p>
       </div>
-      <a href="#" class="contact-btn">Contact</a>
+
+      <div class="hero-media">
+        <img
+          src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80"
+          alt="Woman standing in a bright living room with moving boxes"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="category-grid">
+    <div>
+      <a href="#" class="category-title">Loans</a>
+      <a href="#" class="support-link">
+        <span>Become a customer</span>
+        <svg class="icon" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12h14"></path>
+          <path d="M13 5l7 7-7 7"></path>
+        </svg>
+      </a>
     </div>
 
-    <section class="hero-wrap" aria-label="Featured mortgage offer">
-      <div class="hero">
-        <div class="hero-copy">
-          <h1>We believe your<br />mortgage will be<br />better off with us</h1>
+    <div>
+      <a href="#" class="category-title">Insurance</a>
+      <a href="#" class="support-link">
+        <span>Find customer program</span>
+        <svg class="icon" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12h14"></path>
+          <path d="M13 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
 
-          <a href="#" class="hero-cta">
-            <span>Request a mortgage offer</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 5l7 7-7 7"></path>
-            </svg>
-          </a>
+    <div>
+      <a href="#" class="category-title">Saving</a>
+      <a href="#" class="support-link">
+        <span>Get loan offers</span>
+        <svg class="icon" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12h14"></path>
+          <path d="M13 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
 
-          <p class="hero-disclaimer">
-            Nominal floating interest rate from 4.99 %, annual percentage rate of charge (APRC)
-            from 5.18 %. Annuity loan NOK 2 000 000 o/25 years with monthly payment NOK 11 745.
-            The total amount payable would be NOK 3 526 690 made up of the loan amount plus interest
-            of NOK 1 526 690. Presupposes a mortgage on the home.
-          </p>
+    <div>
+      <a href="#" class="category-title">Cards</a>
+      <a href="#" class="support-link">
+        <span>See our cards</span>
+        <svg class="icon" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12h14"></path>
+          <path d="M13 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- kept in file so existing structure is not broken -->
+  <section class="strip">
+    <div class="strip-inner">
+      <div>
+        <h4>Accounts & cards</h4>
+        <p>Everyday banking with full digital control.</p>
+      </div>
+      <div>
+        <h4>Loans & mortgages</h4>
+        <p>Flexible financing for life’s big decisions.</p>
+      </div>
+      <div>
+        <h4>Savings & investments</h4>
+        <p>Solutions to help your money grow over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <h2>Why choose DNB</h2>
+      <p class="lead">Trusted financial services built around your life goals.</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Secure banking</h3>
+          <p>Advanced security and fraud protection across all digital services.</p>
         </div>
-
-        <div class="hero-media">
-          <img
-            src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80"
-            alt="Woman standing in a bright living room with moving boxes"
-          />
+        <div class="card">
+          <h3>Personal advice</h3>
+          <p>Guidance and tools tailored to your financial situation.</p>
+        </div>
+        <div class="card">
+          <h3>Digital first</h3>
+          <p>Modern mobile and online banking designed for simplicity.</p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="category-nav" aria-label="Main categories">
-      <div class="category">
-        <a href="#" class="category-title">Loans</a>
-        <a href="#" class="arrow-link">
-          <span>Become a customer</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14"></path>
-            <path d="M13 5l7 7-7 7"></path>
-          </svg>
-        </a>
+  <section class="section consent">
+    <div class="section-inner">
+      <div class="consent-box">
+        <h3>Privacy & consent</h3>
+        <p>Manage your consent preferences and understand how we use data responsibly.</p>
+        <a href="#">Manage consent settings</a>
       </div>
-
-      <div class="category">
-        <a href="#" class="category-title">Insurance</a>
-        <a href="#" class="arrow-link">
-          <span>Find customer program</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14"></path>
-            <path d="M13 5l7 7-7 7"></path>
-          </svg>
-        </a>
-      </div>
-
-      <div class="category">
-        <a href="#" class="category-title">Saving</a>
-        <a href="#" class="arrow-link">
-          <span>Get loan offers</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14"></path>
-            <path d="M13 5l7 7-7 7"></path>
-          </svg>
-        </a>
-      </div>
-
-      <div class="category">
-        <a href="#" class="category-title">Cards</a>
-        <a href="#" class="arrow-link">
-          <span>See our cards</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14"></path>
-            <path d="M13 5l7 7-7 7"></path>
-          </svg>
-        </a>
-      </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </main>
 
 </body>
