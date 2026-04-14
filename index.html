@@ -1,64 +1,373 @@
 <!DOCTYPE html>
-<html lang="en" data-no-smooth-scroll="true">
-  <head>
-    <!-- =====================================================
-         Meta
-    ====================================================== -->
-    <meta charset="UTF-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DNB – Financial Services Demo</title>
 
-    <title>DNB – Bank from A to Z</title>
-    <meta
-      name="description"
-      content="DNB – Norway’s largest bank. Gather all your banking services with us."
-    />
+<style>
+/* ==========================================================
+   DNB / EUFEMIA INSPIRED DESIGN TOKENS
+   ========================================================== */
+*{margin:0;padding:0;box-sizing:border-box}
 
-    <!-- =====================================================
-         Fonts (preload)
-    ====================================================== -->
-    <link
-      rel="preload"
-      href="/web/static/DNB-Regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin="===================================================== -->
-    <script
-      src="/web/webpack-runtime.js"
-      crossorigin="anonymous"
+:root{
+  --primary:#0D393C;
+  --primary-hover:#0A2E31;
+  --accent:#402694;
+  --bg:#F7F6F4;
+  --card:#FFFFFF;
+  --text:#1F2937;
+  --muted:#6B7280;
+  --border:#E3E1DD;
 
+  --radius-sm:8px;
+  --radius-md:12px;
+  --radius-lg:16px;
+}
 
-      src="/web/app.js"
-      crossorigin="anonymous========================
-         DNB Core Styles
-         NOTE:
-         This block was auto-generated.
-         Moved to styles/dnb-core.css in this repo.
-    ====================================================== -->
-    <link rel="stylesheet" href=" =====================================================
-         Flag icon styles
-         NOTE:
-         Originally hundreds of base64 SVGs inline.
-         Extracted to styles/flags.css for readability.
-    ====================================================== -->
-    <link rel="stylesheet" href="styles/class="dnb-core-style">
-    <!-- Skip link for accessibility -->
-    <a href="#main" class="dnb-stent
-    </a>
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.55;
+}
 
-    <!-- =====================================================
-         App root (Gatsby)
-    ====================================================== -->
-    <div id="___gatsby">
-      <div id="gatsby-focus-wrapper">
-        <main id="main">
-          <!-- React/Gatsby renders content here -->
-        </main>
+/* ==========================================================
+   HEADER
+   ========================================================== */
+header{
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+}
+
+.header-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px;
+  height:64px;
+  display:flex;
+  align-items:center;
+  gap:32px;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:700;
+  color:var(--primary);
+}
+
+nav{
+  display:flex;
+  gap:24px;
+}
+
+nav a{
+  font-weight:600;
+  color:var(--text);
+  text-decoration:none;
+  padding:6px 0;
+  border-bottom:2px solid transparent;
+}
+
+nav a:hover{
+  color:var(--primary);
+  border-bottom-color:var(--primary);
+}
+
+.header-cta{
+  margin-left:auto;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:#fff;
+  padding:10px 18px;
+  border-radius:var(--radius-sm);
+  font-weight:600;
+  text-decoration:none;
+}
+
+.btn-primary:hover{
+  background:var(--primary-hover);
+}
+
+/* ==========================================================
+   HERO
+   ========================================================== */
+.hero{
+  background:var(--primary);
+  color:#fff;
+}
+
+.hero-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:72px 24px;
+}
+
+.hero h1{
+  font-size:34px;
+  font-weight:700;
+  max-width:600px;
+  margin-bottom:16px;
+}
+
+.hero p{
+  max-width:560px;
+  font-size:17px;
+  opacity:.9;
+  margin-bottom:32px;
+}
+
+.hero .btn-primary{
+  background:#fff;
+  color:var(--primary);
+}
+
+.hero .btn-primary:hover{
+  background:#E6F0EF;
+}
+
+/* ==========================================================
+   SECTIONS
+   ========================================================== */
+.section{
+  padding:64px 0;
+}
+
+.section.alt{
+  background:#EEECE8;
+}
+
+.section-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px;
+}
+
+.section-header{
+  margin-bottom:40px;
+}
+
+.section-header h2{
+  font-size:28px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.section-header p{
+  color:var(--muted);
+  font-size:16px;
+}
+
+/* ==========================================================
+   CARDS
+   ========================================================== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:28px;
+  transition:.2s;
+}
+
+.card:hover{
+  border-color:var(--primary);
+  transform:translateY(-2px);
+}
+
+.card h3{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.card p{
+  color:var(--muted);
+  font-size:14px;
+}
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+footer{
+  background:var(--primary);
+  color:#D1D5DB;
+  padding:48px 0;
+}
+
+.footer-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px;
+}
+
+.footer-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:32px;
+}
+
+.footer-col h4{
+  color:#fff;
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:12px;
+}
+
+.footer-col a{
+  display:block;
+  color:#D1D5DB;
+  font-size:13px;
+  text-decoration:none;
+  margin-bottom:6px;
+}
+
+.footer-col a:hover{
+  color:#fff;
+}
+
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.15);
+  margin-top:32px;
+  padding-top:16px;
+  font-size:13px;
+  color:#E5E7EB;
+}
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+  nav{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ==========================================================
+     HEADER
+========================================================== -->
+<header>
+  <div class="header-inner">
+    <div class="logo">DNB</div>
+    <nav>
+      <a href="#">Private</a>
+      <a href="#">Business</a>
+      <a href="#">Savings</a>
+      <a href="#">Investments</a>
+      <a href="#">Help & Support</a>
+    </nav>
+    <div class="header-cta">
+      <a href="#" class="btn-primary">Log in</a>
+    </div>
+  </div>
+</header>
+
+<!-- ==========================================================
+     HERO
+========================================================== -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Helping you secure your financial future</h1>
+    <p>
+      Simple, transparent banking services designed to give you control,
+      clarity and confidence — today and tomorrow.
+    </p>
+    <a href="#" class="btn-primary">Explore our services</a>
+  </div>
+</section>
+
+<!-- ==========================================================
+     FEATURES
+========================================================== -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>Why choose DNB</h2>
+      <p>Trusted financial services built around your life goals.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Secure banking</h3>
+        <p>Advanced security and fraud protection across all digital services.</p>
+      </div>
+      <div class="card">
+        <h3>Personal advice</h3>
+        <p>Guidance and tools tailored to your financial situation.</p>
+      </div>
+      <div class="card">
+        <h3>Digital first</h3>
+        <p>Modern mobile and online banking designed for simplicity.</p>
       </div>
     </div>
-  </body>
+  </div>
+</section>
+
+<!-- ==========================================================
+     CMP / DEOMO BANNER AREA
+========================================================== -->
+<section class="section alt">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>Privacy & consent</h2>
+      <p>
+        Manage your consent preferences and understand how we use data
+        responsibly across our services.
+      </p>
+    </div>
+    <a href="#" class="btn-primary">Manage consent settings</a>
+  </div>
+</section>
+
+<!-- ==========================================================
+     FOOTER
+========================================================== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="#">Accounts</a>
+        <a href="#">Loans</a>
+        <a href="#">Credit cards</a>
+      </div>
+      <div class="footer-col">
+        <h4>Investing</h4>
+        <a href="#">Funds</a>
+        <a href="#">Shares</a>
+        <a href="#">Pension</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#">Customer service</a>
+        <a href="#">Security</a>
+        <a href="#">Accessibility</a>
+      </div>
+      <div class="footer-col">
+        <h4>About DNB</h4>
+        <a href="#">Company</a>
+        <a href="#">Sustainability</a>
+        <a href="#">Careers</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 Demo use only — styled to reflect DNB look & feel
+    </div>
+  </div>
+</footer>
+
+</body>
 </html>
 ``
