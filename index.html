@@ -3,76 +3,76 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DNB – Financial Services Demo</title>
+<title>DNB – Personal Banking</title>
 
 <style>
-/* ==========================================================
-   DNB / EUFEMIA INSPIRED DESIGN TOKENS
-   ========================================================== */
+/* =========================================================
+   RESET & TOKENS (DNB / EUFEMIA INSPIRED)
+   ========================================================= */
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --primary:#0D393C;
-  --primary-hover:#0A2E31;
-  --accent:#402694;
-  --bg:#F7F6F4;
-  --card:#FFFFFF;
-  --text:#1F2937;
-  --muted:#6B7280;
-  --border:#E3E1DD;
+  --dnb-green:#0D393C;
+  --dnb-green-soft:#E8F1F0;
+  --dnb-ink:#1F2937;
+  --dnb-muted:#6B7280;
+  --dnb-bg:#F7F6F4;
+  --dnb-card:#FFFFFF;
+  --dnb-border:#E3E1DD;
 
-  --radius-sm:8px;
-  --radius-md:12px;
-  --radius-lg:16px;
+  --radius-xs:6px;
+  --radius-sm:10px;
+  --radius-md:14px;
+  --radius-lg:20px;
 }
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.55;
+  background:var(--dnb-bg);
+  color:var(--dnb-ink);
+  line-height:1.6;
 }
 
-/* ==========================================================
+/* =========================================================
    HEADER
-   ========================================================== */
+   ========================================================= */
 header{
-  background:var(--card);
-  border-bottom:1px solid var(--border);
+  background:var(--dnb-card);
+  border-bottom:1px solid var(--dnb-border);
 }
 
 .header-inner{
-  max-width:1200px;
+  max-width:1280px;
   margin:0 auto;
-  padding:0 24px;
-  height:64px;
+  padding:0 32px;
+  height:72px;
   display:flex;
   align-items:center;
-  gap:32px;
+  gap:48px;
 }
 
-.logo{
-  font-size:20px;
-  font-weight:700;
-  color:var(--primary);
+.logo img{
+  height:28px;
+  display:block;
 }
 
 nav{
   display:flex;
-  gap:24px;
+  gap:28px;
 }
 
 nav a{
-  font-weight:600;
-  color:var(--text);
   text-decoration:none;
-  padding:6px 0;
+  color:var(--dnb-ink);
+  font-weight:600;
+  font-size:14px;
+  padding:8px 0;
   border-bottom:2px solid transparent;
 }
 
 nav a:hover{
-  color:var(--primary);
-  border-bottom-color:var(--primary);
+  color:var(--dnb-green);
+  border-bottom-color:var(--dnb-green);
 }
 
 .header-cta{
@@ -80,154 +80,218 @@ nav a:hover{
 }
 
 .btn-primary{
-  background:var(--primary);
+  background:var(--dnb-green);
   color:#fff;
-  padding:10px 18px;
-  border-radius:var(--radius-sm);
+  padding:10px 20px;
+  border-radius:var(--radius-xs);
   font-weight:600;
   text-decoration:none;
+  font-size:14px;
 }
 
 .btn-primary:hover{
-  background:var(--primary-hover);
+  background:#082A2D;
 }
 
-/* ==========================================================
+/* =========================================================
    HERO
-   ========================================================== */
+   ========================================================= */
 .hero{
-  background:var(--primary);
+  background:linear-gradient(180deg,#0D393C 0%,#0B3336 100%);
   color:#fff;
 }
 
 .hero-inner{
-  max-width:1200px;
+  max-width:1280px;
   margin:0 auto;
-  padding:72px 24px;
+  padding:96px 32px 88px;
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:64px;
 }
 
 .hero h1{
-  font-size:34px;
+  font-size:42px;
   font-weight:700;
-  max-width:600px;
-  margin-bottom:16px;
+  line-height:1.15;
+  margin-bottom:20px;
 }
 
 .hero p{
-  max-width:560px;
-  font-size:17px;
-  opacity:.9;
-  margin-bottom:32px;
-}
-
-.hero .btn-primary{
-  background:#fff;
-  color:var(--primary);
-}
-
-.hero .btn-primary:hover{
-  background:#E6F0EF;
-}
-
-/* ==========================================================
-   SECTIONS
-   ========================================================== */
-.section{
-  padding:64px 0;
-}
-
-.section.alt{
-  background:#EEECE8;
-}
-
-.section-inner{
-  max-width:1200px;
-  margin:0 auto;
-  padding:0 24px;
-}
-
-.section-header{
-  margin-bottom:40px;
-}
-
-.section-header h2{
-  font-size:28px;
-  font-weight:700;
-  margin-bottom:8px;
-}
-
-.section-header p{
-  color:var(--muted);
-  font-size:16px;
-}
-
-/* ==========================================================
-   CARDS
-   ========================================================== */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:24px;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-md);
-  padding:28px;
-  transition:.2s;
-}
-
-.card:hover{
-  border-color:var(--primary);
-  transform:translateY(-2px);
-}
-
-.card h3{
   font-size:18px;
-  font-weight:700;
-  margin-bottom:8px;
+  opacity:.9;
+  max-width:520px;
+  margin-bottom:36px;
 }
 
-.card p{
-  color:var(--muted);
+.hero-actions{
+  display:flex;
+  gap:16px;
+}
+
+.btn-secondary{
+  background:transparent;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.35);
+  padding:10px 20px;
+  border-radius:var(--radius-xs);
+  font-weight:600;
+  text-decoration:none;
   font-size:14px;
 }
 
-/* ==========================================================
+.btn-secondary:hover{
+  background:rgba(255,255,255,.08);
+}
+
+/* =========================================================
+   PRODUCT TILES (REAL HOMEPAGE FEEL)
+   ========================================================= */
+.section{
+  padding:88px 0;
+}
+
+.section-inner{
+  max-width:1280px;
+  margin:0 auto;
+  padding:0 32px;
+}
+
+.section-header{
+  max-width:640px;
+  margin-bottom:56px;
+}
+
+.section-header h2{
+  font-size:32px;
+  font-weight:700;
+  margin-bottom:12px;
+}
+
+.section-header p{
+  color:var(--dnb-muted);
+  font-size:16px;
+}
+
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:28px;
+}
+
+.product{
+  background:var(--dnb-card);
+  border:1px solid var(--dnb-border);
+  border-radius:var(--radius-md);
+  padding:36px;
+  transition:.25s;
+}
+
+.product:hover{
+  transform:translateY(-3px);
+  border-color:var(--dnb-green);
+}
+
+.product h3{
+  font-size:20px;
+  font-weight:700;
+  margin-bottom:12px;
+}
+
+.product p{
+  color:var(--dnb-muted);
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.product a{
+  text-decoration:none;
+  font-weight:600;
+  font-size:14px;
+  color:var(--dnb-green);
+}
+
+/* =========================================================
+   ADVISORY BLOCK
+   ========================================================= */
+.advisory{
+  background:var(--dnb-green-soft);
+}
+
+.advisory-inner{
+  max-width:1280px;
+  margin:0 auto;
+  padding:96px 32px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:64px;
+}
+
+.advisory h2{
+  font-size:30px;
+  margin-bottom:16px;
+}
+
+.advisory p{
+  font-size:16px;
+  color:#243636;
+  margin-bottom:24px;
+}
+
+/* =========================================================
+   TRUST / CMP AREA
+   ========================================================= */
+.trust-card{
+  background:var(--dnb-card);
+  border-radius:var(--radius-md);
+  padding:40px;
+  border:1px solid var(--dnb-border);
+}
+
+.trust-card h3{
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+.trust-card p{
+  color:var(--dnb-muted);
+  margin-bottom:24px;
+}
+
+/* =========================================================
    FOOTER
-   ========================================================== */
+   ========================================================= */
 footer{
-  background:var(--primary);
-  color:#D1D5DB;
-  padding:48px 0;
+  background:var(--dnb-green);
+  color:#E5E7EB;
+  padding:72px 0 48px;
 }
 
 .footer-inner{
-  max-width:1200px;
+  max-width:1280px;
   margin:0 auto;
-  padding:0 24px;
+  padding:0 32px;
 }
 
 .footer-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:32px;
+  gap:40px;
+  margin-bottom:48px;
 }
 
 .footer-col h4{
   color:#fff;
   font-size:14px;
-  font-weight:700;
-  margin-bottom:12px;
+  margin-bottom:16px;
 }
 
 .footer-col a{
   display:block;
-  color:#D1D5DB;
+  color:#E5E7EB;
   font-size:13px;
   text-decoration:none;
-  margin-bottom:6px;
+  margin-bottom:8px;
 }
 
 .footer-col a:hover{
@@ -235,18 +299,23 @@ footer{
 }
 
 .footer-bottom{
-  border-top:1px solid rgba(255,255,255,.15);
-  margin-top:32px;
-  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.2);
+  padding-top:20px;
   font-size:13px;
-  color:#E5E7EB;
+  opacity:.9;
 }
 
-/* ==========================================================
+/* =========================================================
    RESPONSIVE
-   ========================================================== */
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr}
+   ========================================================= */
+@media(max-width:1000px){
+  .hero-inner,
+  .advisory-inner{
+    grid-template-columns:1fr;
+  }
+  .product-grid{
+    grid-template-columns:1fr;
+  }
   nav{display:none}
 }
 </style>
@@ -254,18 +323,18 @@ footer{
 
 <body>
 
-<!-- ==========================================================
-     HEADER
-========================================================== -->
+<!-- ================= HEADER ================= -->
 <header>
   <div class="header-inner">
-    <div class="logo">DNB</div>
+    <div class="logo">
+      <img src="https://www.dnb.no/etc.clientlibs/dnb/clientlibs/clientlib-base/resources/images/logo/dnb-logo.svg" alt="DNB"/>
+    </div>
     <nav>
       <a href="#">Private</a>
       <a href="#">Business</a>
       <a href="#">Savings</a>
       <a href="#">Investments</a>
-      <a href="#">Help & Support</a>
+      <a href="#">Help & support</a>
     </nav>
     <div class="header-cta">
       <a href="#" class="btn-primary">Log in</a>
@@ -273,84 +342,92 @@ footer{
   </div>
 </header>
 
-<!-- ==========================================================
-     HERO
-========================================================== -->
+<!-- ================= HERO ================= -->
 <section class="hero">
   <div class="hero-inner">
-    <h1>Helping you secure your financial future</h1>
-    <p>
-      Simple, transparent banking services designed to give you control,
-      clarity and confidence — today and tomorrow.
-    </p>
-    <a href="#" class="btn-primary">Explore our services</a>
+    <div>
+      <h1>Making financial choices easier — today and for the future</h1>
+      <p>
+        With personal advice, secure digital banking and solutions that grow with your life.
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary">Get started</a>
+        <a href="#" class="btn-secondary">Explore our services</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ==========================================================
-     FEATURES
-========================================================== -->
+<!-- ================= PRODUCTS ================= -->
 <section class="section">
   <div class="section-inner">
     <div class="section-header">
-      <h2>Why choose DNB</h2>
-      <p>Trusted financial services built around your life goals.</p>
+      <h2>Everyday banking, tailored to you</h2>
+      <p>Flexible products and advice — whether you’re saving, investing or planning ahead.</p>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <h3>Secure banking</h3>
-        <p>Advanced security and fraud protection across all digital services.</p>
+    <div class="product-grid">
+      <div class="product">
+        <h3>Accounts & cards</h3>
+        <p>Modern accounts with full digital control and secure card services.</p>
+        <a href="#">Learn more</a>
       </div>
-      <div class="card">
-        <h3>Personal advice</h3>
-        <p>Guidance and tools tailored to your financial situation.</p>
+      <div class="product">
+        <h3>Loans & mortgages</h3>
+        <p>Guidance and tools to help you finance what matters most.</p>
+        <a href="#">View options</a>
       </div>
-      <div class="card">
-        <h3>Digital first</h3>
-        <p>Modern mobile and online banking designed for simplicity.</p>
+      <div class="product">
+        <h3>Savings & investments</h3>
+        <p>Grow your money with expert insight and transparent solutions.</p>
+        <a href="#">Explore investing</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==========================================================
-     CMP / DEOMO BANNER AREA
-========================================================== -->
-<section class="section alt">
-  <div class="section-inner">
-    <div class="section-header">
-      <h2>Privacy & consent</h2>
+<!-- ================= ADVISORY ================= -->
+<section class="advisory">
+  <div class="advisory-inner">
+    <div>
+      <h2>Personal advice when you need it</h2>
       <p>
-        Manage your consent preferences and understand how we use data
-        responsibly across our services.
+        Our advisors and digital tools help you make informed financial decisions —
+        from everyday budgeting to long‑term planning.
       </p>
+      <a href="#" class="btn-primary">Talk to an advisor</a>
     </div>
-    <a href="#" class="btn-primary">Manage consent settings</a>
+
+    <div class="trust-card">
+      <h3>Privacy & consent</h3>
+      <p>
+        We respect your privacy and are transparent about how your data is used.
+        Easily manage consent preferences at any time.
+      </p>
+      <a href="#" class="btn-primary">Manage consent</a>
+    </div>
   </div>
 </section>
 
-<!-- ==========================================================
-     FOOTER
-========================================================== -->
+<!-- ================= FOOTER ================= -->
 <footer>
   <div class="footer-inner">
     <div class="footer-grid">
       <div class="footer-col">
         <h4>Products</h4>
         <a href="#">Accounts</a>
+        <a href="#">Cards</a>
         <a href="#">Loans</a>
-        <a href="#">Credit cards</a>
       </div>
       <div class="footer-col">
-        <h4>Investing</h4>
+        <h4>Invest</h4>
         <a href="#">Funds</a>
         <a href="#">Shares</a>
         <a href="#">Pension</a>
       </div>
       <div class="footer-col">
-        <h4>Support</h4>
-        <a href="#">Customer service</a>
+        <h4>Help</h4>
+        <a href="#">Customer support</a>
         <a href="#">Security</a>
         <a href="#">Accessibility</a>
       </div>
@@ -363,7 +440,7 @@ footer{
     </div>
 
     <div class="footer-bottom">
-      © 2026 Demo use only — styled to reflect DNB look & feel
+      © 2026 Demo only — visual style aligned with DNB public website
     </div>
   </div>
 </footer>
