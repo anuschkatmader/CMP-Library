@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DNB – Personal Banking</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNB – Personal</title>
 
 <style>
 /* ================= RESET ================= */
@@ -11,20 +11,20 @@
 
 /* ================= TOKENS ================= */
 :root{
-  --ink:#0B1F22;
-  --muted:#5F6F73;
-  --green:#0D3B3E;
-  --green-soft:#E7F0EF;
+  --dnb-green:#0D3B3E;
+  --dnb-green-dark:#092E31;
   --bg:#F6F6F4;
-  --card:#FFFFFF;
+  --text:#0B1F22;
+  --muted:#5F6F73;
   --border:#E1E1DD;
-  --radius:14px;
+  --card:#ffffff;
 }
 
+/* ================= BASE ================= */
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   background:var(--bg);
-  color:var(--ink);
+  color:var(--text);
   line-height:1.55;
 }
 
@@ -35,86 +35,98 @@ header{
 }
 
 .header-inner{
-  max-width:1360px;
+  max-width:1400px;
   margin:0 auto;
   padding:0 40px;
-  height:76px;
+  height:64px;
   display:flex;
   align-items:center;
-  gap:56px;
+  gap:48px;
 }
 
-.logo img{height:26px}
+.logo img{
+  height:24px;
+  display:block;
+}
 
 nav{
   display:flex;
-  gap:36px;
+  gap:32px;
 }
 
 nav a{
+  font-size:14px;
+  font-weight:600;
   text-decoration:none;
   color:#1C2B2E;
-  font-weight:600;
-  font-size:14px;
 }
 
-nav a:hover{color:var(--green)}
+nav a:hover{
+  color:var(--dnb-green);
+}
+
+.header-cta{
+  margin-left:auto;
+}
 
 .header-cta a{
-  background:var(--green);
+  background:#0D3B3E;
   color:#fff;
-  padding:10px 20px;
-  border-radius:6px;
-  text-decoration:none;
   font-weight:600;
   font-size:14px;
+  padding:8px 16px;
+  border-radius:6px;
+  text-decoration:none;
 }
 
 /* ================= HERO ================= */
 .hero{
-  background:var(--green);
+  background:var(--dnb-green);
   color:#fff;
 }
 
 .hero-inner{
-  max-width:1360px;
+  max-width:1400px;
   margin:0 auto;
-  padding:96px 40px 88px;
+  padding:80px 40px 72px;
 }
 
 .hero h1{
-  font-size:44px;
+  font-size:40px;
   font-weight:700;
+  line-height:1.2;
   max-width:720px;
-  line-height:1.15;
-  margin-bottom:20px;
+  margin-bottom:16px;
 }
 
 .hero p{
-  font-size:18px;
-  max-width:560px;
+  font-size:16px;
   opacity:.9;
-  margin-bottom:36px;
+  max-width:560px;
+  margin-bottom:32px;
 }
 
 .hero-actions{
   display:flex;
-  gap:16px;
+  gap:12px;
 }
 
 .hero-actions a{
-  background:#fff;
-  color:var(--green);
-  padding:12px 22px;
-  border-radius:6px;
+  font-size:14px;
   font-weight:600;
-  font-size:15px;
+  padding:10px 18px;
+  border-radius:6px;
   text-decoration:none;
 }
 
+.hero-primary{
+  background:#fff;
+  color:var(--dnb-green);
+}
+
 .hero-secondary{
-  background:transparent !important;
-  color:#fff !important;
+  background:transparent;
+  color:#fff;
   border:1px solid rgba(255,255,255,.35);
 }
 
@@ -125,131 +137,119 @@ nav a:hover{color:var(--green)}
 }
 
 .info-inner{
-  max-width:1360px;
+  max-width:1400px;
   margin:0 auto;
-  padding:32px 40px;
+  padding:28px 40px;
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:32px;
 }
 
-.info-item h3{
-  font-size:16px;
-  font-weight:700;
-  margin-bottom:6px;
+.info-inner h3{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:4px;
 }
 
-.info-item p{
-  font-size:14px;
+.info-inner p{
+  font-size:13px;
   color:var(--muted);
 }
 
-/* ================= SECTIONS ================= */
+/* ================= SECTION ================= */
 .section{
-  padding:96px 0;
+  padding:72px 0;
 }
 
 .section-inner{
-  max-width:1360px;
+  max-width:1400px;
   margin:0 auto;
   padding:0 40px;
 }
 
 .section h2{
-  font-size:32px;
+  font-size:28px;
   font-weight:700;
-  margin-bottom:12px;
+  margin-bottom:6px;
 }
 
-.section p.lead{
-  font-size:16px;
-  max-width:640px;
+.section .lead{
+  font-size:14px;
   color:var(--muted);
-  margin-bottom:56px;
+  margin-bottom:40px;
 }
 
 /* ================= CARDS ================= */
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:28px;
+  gap:24px;
 }
 
 .card{
-  background:#fff;
-  border-radius:var(--radius);
-  padding:36px;
+  background:var(--card);
   border:1px solid var(--border);
+  border-radius:12px;
+  padding:32px;
 }
 
 .card h3{
-  font-size:20px;
-  font-weight:700;
-  margin-bottom:10px;
+  font-size:18px;
+  font-weight:600;
+  margin-bottom:8px;
 }
 
 .card p{
   font-size:14px;
   color:var(--muted);
-  margin-bottom:18px;
-}
-
-.card a{
-  font-size:14px;
-  font-weight:600;
-  color:var(--green);
-  text-decoration:none;
 }
 
 /* ================= CONSENT ================= */
 .consent{
-  background:var(--green-soft);
+  background:#EFEFEC;
 }
 
 .consent-box{
   background:#fff;
-  border-radius:var(--radius);
-  padding:40px;
-  max-width:640px;
+  border-radius:12px;
+  padding:32px;
+  max-width:520px;
+}
+
+.consent-box h3{
+  font-size:18px;
+  margin-bottom:8px;
+}
+
+.consent-box p{
+  font-size:14px;
+  color:var(--muted);
+  margin-bottom:16px;
+}
+
+.consent-box a{
+  font-size:14px;
+  font-weight:600;
+  color:var(--dnb-green);
+  text-decoration:none;
 }
 
 /* ================= FOOTER ================= */
 footer{
-  background:var(--green);
+  background:var(--dnb-green);
   color:#E5E7EB;
-  padding:80px 0 48px;
+  padding:64px 0 40px;
 }
 
 .footer-inner{
-  max-width:1360px;
+  max-width:1400px;
   margin:0 auto;
   padding:0 40px;
 }
 
-.footer-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:48px;
-  margin-bottom:40px;
-}
-
-.footer-col h4{
-  font-size:14px;
-  margin-bottom:14px;
-  color:#fff;
-}
-
-.footer-col a{
-  display:block;
-  font-size:13px;
-  color:#E5E7EB;
-  text-decoration:none;
-  margin-bottom:8px;
-}
-
 .footer-bottom{
   border-top:1px solid rgba(255,255,255,.2);
-  padding-top:18px;
+  padding-top:16px;
   font-size:13px;
 }
 
@@ -286,12 +286,9 @@ footer{
 <section class="hero">
   <div class="hero-inner">
     <h1>Helping you secure your financial future</h1>
-    <p>
-      Simple, transparent banking services designed to give you control,
-      clarity and confidence — today and tomorrow.
-    </p>
+    <p>Simple, transparent banking services designed to give you control, clarity and confidence — today and tomorrow.</p>
     <div class="hero-actions">
-      <a href="#">Explore our services</a>
+      <a href="#" class="hero-primary">Explore our services</a>
       <a href="#" class="hero-secondary">Get personal advice</a>
     </div>
   </div>
@@ -300,15 +297,15 @@ footer{
 <!-- INFO STRIP -->
 <section class="info-strip">
   <div class="info-inner">
-    <div class="info-item">
+    <div>
       <h3>Accounts & cards</h3>
       <p>Everyday banking with full digital control.</p>
     </div>
-    <div class="info-item">
+    <div>
       <h3>Loans & mortgages</h3>
       <p>Flexible financing for life’s big decisions.</p>
     </div>
-    <div class="info-item">
+    <div>
       <h3>Savings & investments</h3>
       <p>Solutions to help your money grow over time.</p>
     </div>
@@ -325,17 +322,14 @@ footer{
       <div class="card">
         <h3>Secure banking</h3>
         <p>Advanced security and fraud protection across all digital services.</p>
-        <a href="#">Learn more</a>
       </div>
       <div class="card">
         <h3>Personal advice</h3>
         <p>Guidance and tools tailored to your financial situation.</p>
-        <a href="#">Talk to an advisor</a>
       </div>
       <div class="card">
         <h3>Digital first</h3>
         <p>Modern mobile and online banking designed for simplicity.</p>
-        <a href="#">Explore digital services</a>
       </div>
     </div>
   </div>
@@ -346,10 +340,8 @@ footer{
   <div class="section-inner">
     <div class="consent-box">
       <h3>Privacy & consent</h3>
-      <p class="lead">
-        Manage your consent preferences and understand how we use data responsibly.
-      </p>
-      <a href="#" style="color:var(--green);font-weight:600;">Manage consent settings</a>
+      <p>Manage your consent preferences and understand how we use data responsibly.</p>
+      <a href="#">Manage consent settings</a>
     </div>
   </div>
 </section>
@@ -357,33 +349,6 @@ footer{
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <h4>Products</h4>
-        <a href="#">Accounts</a>
-        <a href="#">Loans</a>
-        <a href="#">Cards</a>
-      </div>
-      <div class="footer-col">
-        <h4>Savings</h4>
-        <a href="#">Funds</a>
-        <a href="#">Shares</a>
-        <a href="#">Pension</a>
-      </div>
-      <div class="footer-col">
-        <h4>Help</h4>
-        <a href="#">Customer support</a>
-        <a href="#">Security</a>
-        <a href="#">Accessibility</a>
-      </div>
-      <div class="footer-col">
-        <h4>About DNB</h4>
-        <a href="#">Company</a>
-        <a href="#">Sustainability</a>
-        <a href="#">Careers</a>
-      </div>
-    </div>
-
     <div class="footer-bottom">
       © 2026 Demo only — visually aligned with DNB public website
     </div>
