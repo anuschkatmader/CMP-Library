@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- OneTrust Cookies Consent Notice start for anuschkatmader.github.io/CMP-Library/ -->
-<script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-language="en" type="text/javascript" charset="UTF-8" data-domain-script="019d8c56-5d1b-7a59-90be-200432151806" ></script>
-<script type="text/javascript">
-function OptanonWrapper() { }
-</script>
-<!-- OneTrust Cookies Consent Notice end for anuschkatmader.github.io/CMP-Library/ -->
+  <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-language="nl" type="text/javascript" charset="UTF-8" data-domain-script="019d8c56-5d1b-7a59-90be-200432151806"></script>
+  <script type="text/javascript">
+  function OptanonWrapper() { }
+  </script>
+  <!-- OneTrust Cookies Consent Notice end for anuschkatmader.github.io/CMP-Library/ -->
+
   <title>DNB – Personal Banking</title>
 
   <style>
@@ -32,6 +33,10 @@ function OptanonWrapper() { }
       text-rendering:optimizeLegibility;
     }
 
+    body.modal-open{
+      overflow:hidden;
+    }
+
     img{
       display:block;
       max-width:100%;
@@ -40,6 +45,10 @@ function OptanonWrapper() { }
     a{
       color:inherit;
       text-decoration:none;
+    }
+
+    button{
+      font:inherit;
     }
 
     :root{
@@ -55,12 +64,15 @@ function OptanonWrapper() { }
       --hero-text:#f7f8f7;
       --container:1080px;
       --header-height:66px;
+      --overlay:rgba(26,34,34,.38);
     }
 
     .site-header{
       background:#fff;
       border-top:1px solid #d8d5d1;
       border-bottom:1px solid var(--line);
+      position:relative;
+      z-index:5;
     }
 
     .header-inner{
@@ -85,11 +97,16 @@ function OptanonWrapper() { }
     }
 
     .menu-link,
-    .icon-link{
+    .icon-link,
+    .icon-button{
       color:var(--teal-text);
       font-size:14px;
       line-height:1.1;
       font-weight:400;
+      background:none;
+      border:0;
+      padding:0;
+      cursor:pointer;
     }
 
     .menu-link{
@@ -99,7 +116,8 @@ function OptanonWrapper() { }
       gap:2px;
     }
 
-    .icon-link{
+    .icon-link,
+    .icon-button{
       display:inline-flex;
       flex-direction:column;
       align-items:center;
@@ -114,12 +132,21 @@ function OptanonWrapper() { }
 
     .logo-wordmark{
       display:inline-flex;
-      align-items:center;
+      align-items:flex-end;
       color:var(--teal-text);
       font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
       font-weight:300;
       letter-spacing:-0.08em;
       line-height:1;
+      gap:0;
+    }
+
+    .logo-d,
+    .logo-n,
+    .logo-b{
+      display:inline-block;
+      line-height:.88;
+      font-weight:300;
     }
 
     .logo-d,
@@ -129,14 +156,8 @@ function OptanonWrapper() { }
 
     .logo-n{
       font-size:36px;
-    }
-
-    .logo-divider{
-      width:1.5px;
-      height:40px;
-      background:var(--teal-text);
-      margin:0 4px 0 2px;
-      transform:translateY(1px);
+      margin-left:-1px;
+      margin-right:0;
     }
 
     .icon{
@@ -302,6 +323,86 @@ function OptanonWrapper() { }
       display:none !important;
     }
 
+    .pc-overlay{
+      position:fixed;
+      inset:0;
+      background:var(--overlay);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      z-index:1000;
+    }
+
+    .pc-overlay.is-open{
+      display:flex;
+    }
+
+    .pc-modal{
+      width:min(880px, 100%);
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 20px 60px rgba(0,0,0,.18);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .pc-modal-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px 20px;
+      border-bottom:1px solid #e7ebe7;
+      background:#fff;
+    }
+
+    .pc-modal-title{
+      font-size:18px;
+      font-weight:500;
+      color:var(--ink);
+    }
+
+    .pc-close{
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      border:1px solid #dfe6e1;
+      background:#fff;
+      color:var(--teal-text);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      flex:none;
+    }
+
+    .pc-close svg{
+      width:18px;
+      height:18px;
+      stroke:currentColor;
+      fill:none;
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .ot-form-wrapper{
+      width:100%;
+      max-width:none;
+      height:800px;
+      border:0;
+      margin:0;
+      background:#fff;
+    }
+
+    .ot-form-wrapper iframe{
+      width:100%;
+      height:100%;
+      border:none;
+      display:block;
+    }
+
     @media (max-width: 1000px){
       .hero{
         grid-template-columns:1fr;
@@ -395,8 +496,24 @@ function OptanonWrapper() { }
         font-size:30px;
       }
 
-      .logo-divider{
-        height:34px;
+      .pc-overlay{
+        padding:12px;
+      }
+
+      .pc-modal{
+        border-radius:12px;
+      }
+
+      .pc-modal-header{
+        padding:14px 14px;
+      }
+
+      .pc-modal-title{
+        font-size:16px;
+      }
+
+      .ot-form-wrapper{
+        height:min(78vh, 800px);
       }
     }
   </style>
@@ -420,7 +537,6 @@ function OptanonWrapper() { }
       <div class="logo-wordmark" aria-hidden="true">
         <span class="logo-d">D</span>
         <span class="logo-n">N</span>
-        <span class="logo-divider"></span>
         <span class="logo-b">B</span>
       </div>
     </div>
@@ -434,14 +550,14 @@ function OptanonWrapper() { }
         <span>Search</span>
       </a>
 
-      <a href="#" class="icon-link" aria-label="Log in">
+      <button type="button" class="icon-button" id="openPreferenceCenter" aria-label="Log in">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M15 4h2.5A1.5 1.5 0 0 1 19 5.5v13A1.5 1.5 0 0 1 17.5 20H15"></path>
           <path d="M10 8l-4 4 4 4"></path>
           <path d="M6 12h9"></path>
         </svg>
         <span>Log in</span>
-      </a>
+      </button>
     </div>
   </div>
 </header>
@@ -582,6 +698,64 @@ function OptanonWrapper() { }
     </div>
   </section>
 </main>
+
+<div class="pc-overlay" id="preferenceCenterOverlay" aria-hidden="true">
+  <div class="pc-modal" role="dialog" aria-modal="true" aria-labelledby="pcModalTitle">
+    <div class="pc-modal-header">
+      <div class="pc-modal-title" id="pcModalTitle">Preference Center</div>
+      <button type="button" class="pc-close" id="closePreferenceCenter" aria-label="Close preference center">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12"></path>
+          <path d="M18 6L6 18"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- OneTrust Web Form start -->
+    <div class="ot-form-wrapper">
+      <iframe
+        title="OneTrust Preference Center"
+        src="https://privacyportaltrial.onetrust.com/ui/#/preferences/multipage/login/99936133-1336-4d3d-b3ec-758f12d89222">
+      </iframe>
+    </div>
+    <!-- OneTrust Web Form end -->
+  </div>
+</div>
+
+<script>
+  (function () {
+    const openBtn = document.getElementById('openPreferenceCenter');
+    const closeBtn = document.getElementById('closePreferenceCenter');
+    const overlay = document.getElementById('preferenceCenterOverlay');
+
+    function openPreferenceCenter() {
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+    }
+
+    function closePreferenceCenter() {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+    }
+
+    openBtn.addEventListener('click', openPreferenceCenter);
+    closeBtn.addEventListener('click', closePreferenceCenter);
+
+    overlay.addEventListener('click', function (event) {
+      if (event.target === overlay) {
+        closePreferenceCenter();
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && overlay.classList.contains('is-open')) {
+        closePreferenceCenter();
+      }
+    });
+  })();
+</script>
 
 </body>
 </html>
