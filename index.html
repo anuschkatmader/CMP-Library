@@ -7,16 +7,17 @@
 
 <style>
 :root{
-  --bg0:#050006;
-  --bg1:#120018;
-  --bg2:#2b0018;
+  --bg0:#09000c;
+  --bg1:#1a001f;
+  --bg2:#3b0b1f;
   --txt:#ffffff;
-  --muted:#b5b5bf;
+  --muted:#c3bcc7;
   --accent:#e60000;
-  --radius:14px;
-  --radiusSm:12px;
-  --navH:92px;
-  --railW:72px;
+  --focus:#f0d89a;
+  --radius:4px;
+  --radiusSm:3px;
+  --navH:64px;
+  --railW:54px;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -25,8 +26,9 @@ html,body{height:100%}
 body{
   font-family:Segoe UI, Arial, sans-serif;
   background:
-    radial-gradient(1200px 600px at 35% 0%, #2f0043 0%, transparent 60%),
-    linear-gradient(180deg,#050007,#000);
+    radial-gradient(1000px 520px at 22% 0%, rgba(116,20,76,.55) 0%, transparent 58%),
+    radial-gradient(800px 400px at 100% 0%, rgba(90,0,40,.35) 0%, transparent 55%),
+    linear-gradient(180deg,#14000f 0%, #070008 65%, #030003 100%);
   color:var(--txt);
   overflow:hidden;
 }
@@ -36,64 +38,77 @@ header{
   height:var(--navH);
   display:flex;
   align-items:center;
-  padding:0 36px;
-  background:linear-gradient(to bottom,rgba(0,0,0,.85),rgba(0,0,0,.3));
-  backdrop-filter:blur(10px);
+  padding:0 22px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.38),rgba(0,0,0,.06));
 }
 
 .brand{
-  display:flex;align-items:center;gap:10px;
-  min-width:220px;
-  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:160px;
+  font-weight:600;
+  font-size:13px;
+  opacity:.96;
 }
 .brand-dot{
-  width:26px;height:26px;border-radius:50%;
+  width:15px;
+  height:15px;
+  border-radius:50%;
   background:var(--accent);
-  box-shadow:0 0 12px var(--accent);
+  box-shadow:0 0 10px rgba(230,0,0,.65);
 }
-.brand span{font-weight:400}
+.brand span{font-weight:500}
 
 .top-nav{
   margin:0 auto;
   display:flex;
-  gap:84px;
-  letter-spacing:.8px;
-  font-size:16px;
+  gap:62px;
+  letter-spacing:.3px;
+  font-size:12px;
   text-transform:uppercase;
 }
 .top-nav .active{
   position:relative;
+  font-weight:600;
 }
 .top-nav .active::after{
   content:"";
   position:absolute;
-  bottom:-14px;
+  bottom:-10px;
   left:50%;
   transform:translateX(-50%);
-  width:48px;height:3px;
+  width:34px;
+  height:2px;
   background:#fff;
-  border-radius:3px;
+  border-radius:2px;
 }
 
 .top-right{
-  min-width:260px;
+  min-width:160px;
   display:flex;
   align-items:center;
   justify-content:flex-end;
-  gap:14px;
+  gap:10px;
 }
-.clock{font-size:13px}
+.clock{
+  font-size:11px;
+  opacity:.95;
+}
 .live-dot{
-  width:12px;height:12px;border-radius:50%;
+  width:9px;
+  height:9px;
+  border-radius:50%;
   background:var(--accent);
-  box-shadow:0 0 8px var(--accent);
+  box-shadow:0 0 8px rgba(230,0,0,.7);
 }
 .profile-btn{
-  padding:8px 16px;
+  padding:5px 11px;
   border-radius:999px;
-  border:1px solid rgba(255,255,255,.6);
-  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.06);
   color:#fff;
+  font-size:11px;
 }
 
 /* ================= APP ================= */
@@ -105,43 +120,56 @@ header{
 
 /* LEFT RAIL */
 .rail{
-  padding-top:18px;
+  padding-top:8px;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:16px;
-  background:linear-gradient(to right,rgba(0,0,0,.5),transparent);
+  gap:10px;
+  background:linear-gradient(to right,rgba(0,0,0,.26),transparent);
 }
 .rail-btn{
-  width:44px;height:44px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.3);
+  width:34px;
+  height:34px;
+  border-radius:3px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
   display:flex;
   align-items:center;
   justify-content:center;
 }
 .rail-btn svg{
-  width:20px;height:20px;
-  stroke:#fff;fill:none;stroke-width:2;
+  width:16px;
+  height:16px;
+  stroke:#fff;
+  fill:none;
+  stroke-width:1.8;
+  opacity:.95;
+}
+.rail-btn.focused{
+  border-color:var(--focus);
+  box-shadow:0 0 0 1px rgba(240,216,154,.25);
 }
 
 /* CONTENT */
 main{
-  padding:16px 28px;
+  padding:8px 14px 14px 6px;
   overflow:hidden;
 }
 
 .top-grid{
   display:grid;
-  grid-template-columns:560px 1fr;
-  gap:22px;
+  grid-template-columns:430px 1fr;
+  gap:10px;
 }
-.stack{display:flex;flex-direction:column;gap:18px}
+.stack{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
 .grid-right{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:16px;
+  gap:8px;
 }
 
 /* CARDS */
@@ -149,78 +177,98 @@ main{
   position:relative;
   border-radius:var(--radius);
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.06);
   background:#111;
-  transition:.25s;
+  transition:.2s;
 }
 .card.focused{
-  transform:scale(1.06);
-  box-shadow:0 0 0 3px #fff,0 28px 60px rgba(0,0,0,.85);
+  transform:scale(1.015);
+  box-shadow:0 0 0 2px var(--focus);
+  border-color:var(--focus);
   z-index:5;
 }
 
-.hero{height:315px}
-.feature{height:165px}
-.small{height:150px}
-.tile{width:280px;height:158px}
+.hero{height:170px}
+.feature{height:118px}
+.small{height:81px}
+.tile{width:220px;height:120px}
 
 .poster img{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   object-fit:cover;
+  filter:saturate(.95) contrast(1.02) brightness(.92);
 }
 
 .card::after{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to top,rgba(0,0,0,.82),transparent 55%);
+  background:
+    linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,.18) 54%, rgba(0,0,0,0) 100%);
 }
 
 .overlay{
   position:absolute;
-  left:16px;
-  bottom:14px;
+  left:10px;
+  bottom:8px;
+  right:10px;
 }
 .title{
-  font-size:22px;font-weight:600;
+  font-size:14px;
+  font-weight:500;
+  line-height:1.1;
+  text-shadow:0 1px 2px rgba(0,0,0,.7);
 }
-.small .title,.tile .title{font-size:14px}
+.small .title,.tile .title{
+  font-size:11px;
+  font-weight:500;
+}
 
 .meta{
   display:none;
-  font-size:12px;
+  font-size:10px;
   opacity:.9;
+  margin-top:3px;
+  color:#d9d6dd;
 }
 .recording .meta{display:block}
 
 .badge{
   position:absolute;
-  top:12px;left:12px;
-  background:var(--accent);
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
+  top:8px;
+  left:8px;
+  background:rgba(255,255,255,.92);
+  color:#222;
+  padding:2px 6px;
+  border-radius:2px;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.2px;
 }
 
 /* SECTION */
-.section{margin-top:24px}
+.section{margin-top:16px}
 .section-title{
-  margin-bottom:14px;
-  font-size:16px;
-  letter-spacing:1px;
+  margin-bottom:8px;
+  font-size:13px;
+  letter-spacing:.4px;
+  color:#ddd7df;
 }
-.carousel{display:flex;gap:16px}
+.carousel{display:flex;gap:8px}
 
 /* PROFILE */
 #profileOverlay{
-  position:fixed;inset:0;
+  position:fixed;
+  inset:0;
   background:rgba(0,0,0,.75);
   backdrop-filter:blur(14px);
   display:none;
 }
 #profileOverlay.active{display:block}
 .profile-box{
-  width:900px;max-width:90%;
+  width:900px;
+  max-width:90%;
   margin:80px auto;
   background:#0c0c14;
   border-radius:18px;
@@ -238,7 +286,7 @@ main{
   <div class="brand"><div class="brand-dot"></div>Vodafone <span>TV</span></div>
   <div class="top-nav">
     <div class="active">MEIN TV</div>
-    <div>TV‑GUIDE</div>
+    <div>TV-GUIDE</div>
     <div>JETZT ANSEHEN</div>
   </div>
   <div class="top-right">
@@ -250,39 +298,62 @@ main{
 
 <div class="app">
   <aside class="rail">
-    <button class="rail-btn focused" tabindex="0"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10.5V21h14V10.5"/><path d="M9 21v-6h6v6"/></svg></button>
-    <button class="rail-btn" tabindex="0"><svg viewBox="0 0 24 24"><rect x="5" y="6" width="14" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg></button>
+    <button class="rail-btn focused" tabindex="0"><svg viewBox="0 0 24 24"><path d="M3 7h18"/><path d="M5 7v10h14V7"/><path d="M10 20h4"/></svg></button>
+    <button class="rail-btn" tabindex="0"><svg viewBox="0 0 24 24"><path d="M7 5h10"/><path d="M7 12h10"/><path d="M7 19h10"/></svg></button>
     <button class="rail-btn" tabindex="0"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2"/></svg></button>
+    <button class="rail-btn" tabindex="0"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a1.7 1.7 0 1 1-2.4 2.4l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a1.7 1.7 0 1 1-3.4 0v-.2a1 1 0 0 0-.7-.9 1 1 0 0 0-1.1.2l-.1.1a1.7 1.7 0 1 1-2.4-2.4l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H4a1.7 1.7 0 1 1 0-3.4h.2a1 1 0 0 0 .9-.7 1 1 0 0 0-.2-1.1l-.1-.1a1.7 1.7 0 1 1 2.4-2.4l.1.1a1 1 0 0 0 1.1.2H9a1 1 0 0 0 .6-.9V4a1.7 1.7 0 1 1 3.4 0v.2a1 1 0 0 0 .7.9 1 1 0 0 0 1.1-.2l.1-.1a1.7 1.7 0 1 1 2.4 2.4l-.1.1a1 1 0 0 0-.2 1.1V9c0 .4.2.8.6.9h.2A1.7 1.7 0 1 1 20 13.3h-.2a1 1 0 0 0-.9.7Z"/></svg></button>
   </aside>
 
   <main>
     <section class="top-grid">
       <div class="stack">
         <div class="card hero recording focused" tabindex="0" data-title="The Rookie">
-          <div class="poster"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80"></div>
-          <div class="badge">AUFNAHME</div>
+          <div class="poster"><img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1600&q=80"></div>
+          <div class="badge">Grabaciones</div>
           <div class="overlay">
             <div class="title">The Rookie</div>
-            <div class="meta">14:10 Uhr · HD</div>
+            <div class="meta">14:10 Uhr</div>
           </div>
         </div>
 
-        <div class="card feature recording" tabindex="0" data-title="Ersparte: Alles oder Nichts">
-          <div class="poster"><img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1600&q=80"></div>
+        <div class="card feature recording" tabindex="0" data-title="España desde el aire">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1600&q=80"></div>
           <div class="overlay">
-            <div class="title">Ersparte: Alles oder Nichts</div>
-            <div class="meta">13:45 Uhr</div>
+            <div class="title">España desde el aire</div>
+            <div class="meta">Grabaciones</div>
           </div>
         </div>
       </div>
 
       <div class="grid-right">
-        <div class="card small" tabindex="0" data-title="Cosmo Sapiens"><div class="poster"><img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">Cosmo Sapiens</div></div></div>
-        <div class="card small" tabindex="0" data-title="Die Rezepte des Tages"><div class="poster"><img src="https://images.unsplash.com/photo-1498575207490-84fef63b5467?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">Die Rezepte des Tages</div></div></div>
-        <div class="card small" tabindex="0" data-title="In Therapie"><div class="poster"><img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80"></div><div class="badge">NEU</div><div class="overlay"><div class="title">In Therapie</div></div></div>
-        <div class="card small" tabindex="0" data-title="Kanal Spotlight"><div class="poster"><img src="https://images.unsplash.com/photo-1518972559570-7cc1309f3229?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">Kanal Spotlight</div></div></div>
-        <div class="card small" tabindex="0" data-title="Back to Life"><div class="poster"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">Back to Life</div></div></div>
-        <div class="card small" tabindex="0" data-title="Personal Assistant"><div class="poster"><img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">Personal Assistant</div></div></div>
+        <div class="card small" tabindex="0" data-title="Cosmo Sapiens"><div class="poster"><img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80"></div><div class="badge">1</div><div class="overlay"><div class="title">Cosmo Sapiens</div></div></div>
+        <div class="card small" tabindex="0" data-title="Carnets Sapiens"><div class="poster"><img src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=1200&q=80"></div><div class="badge">2</div><div class="overlay"><div class="title">Carnets Sapiens</div></div></div>
+        <div class="card small" tabindex="0" data-title="En terapia"><div class="poster"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">En terapia</div></div></div>
+        <div class="card small" tabindex="0" data-title="La ruleta de la suerte"><div class="poster"><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80"></div><div class="badge">HD</div><div class="overlay"><div class="title">La ruleta de la suerte</div></div></div>
+        <div class="card small" tabindex="0" data-title="Back to Life"><div class="poster"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">Back to Life</div></div></div>
+        <div class="card small" tabindex="0" data-title="Personal Assistant"><div class="poster"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">Personal Assistant</div></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Grabaciones</div>
+      <div class="carousel">
+        <div class="card tile" tabindex="0" data-title="The Rookie">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">The Rookie</div></div>
+        </div>
+        <div class="card tile" tabindex="0" data-title="España desde el aire">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">España desde el aire</div></div>
+        </div>
+        <div class="card tile" tabindex="0" data-title="India">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">India</div></div>
+        </div>
+        <div class="card tile" tabindex="0" data-title="Las claves">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">Las claves</div></div>
+        </div>
       </div>
     </section>
   </main>
