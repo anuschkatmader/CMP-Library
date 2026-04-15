@@ -3,1125 +3,442 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vodafone TV</title>
+  <title>Vodafone TV – Demo</title>
 
   <style>
     /* =========================================================
-       Vodafone TV – Demo UI (single file)
-       - TV-first layout (16:9 friendly)
-       - Remote navigation (Arrow keys + Enter), ESC closes profile
-       - Real photos via Unsplash Source (network required), with graceful fallback
+       Vodafone TV – High‑fidelity demo
+       FIXED: real images (images.unsplash.com, deterministic)
+       Mode B: metadata ONLY on recordings/live
        ========================================================= */
 
     :root{
       --bg0:#040006;
       --bg1:#0a0010;
       --bg2:#1f0010;
-      --panel:#0c0c12;
-      --card:#12121a;
-      --stroke:rgba(255,255,255,.12);
-      --stroke2:rgba(255,255,255,.18);
+
       --txt:#ffffff;
       --muted:#bdbdc8;
-      --muted2:#8b8b98;
 
-      --accent:#e60000;               /* Vodafone red */
-      --focusRing:#ffffff;            /* focused card ring */
-      --focusRingAlt:#e60000;         /* alt ring for small tiles */
+      --accent:#e60000;
+      --focus:#ffffff;
 
       --radius:14px;
       --radiusSm:12px;
 
       --navH:92px;
       --railW:72px;
-
-      --shadow:rgba(0,0,0,.65);
-      --ease:cubic-bezier(.2,.9,.2,1);
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
+
     body{
-      font-family: "Vodafone","Vodafone Rg","VodafoneRegular","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+      font-family:"Segoe UI",Arial,sans-serif;
       color:var(--txt);
       overflow:hidden;
-
       background:
         radial-gradient(1200px 700px at 35% 0%, #2b0040 0%, transparent 60%),
-        radial-gradient(900px 500px at 85% 20%, #330010 0%, transparent 58%),
         linear-gradient(135deg, var(--bg1), var(--bg0) 55%, var(--bg2));
     }
 
-    /* subtle grain */
-    .grain{
-      pointer-events:none;
-      position:fixed; inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
-      mix-blend-mode:overlay;
-      opacity:.55;
-      z-index:2;
-    }
-
-    /* vignette */
-    .vignette{
-      pointer-events:none;
-      position:fixed; inset:0;
-      background: radial-gradient(circle at 50% 35%, transparent 32%, rgba(0,0,0,.46) 75%, rgba(0,0,0,.78) 100%);
-      z-index:1;
-    }
-
-    /* =========================================================
-       TOP BAR
-       ========================================================= */
+    /* ================= TOP BAR ================= */
     header{
-      position:fixed; top:0; left:0; right:0;
+      position:fixed;top:0;left:0;right:0;
       height:var(--navH);
-      display:flex;
-      align-items:center;
-      padding:0 38px 0 26px;
+      display:flex;align-items:center;
+      padding:0 36px;
+      background:linear-gradient(to bottom,rgba(0,0,0,.8),rgba(0,0,0,.25));
+      backdrop-filter:blur(10px);
       z-index:20;
-
-      background: linear-gradient(to bottom, rgba(0,0,0,.76), rgba(0,0,0,.25));
-      backdrop-filter: blur(10px);
     }
 
     .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
+      display:flex;align-items:center;gap:10px;
       min-width:240px;
-      user-select:none;
+      font-weight:700;
     }
     .brand-dot{
       width:26px;height:26px;border-radius:50%;
       background:var(--accent);
       box-shadow:0 0 14px rgba(230,0,0,.75);
     }
-    .brand-text{
-      font-size:20px;
-      letter-spacing:.2px;
-      font-weight:700;
-    }
-    .brand-text span{font-weight:400}
+    .brand span{font-weight:400}
 
     .top-nav{
       margin:0 auto;
-      display:flex;
-      align-items:center;
-      gap:84px;
-      transform: translateX(-28px);
-      user-select:none;
-    }
-    .top-nav .tab{
-      font-size:16px;
-      letter-spacing:.9px;
+      display:flex;gap:84px;
       text-transform:uppercase;
-      color:rgba(255,255,255,.72);
+      letter-spacing:.9px;
+      font-size:16px;
+    }
+    .top-nav .active{
       position:relative;
     }
-    .top-nav .tab.active{color:#fff}
-    .top-nav .tab.active::after{
+    .top-nav .active::after{
       content:"";
       position:absolute;
-      left:50%; transform:translateX(-50%);
+      left:50%;transform:translateX(-50%);
       bottom:-14px;
-      width:48px; height:3px;
-      border-radius:999px;
+      width:48px;height:3px;
       background:#fff;
-      box-shadow:0 0 14px rgba(255,255,255,.38);
-      opacity:.92;
+      border-radius:3px;
     }
 
     .top-right{
-      min-width:280px;
-      margin-left:auto;
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:14px;
+      display:flex;align-items:center;gap:14px;
+      min-width:280px;justify-content:flex-end;
     }
-
-    .clock{
-      font-variant-numeric: tabular-nums;
-      font-size:13px;
-      color:#fff;
-      opacity:.95;
-      user-select:none;
-    }
+    .clock{font-size:13px}
     .live-dot{
       width:12px;height:12px;border-radius:50%;
       background:var(--accent);
-      box-shadow:0 0 10px rgba(230,0,0,.85);
+      box-shadow:0 0 8px var(--accent);
     }
-
     .profile-btn{
       padding:8px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.62);
-      background:rgba(0,0,0,.22);
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.6);
+      background:rgba(0,0,0,.25);
       color:#fff;
-      font-size:13px;
-      letter-spacing:.2px;
       cursor:pointer;
-      transition: background .2s var(--ease), box-shadow .2s var(--ease), transform .2s var(--ease);
-    }
-    .profile-btn:focus-visible{
-      outline:none;
-      box-shadow:0 0 0 3px rgba(230,0,0,.86);
     }
 
-    /* =========================================================
-       APP LAYOUT
-       ========================================================= */
+    /* ================= LAYOUT ================= */
     .app{
       position:fixed;
-      inset: var(--navH) 0 0 0;
+      inset:var(--navH) 0 0 0;
       display:grid;
-      grid-template-columns: var(--railW) 1fr;
-      height:calc(100vh - var(--navH));
-      z-index:5;
+      grid-template-columns:var(--railW) 1fr;
     }
 
-    /* Left rail */
+    /* LEFT RAIL (line icons only) */
     .rail{
       padding-top:18px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:16px;
-      background: linear-gradient(to right, rgba(0,0,0,.48), rgba(0,0,0,0));
+      display:flex;flex-direction:column;
+      align-items:center;gap:16px;
+      background:linear-gradient(to right,rgba(0,0,0,.5),transparent);
     }
-
     .rail-btn{
-      width:44px; height:44px;
+      width:44px;height:44px;
       border-radius:12px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.22);
-      display:flex; align-items:center; justify-content:center;
-      cursor:pointer;
-      transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s var(--ease);
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.3);
+      display:flex;align-items:center;justify-content:center;
     }
     .rail-btn svg{
-      width:20px; height:20px;
-      stroke: rgba(255,255,255,.86);
-      stroke-width:2;
-      fill:none;
-      stroke-linecap:round;
-      stroke-linejoin:round;
-      opacity:.95;
+      width:20px;height:20px;
+      stroke:#fff;fill:none;stroke-width:2;
+      stroke-linecap:round;stroke-linejoin:round;
     }
-
     .rail-btn.focused{
-      transform: scale(1.08);
-      box-shadow: 0 0 0 3px rgba(255,255,255,.92);
-      border-color: rgba(255,255,255,.58);
+      box-shadow:0 0 0 3px #fff;
+      transform:scale(1.08);
     }
 
-    /* Content */
-    .content{
-      padding: 14px 30px 26px 22px;
+    /* CONTENT */
+    main{
+      padding:16px 28px;
       overflow:hidden;
     }
 
     .top-grid{
       display:grid;
-      grid-template-columns: 560px 1fr;
-      gap: 22px;
-      align-items:start;
+      grid-template-columns:560px 1fr;
+      gap:22px;
     }
-
-    .stack{
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
+    .stack{display:flex;flex-direction:column;gap:18px}
     .grid-right{
       display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      align-content:start;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
     }
 
-    /* =========================================================
-       Cards / Tiles
-       ========================================================= */
+    /* ================= CARDS ================= */
     .card{
       position:relative;
-      border-radius: var(--radius);
+      border-radius:var(--radius);
       overflow:hidden;
-      background: radial-gradient(900px 500px at 50% 20%, rgba(255,255,255,.06), rgba(255,255,255,.02) 55%, rgba(0,0,0,.25));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 18px 35px rgba(0,0,0,.55);
-      transform-origin:center;
-      transition: transform .32s var(--ease), box-shadow .32s var(--ease), border-color .32s var(--ease);
-      user-select:none;
+      border:1px solid rgba(255,255,255,.12);
+      background:#111;
+      transition:.3s;
+    }
+    .card.focused{
+      transform:scale(1.07);
+      box-shadow:0 0 0 3px #fff,0 30px 60px rgba(0,0,0,.8);
+      z-index:5;
     }
 
-    /* image layer (real photos) */
-    .poster{
-      position:absolute;
-      inset:0;
-      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.55));
-    }
+    .hero{height:315px}
+    .feature{height:165px}
+    .small{height:150px}
+    .tile{width:280px;height:158px}
+
     .poster img{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
+      width:100%;height:100%;
       object-fit:cover;
-      opacity:0;                 /* fades in when loaded */
-      transition: opacity .35s var(--ease), transform .35s var(--ease), filter .35s var(--ease);
-      transform: scale(1.02);
-      filter:saturate(1.05) contrast(1.06);
     }
-    .poster img.loaded{opacity:1}
-    .poster img.failed{opacity:0}
 
-    /* readability gradient */
     .card::after{
       content:"";
-      position:absolute;
-      inset:0;
-      background: linear-gradient(to top, rgba(0,0,0,.82), rgba(0,0,0,.14) 55%, rgba(0,0,0,0) 78%);
-      pointer-events:none;
+      position:absolute;inset:0;
+      background:linear-gradient(to top,rgba(0,0,0,.8),transparent 55%);
     }
 
-    /* Focus */
-    .card.focused{
-      transform: scale(1.06);
-      border-color: rgba(255,255,255,.86);
-      box-shadow: 0 0 0 3px rgba(255,255,255,.92), 0 28px 55px rgba(0,0,0,.72);
-      z-index: 10;
-    }
-    .card.small.focused,
-    .card.tile.focused{
-      transform: scale(1.10);
-      border-color: rgba(230,0,0,.95);
-      box-shadow: 0 0 0 3px rgba(230,0,0,.88), 0 26px 52px rgba(0,0,0,.75);
-    }
-
-    /* Sizes (close to screenshots) */
-    .hero{ width:560px; height:315px; }
-    .feature{ width:560px; height:165px; border-radius: var(--radiusSm); }
-    .small{ height:150px; border-radius: var(--radiusSm); }
-    .tile{ width:280px; height:158px; border-radius: var(--radiusSm); }
-
-    /* Overlay content */
     .overlay{
-      position:absolute;
-      left:16px;
-      right:16px;
-      bottom:14px;
+      position:absolute;left:16px;bottom:14px;
       z-index:3;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      pointer-events:none;
     }
-
     .title{
-      font-size:22px;
-      font-weight:650;
-      letter-spacing:.15px;
-      line-height:1.07;
-      color:#fff;
-      text-shadow:0 2px 10px rgba(0,0,0,.88);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-size:22px;font-weight:600;
+      text-shadow:0 2px 8px rgba(0,0,0,.9);
     }
-    .small .title, .tile .title{font-size:14px;font-weight:600}
+    .small .title,.tile .title{font-size:14px}
 
-    /* Metadata: ONLY for recordings/live (Mode B) */
+    /* Metadata ONLY on recordings */
     .meta{
       display:none;
-      align-items:center;
-      gap:10px;
       font-size:12px;
-      color:rgba(255,255,255,.85);
-      text-shadow:0 2px 10px rgba(0,0,0,.9);
+      margin-top:4px;
+      opacity:.9;
     }
-    .is-recording .meta{
-      display:flex;
-    }
+    .recording .meta{display:block}
 
-    .meta .dot{
-      width:10px;height:10px;border-radius:50%;
-      background:#2a8cff;
-      box-shadow:0 0 0 2px rgba(255,255,255,.12);
-      flex:0 0 auto;
-    }
-    .meta .sep{opacity:.75}
-    .meta .tag{
-      padding:2px 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(0,0,0,.35);
-      font-size:11px;
-      letter-spacing:.3px;
-    }
-
-    /* Badge (NEU etc.) */
     .badge{
-      position:absolute;
-      top:12px;
-      left:12px;
-      z-index:3;
-      display:none;
-      padding:5px 10px;
+      position:absolute;top:12px;left:12px;
+      background:var(--accent);
+      padding:4px 10px;
       border-radius:999px;
       font-size:11px;
-      letter-spacing:.7px;
-      text-transform:uppercase;
-      background:rgba(230,0,0,.92);
-      border:1px solid rgba(255,255,255,.15);
-      box-shadow:0 10px 24px rgba(0,0,0,.45);
-      pointer-events:none;
+      display:none;
     }
-    .has-badge .badge{display:inline-flex}
+    .has-badge .badge{display:block}
 
     /* Section */
-    .section{
-      margin-top:22px;
-    }
+    .section{margin-top:24px}
     .section-title{
-      margin: 18px 0 12px;
-      font-size: 16px;
-      color: rgba(255,255,255,.86);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      user-select:none;
+      margin-bottom:14px;
+      letter-spacing:1px;
+      font-size:16px;
     }
-    .carousel{
-      display:flex;
-      gap: 16px;
-      overflow:hidden;
-      padding-bottom: 8px;
-    }
+    .carousel{display:flex;gap:16px}
 
-    /* =========================================================
-       Profile overlay (cleaner + TV-friendly)
-       ========================================================= */
+    /* ================= PROFILE ================= */
     #profileOverlay{
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,.72);
-      backdrop-filter: blur(14px);
-      z-index:60;
-      display:none;
+      position:fixed;inset:0;
+      background:rgba(0,0,0,.75);
+      backdrop-filter:blur(14px);
+      display:none;z-index:50;
     }
     #profileOverlay.active{display:block}
 
-    .profile-shell{
-      position:absolute;
-      inset: 90px 70px 70px 70px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(18,18,26,.92), rgba(10,10,16,.92));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 40px 90px rgba(0,0,0,.65);
-      padding: 24px 28px;
-      display:flex;
-      flex-direction:column;
-      gap: 18px;
-    }
-
-    .profile-top{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      justify-content:space-between;
-    }
-    .back-btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.20);
-      background: rgba(0,0,0,.25);
-      color:#fff;
-      cursor:pointer;
-      font-size: 13px;
-      letter-spacing:.2px;
-      transition: box-shadow .2s var(--ease), transform .2s var(--ease), background .2s var(--ease);
-    }
-    .back-btn:focus-visible{
-      outline:none;
-      box-shadow:0 0 0 3px rgba(230,0,0,.86);
-    }
-    .profile-title{
-      font-size:18px;
-      letter-spacing:.8px;
-      text-transform:uppercase;
-      color:#fff;
-      opacity:.95;
-      user-select:none;
+    .profile-box{
+      width:900px;max-width:90%;
+      margin:80px auto;
+      background:#0c0c14;
+      border-radius:18px;
+      padding:28px;
     }
 
     .profile-grid{
       display:grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 18px;
-      flex:1;
-      min-height:0;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      margin-top:20px;
     }
-
     .p-card{
-      border-radius: 14px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.10);
-      padding: 18px 18px;
-      min-height:0;
+      background:#15151d;
+      border-radius:14px;
+      padding:18px;
     }
     .p-card h3{
       font-size:14px;
-      letter-spacing:.8px;
+      margin-bottom:10px;
       text-transform:uppercase;
-      color:rgba(255,255,255,.9);
-      margin-bottom:12px;
+      letter-spacing:.8px;
     }
-
-    .kv{
-      display:grid;
-      grid-template-columns: 150px 1fr;
-      row-gap:10px;
-      column-gap:14px;
+    .p-card p{
       font-size:14px;
+      margin:4px 0;
     }
-    .kv .k{color:rgba(255,255,255,.72)}
-    .kv .v{color:#fff}
 
     .actions{
-      display:flex;
-      gap: 12px;
-      flex-wrap:wrap;
-      margin-top: 6px;
+      margin-top:20px;
+      display:flex;gap:12px;flex-wrap:wrap;
     }
-
-    .action-btn{
-      padding:10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(0,0,0,.22);
+    .actions button{
+      padding:10px 16px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.4);
+      background:rgba(0,0,0,.3);
       color:#fff;
-      cursor:pointer;
-      font-size: 13px;
-      letter-spacing:.2px;
-      transition: box-shadow .2s var(--ease), transform .2s var(--ease), background .2s var(--ease);
-    }
-    .action-btn:focus-visible{
-      outline:none;
-      box-shadow:0 0 0 3px rgba(255,255,255,.92);
     }
 
-    /* =========================================================
-       Toast (no alert popups)
-       ========================================================= */
     #toast{
       position:fixed;
-      left:50%;
-      bottom:34px;
+      bottom:34px;left:50%;
       transform:translateX(-50%);
-      padding:12px 16px;
-      border-radius: 12px;
-      background: rgba(0,0,0,.70);
-      border: 1px solid rgba(255,255,255,.16);
-      color:#fff;
-      font-size: 14px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 18px 40px rgba(0,0,0,.55);
-      z-index: 120;
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .18s var(--ease);
-    }
-    #toast.show{opacity:1}
-
-    /* Responsive fallback (optional) */
-    @media (max-width: 1280px){
-      header{padding:0 18px}
-      .top-nav{gap:42px; transform:none}
-      .top-grid{grid-template-columns: 1fr}
-      .hero,.feature{width:100%}
-      .grid-right{grid-template-columns: repeat(2, 1fr)}
-      .profile-shell{inset: 90px 20px 20px 20px}
-      .profile-grid{grid-template-columns:1fr}
-      .kv{grid-template-columns: 140px 1fr}
+      padding:12px 18px;
+      border-radius:14px;
+      background:rgba(0,0,0,.7);
+      display:none;
     }
   </style>
 </head>
 
 <body>
-  <div class="vignette"></div>
-  <div class="grain"></div>
-
-  <header>
-    <div class="brand" aria-label="Vodafone TV">
-      <div class="brand-dot" aria-hidden="true"></div>
-      <div class="brand-text">Vodafone <span>TV</span></div>
-    </div>
-
-    <div class="top-nav" aria-label="Hauptnavigation">
-      <div class="tab active">MEIN TV</div>
-      <div class="tab">TV‑GUIDE</div>
-      <div class="tab">JETZT ANSEHEN</div>
-    </div>
-
-    <div class="top-right">
-      <div class="clock" id="clock">12:41</div>
-      <div class="live-dot" aria-label="Live"></div>
-      <button class="profile-btn" id="profileBtn" tabindex="0">Mein Profil</button>
-    </div>
-  </header>
-
-  <div class="app" aria-label="App">
-    <!-- Left rail (clean line icons) -->
-    <aside class="rail" aria-label="Seitenleiste">
-      <button class="rail-btn focused" tabindex="0" data-nav="rail" aria-label="Start">
-        <!-- Home (line icon) -->
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 10.5 12 3l9 7.5"></path>
-          <path d="M5 10.5V21h14V10.5"></path>
-          <path d="M9 21v-6h6v6"></path>
-        </svg>
-      </button>
-
-      <button class="rail-btn" tabindex="0" data-nav="rail" aria-label="Aufnahmen">
-        <!-- Recordings -->
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="5" y="6" width="14" height="12" rx="2"></rect>
-          <path d="M9 3h6"></path>
-          <circle cx="12" cy="12" r="2.2"></circle>
-        </svg>
-      </button>
-
-      <button class="rail-btn" tabindex="0" data-nav="rail" aria-label="Suche">
-        <!-- Search -->
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="11" cy="11" r="6"></circle>
-          <path d="M20 20l-4.2-4.2"></path>
-        </svg>
-      </button>
-    </aside>
-
-    <!-- Content -->
-    <main class="content" aria-label="Inhalte">
-      <section class="top-grid" aria-label="Startbereich">
-        <div class="stack">
-          <!-- Hero (recording => shows meta) -->
-          <div class="card hero focused is-recording has-badge"
-               tabindex="0"
-               data-nav="card"
-               data-title="The Rookie"
-               data-meta-time="14:10"
-               data-meta-hd="true"
-               data-badge="AUFNAHME"
-               data-img="https://source.unsplash.com/1600x900/?police,detective,city,night&sig=101">
-            <div class="poster">
-              <img alt="The Rookie – Hintergrundbild" loading="eager" decoding="async" />
-            </div>
-            <div class="badge" aria-hidden="true">AUFNAHME</div>
-            <div class="overlay">
-              <div class="title">The Rookie</div>
-              <div class="meta">
-                <span class="dot" aria-hidden="true"></span>
-                <span class="time">14:10 Uhr</span>
-                <span class="sep">·</span>
-                <span class="tag">HD</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Feature (recording => shows meta) -->
-          <div class="card feature is-recording"
-               tabindex="0"
-               data-nav="card"
-               data-title="Ersparte: Alles oder Nichts"
-               data-meta-time="13:45"
-               data-meta-hd="false"
-               data-img="https://source.unsplash.com/1600x900/?drama,shadow,portrait,moody&sig=102">
-            <div class="poster">
-              <img alt="Ersparte: Alles oder Nichts – Hintergrundbild" loading="lazy" decoding="async" />
-            </div>
-            <div class="overlay">
-              <div class="title">Ersparte: Alles oder Nichts</div>
-              <div class="meta">
-                <span class="dot" aria-hidden="true"></span>
-                <span class="time">13:45 Uhr</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right grid (Mode B: minimal titles; allow NEU badge on one) -->
-        <div class="grid-right">
-          <div class="card small"
-               tabindex="0"
-               data-nav="card"
-               data-title="Cosmo Sapiens"
-               data-img="https://source.unsplash.com/1600x900/?space,stars,astronomy,nebula&sig=201">
-            <div class="poster"><img alt="Cosmo Sapiens – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="overlay"><div class="title">Cosmo Sapiens</div></div>
-          </div>
-
-          <div class="card small"
-               tabindex="0"
-               data-nav="card"
-               data-title="Die Rezepte des Tages"
-               data-img="https://source.unsplash.com/1600x900/?cooking,kitchen,food,chef&sig=202">
-            <div class="poster"><img alt="Die Rezepte des Tages – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="overlay"><div class="title">Die Rezepte des Tages</div></div>
-          </div>
-
-          <div class="card small has-badge"
-               tabindex="0"
-               data-nav="card"
-               data-title="In Therapie"
-               data-badge="NEU"
-               data-img="https://source.unsplash.com/1600x900/?therapy,room,quiet,interior&sig=203">
-            <div class="poster"><img alt="In Therapie – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="badge" aria-hidden="true">NEU</div>
-            <div class="overlay"><div class="title">In Therapie</div></div>
-          </div>
-
-          <div class="card small"
-               tabindex="0"
-               data-nav="card"
-               data-title="Kanal Spotlight"
-               data-img="https://source.unsplash.com/1600x900/?stage,spotlight,concert,lights&sig=204">
-            <div class="poster"><img alt="Kanal Spotlight – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="overlay"><div class="title">Kanal Spotlight</div></div>
-          </div>
-
-          <div class="card small"
-               tabindex="0"
-               data-nav="card"
-               data-title="Back to Life"
-               data-img="https://source.unsplash.com/1600x900/?city,evening,street,cinematic&sig=205">
-            <div class="poster"><img alt="Back to Life – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="overlay"><div class="title">Back to Life</div></div>
-          </div>
-
-          <div class="card small"
-               tabindex="0"
-               data-nav="card"
-               data-title="Personal Assistant"
-               data-img="https://source.unsplash.com/1600x900/?office,night,computer,moody&sig=206">
-            <div class="poster"><img alt="Personal Assistant – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="overlay"><div class="title">Personal Assistant</div></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" aria-label="Aufnahmen">
-        <div class="section-title">AUFNAHMEN</div>
-        <div class="carousel" id="carousel1">
-          <div class="card tile is-recording"
-               tabindex="0"
-               data-nav="card"
-               data-title="The Rookie – Folge 3"
-               data-meta-time="20:15"
-               data-meta-hd="true"
-               data-img="https://source.unsplash.com/1600x900/?police,car,lights,night&sig=301">
-            <div class="poster"><img alt="The Rookie – Folge 3 – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="overlay">
-              <div class="title">The Rookie – Folge 3</div>
-              <div class="meta">
-                <span class="dot" aria-hidden="true"></span>
-                <span class="time">20:15 Uhr</span>
-                <span class="sep">·</span>
-                <span class="tag">HD</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card tile is-recording has-badge"
-               tabindex="0"
-               data-nav="card"
-               data-title="Rick Steins Reise"
-               data-meta-time="21:00"
-               data-meta-hd="false"
-               data-badge="NEU"
-               data-img="https://source.unsplash.com/1600x900/?travel,food,market,documentary&sig=302">
-            <div class="poster"><img alt="Rick Steins Reise – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="badge" aria-hidden="true">NEU</div>
-            <div class="overlay">
-              <div class="title">Rick Steins Reise</div>
-              <div class="meta">
-                <span class="dot" aria-hidden="true"></span>
-                <span class="time">21:00 Uhr</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card tile is-recording"
-               tabindex="0"
-               data-nav="card"
-               data-title="Die großen Fragen"
-               data-meta-time="18:30"
-               data-meta-hd="true"
-               data-img="https://source.unsplash.com/1600x900/?library,books,philosophy,moody&sig=303">
-            <div class="poster"><img alt="Die großen Fragen – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="overlay">
-              <div class="title">Die großen Fragen</div>
-              <div class="meta">
-                <span class="dot" aria-hidden="true"></span>
-                <span class="time">18:30 Uhr</span>
-                <span class="sep">·</span>
-                <span class="tag">HD</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card tile is-recording"
-               tabindex="0"
-               data-nav="card"
-               data-title="Filmabend"
-               data-meta-time="22:10"
-               data-meta-hd="true"
-               data-img="https://source.unsplash.com/1600x900/?cinema,screen,film,night&sig=304">
-            <div class="poster"><img alt="Filmabend – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="overlay">
-              <div class="title">Filmabend</div>
-              <div class="meta">
-                <span class="dot" aria-hidden="true"></span>
-                <span class="time">22:10 Uhr</span>
-                <span class="sep">·</span>
-                <span class="tag">HD</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card tile is-recording"
-               tabindex="0"
-               data-nav="card"
-               data-title="Krimi Nacht"
-               data-meta-time="23:05"
-               data-meta-hd="false"
-               data-img="https://source.unsplash.com/1600x900/?crime,city,street,night&sig=305">
-            <div class="poster"><img alt="Krimi Nacht – Hintergrundbild" loading="lazy" decoding="async" /></div>
-            <div class="overlay">
-              <div class="title">Krimi Nacht</div>
-              <div class="meta">
-                <span class="dot" aria-hidden="true"></span>
-                <span class="time">23:05 Uhr</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+<header>
+  <div class="brand"><div class="brand-dot"></div>Vodafone <span>TV</span></div>
+  <div class="top-nav">
+    <div class="active">MEIN TV</div>
+    <div>TV‑GUIDE</div>
+    <div>JETZT ANSEHEN</div>
   </div>
+  <div class="top-right">
+    <div class="clock" id="clock">14:39</div>
+    <div class="live-dot"></div>
+    <button class="profile-btn" id="profileBtn">Mein Profil</button>
+  </div>
+</header>
 
-  <!-- Profile Overlay -->
-  <section id="profileOverlay" aria-hidden="true" aria-label="Mein Profil">
-    <div class="profile-shell" role="dialog" aria-modal="true" aria-label="Profil">
-      <div class="profile-top">
-        <button class="back-btn" id="closeProfile" tabindex="0" aria-label="Zurück">
-          <!-- left arrow line icon -->
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" style="stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">
-            <path d="M15 18l-6-6 6-6"></path>
-          </svg>
-          Zurück
-        </button>
-        <div class="profile-title">MEIN PROFIL</div>
-        <div style="width:120px"></div>
-      </div>
+<div class="app">
+  <aside class="rail">
+    <button class="rail-btn focused" tabindex="0">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10.5V21h14V10.5"/><path d="M9 21v-6h6v6"/></svg>
+    </button>
+    <button class="rail-btn" tabindex="0">
+      <svg viewBox="0 0 24 24"><rect x="5" y="6" width="14" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+    </button>
+    <button class="rail-btn" tabindex="0">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2"/></svg>
+    </button>
+  </aside>
 
-      <div class="profile-grid">
-        <div class="p-card">
-          <h3>Profil</h3>
-          <div class="kv">
-            <div class="k">Name</div><div class="v">Anuschka Mader</div>
-            <div class="k">Geburtstag</div><div class="v">05.02.1998</div>
-            <div class="k">E‑Mail</div><div class="v">anuschka.mader@example.com</div>
-            <div class="k">Adresse</div><div class="v">Musterstraße 12, 10115 Berlin</div>
+  <main>
+    <section class="top-grid">
+      <div class="stack">
+        <div class="card hero recording has-badge focused" tabindex="0">
+          <div class="poster">
+            <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80">
+          </div>
+          <div class="badge">AUFNAHME</div>
+          <div class="overlay">
+            <div class="title">The Rookie</div>
+            <div class="meta">14:10 Uhr · HD</div>
           </div>
         </div>
 
-        <div class="p-card">
-          <h3>Konto</h3>
-          <div class="kv">
-            <div class="k">Account‑ID</div><div class="v">VF-DE-83492017</div>
-            <div class="k">Zahlung</div><div class="v">VISA •••• 4242, gültig bis 08/28</div>
-            <div class="k">IBAN</div><div class="v">DE** **** **** **** **** ** (Demo)</div>
+        <div class="card feature recording" tabindex="0">
+          <div class="poster">
+            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80">
+          </div>
+          <div class="overlay">
+            <div class="title">Ersparte: Alles oder Nichts</div>
+            <div class="meta">13:45 Uhr</div>
           </div>
         </div>
       </div>
 
-      <div class="actions" aria-label="Aktionen">
-        <button class="action-btn" tabindex="0">Profil bearbeiten</button>
-        <button class="action-btn" tabindex="0">Zahlungsarten verwalten</button>
-        <button class="action-btn" tabindex="0">Datenschutz &amp; Präferenzen</button>
-        <button class="action-btn" tabindex="0">Abmelden</button>
+      <div class="grid-right">
+        <div class="card small" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">Cosmo Sapiens</div></div>
+        </div>
+        <div class="card small" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">Die Rezepte des Tages</div></div>
+        </div>
+        <div class="card small has-badge" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="badge">NEU</div>
+          <div class="overlay"><div class="title">In Therapie</div></div>
+        </div>
+        <div class="card small" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">Kanal Spotlight</div></div>
+        </div>
+        <div class="card small" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1501139083538-0139583c060f?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">Back to Life</div></div>
+        </div>
+        <div class="card small" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">Personal Assistant</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">AUFNAHMEN</div>
+      <div class="carousel">
+        <div class="card tile recording" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1501139083538-0139583c060f?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">The Rookie – Folge 3</div><div class="meta">20:15 Uhr · HD</div></div>
+        </div>
+        <div class="card tile recording has-badge" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="badge">NEU</div>
+          <div class="overlay"><div class="title">Rick Steins Reise</div><div class="meta">21:00 Uhr</div></div>
+        </div>
+        <div class="card tile recording" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">Die großen Fragen</div><div class="meta">18:30 Uhr · HD</div></div>
+        </div>
+        <div class="card tile recording" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">Filmabend</div><div class="meta">22:10 Uhr · HD</div></div>
+        </div>
+        <div class="card tile recording" tabindex="0">
+          <div class="poster"><img src="https://images.unsplash.com/photo-1501139083538-0139583c060f?auto=format&fit=crop&w=1200&q=80"></div>
+          <div class="overlay"><div class="title">Krimi Nacht</div><div class="meta">23:05 Uhr</div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- PROFILE -->
+<section id="profileOverlay">
+  <div class="profile-box">
+    <h2>Mein Profil</h2>
+    <div class="profile-grid">
+      <div class="p-card">
+        <h3>Profil</h3>
+        <p>Name: Anuschka Mader</p>
+        <p>Geburtstag: 05.02.1998</p>
+        <p>E‑Mail: anuschka.mader@example.com</p>
+        <p>Adresse: Musterstraße 12, 10115 Berlin</p>
+      </div>
+      <div class="p-card">
+        <h3>Konto</h3>
+        <p>Account‑ID: VF-DE-83492017</p>
+        <p>Zahlung: VISA •••• 4242 (08/28)</p>
+        <p>IBAN: DE** **** **** **** **** **</p>
       </div>
     </div>
-  </section>
+    <div class="actions">
+      <button>Profil bearbeiten</button>
+      <button>Zahlungsarten verwalten</button>
+      <button>Datenschutz & Präferenzen</button>
+      <button>Abmelden</button>
+    </div>
+  </div>
+</section>
 
-  <div id="toast" aria-live="polite"></div>
+<div id="toast"></div>
 
-  <script>
-    /************************************************************
-     * 1) Clock
-     ************************************************************/
-    function pad(n){ return String(n).padStart(2,"0"); }
-    function updateClock(){
-      const d = new Date();
-      document.getElementById("clock").textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    }
-    updateClock();
-    setInterval(updateClock, 10_000);
+<script>
+  function pad(n){return String(n).padStart(2,"0")}
+  function updateClock(){
+    const d=new Date();
+    document.getElementById("clock").textContent=`${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  updateClock();setInterval(updateClock,10000);
 
-    /************************************************************
-     * 2) Image loading (real photos) + graceful fallback
-     *    NOTE: network required for Unsplash Source URLs.
-     ************************************************************/
-    function hydrateImages(){
-      const cards = document.querySelectorAll(".card[data-img]");
-      cards.forEach(card => {
-        const url = card.getAttribute("data-img");
-        const img = card.querySelector(".poster img");
-        if(!img || !url) return;
-
-        // If already set, skip
-        if(img.dataset.bound === "1") return;
-        img.dataset.bound = "1";
-
-        img.addEventListener("load", () => img.classList.add("loaded"), { once:true });
-        img.addEventListener("error", () => img.classList.add("failed"), { once:true });
-
-        // Set URL last to trigger load
-        img.src = url;
-      });
-    }
-    hydrateImages();
-
-    /************************************************************
-     * 3) Mode B: Metadata only for recordings
-     *    - Use dataset meta fields to set UI values (time/HD)
-     ************************************************************/
-    function hydrateMeta(){
-      document.querySelectorAll(".card.is-recording").forEach(card => {
-        const t = card.dataset.metaTime;
-        const hd = card.dataset.metaHd;
-        const timeEl = card.querySelector(".meta .time");
-        const hdTag = card.querySelector(".meta .tag");
-        if(timeEl && t) timeEl.textContent = `${t} Uhr`;
-        if(hdTag){
-          const showHD = (hd === "true");
-          hdTag.style.display = showHD ? "inline-flex" : "none";
-        }
-      });
-
-      document.querySelectorAll(".card.has-badge").forEach(card => {
-        const b = card.dataset.badge;
-        const badgeEl = card.querySelector(".badge");
-        if(badgeEl && b) badgeEl.textContent = b;
-      });
-    }
-    hydrateMeta();
-
-    /************************************************************
-     * 4) Toast (no alert)
-     ************************************************************/
-    let toastTimer;
-    function toast(msg){
-      const el = document.getElementById("toast");
-      el.textContent = msg;
-      el.classList.add("show");
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
-    }
-
-    /************************************************************
-     * 5) Profile overlay open/close + focus management
-     *    - Save last focused element
-     *    - Trap navigation inside overlay when open
-     ************************************************************/
-    const overlay = document.getElementById("profileOverlay");
-    const profileBtn = document.getElementById("profileBtn");
-    const closeProfileBtn = document.getElementById("closeProfile");
-    let overlayOpen = false;
-    let lastFocused = null;
-
-    function openProfile(){
-      if(overlayOpen) return;
-      lastFocused = document.activeElement;
-      overlayOpen = true;
-      overlay.classList.add("active");
-      overlay.setAttribute("aria-hidden","false");
-      // Set focus to back button
-      setFocused(closeProfileBtn);
-      toast("Profil geöffnet");
-    }
-
-    function closeProfile(){
-      if(!overlayOpen) return;
-      overlayOpen = false;
-      overlay.classList.remove("active");
-      overlay.setAttribute("aria-hidden","true");
-      if(lastFocused && typeof lastFocused.focus === "function"){
-        setFocused(lastFocused);
-      } else {
-        setFocused(profileBtn);
-      }
-      toast("Zurück");
-    }
-
-    profileBtn.addEventListener("click", openProfile);
-    closeProfileBtn.addEventListener("click", closeProfile);
-
-    /************************************************************
-     * 6) Remote navigation (spatial)
-     *    - Arrow keys choose nearest element in direction
-     *    - In overlay: only overlay focusables
-     ************************************************************/
-    function focusablesRoot(){
-      if(overlayOpen){
-        return Array.from(overlay.querySelectorAll('[tabindex="0"]'))
-          .filter(el => el.offsetParent !== null);
-      }
-      // app: rail buttons, cards, profile button
-      return Array.from(document.querySelectorAll('.rail-btn[tabindex="0"], .card[tabindex="0"], #profileBtn'))
-        .filter(el => el.offsetParent !== null);
-    }
-
-    let current = document.querySelector(".card.hero") || document.querySelector(".rail-btn") || profileBtn;
-
-    function clearFocusClasses(){
-      document.querySelectorAll(".focused").forEach(x => x.classList.remove("focused"));
-    }
-
-    function setFocused(el){
-      if(!el) return;
-      clearFocusClasses();
-
-      // Apply focus classes
-      if(el.classList.contains("rail-btn")) el.classList.add("focused");
-      if(el.classList.contains("card")) el.classList.add("focused");
-
-      // Use focus-visible behavior; avoid scroll jumps
-      el.focus({ preventScroll:true });
-      current = el;
-
-      // Keep carousel visible
-      const parent = el.closest(".carousel");
-      if(parent){
-        const pr = parent.getBoundingClientRect();
-        const er = el.getBoundingClientRect();
-        const pad = 30;
-        if(er.left < pr.left + pad) parent.scrollLeft -= (pr.left + pad - er.left);
-        if(er.right > pr.right - pad) parent.scrollLeft += (er.right - (pr.right - pad));
-      }
-    }
-
-    function centerOf(rect){ return { x: rect.left + rect.width/2, y: rect.top + rect.height/2 }; }
-
-    function nextInDirection(dir){
-      const all = focusablesRoot();
-      const curRect = current.getBoundingClientRect();
-      const c = centerOf(curRect);
-
-      let best = null;
-      let bestScore = Infinity;
-
-      for(const el of all){
-        if(el === current) continue;
-        const r = el.getBoundingClientRect();
-        const p = centerOf(r);
-
-        const dx = p.x - c.x;
-        const dy = p.y - c.y;
-
-        const ok =
-          (dir === "left"  && dx < -8) ||
-          (dir === "right" && dx >  8) ||
-          (dir === "up"    && dy < -8) ||
-          (dir === "down"  && dy >  8);
-        if(!ok) continue;
-
-        // Score: move along primary axis with modest penalty for off-axis
-        const primary = (dir==="left"||dir==="right") ? Math.abs(dx) : Math.abs(dy);
-        const offAxis = (dir==="left"||dir==="right") ? Math.abs(dy) : Math.abs(dx);
-        const score = primary + offAxis * 0.35;
-
-        if(score < bestScore){
-          bestScore = score;
-          best = el;
-        }
-      }
-      return best;
-    }
-
-    document.addEventListener("keydown", (e) => {
-      const key = e.key;
-
-      // ESC closes profile overlay if open
-      if(key === "Escape" && overlayOpen){
-        e.preventDefault();
-        closeProfile();
-        return;
-      }
-
-      if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(key)){
-        e.preventDefault();
-        const dir = key.replace("Arrow","").toLowerCase();
-        const nxt = nextInDirection(dir);
-        if(nxt) setFocused(nxt);
-        return;
-      }
-
-      if(key === "Enter"){
-        e.preventDefault();
-
-        // Activate based on focused element
-        if(current === profileBtn){
-          openProfile();
-          return;
-        }
-        if(current === closeProfileBtn){
-          closeProfile();
-          return;
-        }
-
-        if(current.classList && current.classList.contains("action-btn")){
-          toast(`${current.textContent.trim()} (Demo)`);
-          return;
-        }
-
-        if(current.classList && current.classList.contains("rail-btn")){
-          const label = current.getAttribute("aria-label") || "Menü";
-          toast(`${label} (Demo)`);
-          return;
-        }
-
-        if(current.classList && current.classList.contains("card")){
-          const title = current.dataset.title || "Inhalt";
-          toast(`Abspielen: ${title}`);
-          return;
-        }
-      }
-    });
-
-    // Initial focus
-    setFocused(document.querySelector(".card.hero"));
-
-    /************************************************************
-     * 7) Click support (mouse)
-     ************************************************************/
-    document.querySelectorAll(".card[tabindex='0']").forEach(card => {
-      card.addEventListener("click", () => {
-        setFocused(card);
-        toast(`Abspielen: ${card.dataset.title || "Inhalt"}`);
-      });
-    });
-
-    document.querySelectorAll(".rail-btn[tabindex='0']").forEach(btn => {
-      btn.addEventListener("click", () => {
-        setFocused(btn);
-        toast(`${btn.getAttribute("aria-label") || "Menü"} (Demo)`);
-      });
-    });
-  </script>
+  const profileBtn=document.getElementById("profileBtn");
+  const overlay=document.getElementById("profileOverlay");
+  profileBtn.onclick=()=>overlay.classList.add("active");
+  overlay.onclick=()=>overlay.classList.remove("active");
+</script>
 </body>
 </html>
