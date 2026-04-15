@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>TV App UI – Vodafone‑style</title>
+  <title>TV App – Vodafone‑Style UI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     /* =====================
-       GLOBAL RESET & BASICS
+       RESET & BASE
        ===================== */
     * {
       box-sizing: border-box;
@@ -16,9 +16,9 @@
     }
 
     body {
-      background: linear-gradient(135deg, #1b0125, #000000, #2b0000);
-      color: #ddd;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: radial-gradient(circle at top, #2b0033, #050005 60%, #000);
+      color: #e0e0e0;
       overflow: hidden;
     }
 
@@ -27,56 +27,79 @@
     }
 
     /* =====================
-       TOP NAVIGATION BAR
+       TOP BAR
        ===================== */
-    .top-nav {
+    header {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      height: 80px;
+      height: 90px;
       display: flex;
       align-items: center;
       padding: 0 60px;
-      background: rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(8px);
-      z-index: 10;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0.25));
+      backdrop-filter: blur(10px);
+      z-index: 20;
     }
 
-    .menu {
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-right: 60px;
+    }
+
+    .logo-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #e60000;
+      box-shadow: 0 0 10px rgba(230,0,0,0.8);
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    nav {
       display: flex;
       gap: 50px;
     }
 
-    .menu-item {
+    nav .item {
       font-size: 20px;
       text-transform: uppercase;
       color: #aaa;
-      cursor: pointer;
       position: relative;
     }
 
-    .menu-item.active {
+    nav .item.active {
       color: #fff;
     }
 
-    .menu-item.active::after {
+    nav .item.active::after {
       content: "";
       position: absolute;
       left: 0;
-      bottom: -10px;
+      bottom: -12px;
       width: 100%;
       height: 3px;
-      background: #e60000;
-      box-shadow: 0 0 12px #e60000;
+      background: #fff;
+      box-shadow: 0 0 12px rgba(255,255,255,0.8);
     }
 
-    .nav-right {
+    .top-right {
       margin-left: auto;
       display: flex;
       align-items: center;
-      gap: 20px;
-      color: #fff;
+      gap: 22px;
+    }
+
+    .clock {
+      font-size: 16px;
     }
 
     .live-dot {
@@ -87,61 +110,80 @@
       box-shadow: 0 0 8px #e60000;
     }
 
+    .login-btn {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid #fff;
+      font-size: 14px;
+      color: #fff;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .login-btn:focus {
+      box-shadow: 0 0 0 3px #e60000;
+    }
+
     /* =====================
-       MAIN CONTENT AREA
+       MAIN LAYOUT
        ===================== */
     main {
-      padding-top: 120px;
+      padding-top: 130px;
       padding-left: 60px;
       padding-right: 60px;
     }
 
-    /* =====================
-       ROW STRUCTURE
-       ===================== */
     .row {
-      margin-bottom: 50px;
+      margin-bottom: 48px;
     }
 
     .row-title {
       font-size: 22px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       text-transform: uppercase;
-      color: #bbb;
+      color: #cfcfcf;
     }
 
     .rail {
       display: flex;
-      gap: 24px;
-      transition: transform 0.35s ease;
+      gap: 26px;
     }
 
     /* =====================
        HERO CARD
        ===================== */
-    .hero-card {
-      width: 520px;
-      height: 290px;
-      border-radius: 12px;
-      background: linear-gradient(120deg, #333, #111);
+    .hero {
+      width: 560px;
+      height: 315px;
+      border-radius: 14px;
       position: relative;
-      flex-shrink: 0;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.8);
       transition: transform 0.35s ease, box-shadow 0.35s ease;
     }
 
-    .hero-card.focused {
-      transform: scale(1.07);
-      box-shadow: 0 0 0 3px #fff, 0 25px 50px rgba(0,0,0,0.8);
+    .hero.focused {
+      transform: scale(1.06);
+      box-shadow: 0 0 0 3px #fff, 0 30px 60px rgba(0,0,0,0.9);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 60%);
+      border-radius: 14px;
     }
 
     .hero-info {
       position: absolute;
       bottom: 20px;
       left: 20px;
+      z-index: 2;
     }
 
-    .hero-badge {
+    .badge {
       font-size: 12px;
       background: rgba(0,0,0,0.6);
       padding: 4px 10px;
@@ -151,27 +193,36 @@
     }
 
     .hero-title {
-      font-size: 26px;
+      font-size: 28px;
+      font-weight: 600;
       color: #fff;
     }
 
     /* =====================
-       CONTENT TILES
+       TILES
        ===================== */
     .tile {
-      width: 240px;
-      height: 135px;
+      width: 250px;
+      height: 140px;
       border-radius: 10px;
-      background: linear-gradient(135deg, #444, #222);
       position: relative;
-      flex-shrink: 0;
-      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), transparent 55%);
+      border-radius: 10px;
     }
 
     .tile.focused {
       transform: scale(1.12);
-      box-shadow: 0 0 0 3px #e60000, 0 20px 40px rgba(0,0,0,0.7);
-      z-index: 2;
+      box-shadow: 0 0 0 3px #e60000, 0 22px 45px rgba(0,0,0,0.8);
+      z-index: 3;
     }
 
     .tile-info {
@@ -179,178 +230,174 @@
       bottom: 10px;
       left: 10px;
       right: 10px;
-      font-size: 14px;
+      z-index: 2;
+    }
+
+    .title {
+      font-size: 15px;
       color: #fff;
     }
 
     .meta {
       font-size: 11px;
-      color: #ccc;
+      color: #ddd;
       margin-top: 4px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
     }
 
-    /* =====================
-       ACCESSIBILITY HELPER
-       ===================== */
-    .sr-only {
-      position: absolute;
-      left: -9999px;
+    .channel {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #1e90ff;
+      display: inline-block;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- =====================
-       TOP NAVIGATION
-       ===================== -->
-  <header class="top-nav">
-    <nav class="menu">
-      <div class="menu-item active">MI TV</div>
-      <div class="menu-item">GUÍA TV</div>
-      <div class="menu-item">VER AHORA</div>
-    </nav>
+<header>
+  <div class="logo">
+    <div class="logo-circle"></div>
+    <div class="logo-text">TV</div>
+  </div>
 
-    <div class="nav-right">
-      <span id="clock">14:39</span>
-      <span class="live-dot"></span>
+  <nav>
+    <div class="item active">Mein TV</div>
+    <div class="item">TV‑Guide</div>
+    <div class="item">Jetzt ansehen</div>
+  </nav>
+
+  <div class="top-right">
+    <div class="clock">14:39</div>
+    <div class="live-dot"></div>
+    <button class="login-btn" id="loginBtn">Anmelden</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO ROW -->
+  <section class="row" data-row="0">
+    <div class="rail">
+      <div class="hero focused" tabindex="0"
+           style="background-image:url('https://picsum.photos/seed/series1/900/500')">
+        <div class="hero-info">
+          <div class="badge">Aufnahmen</div>
+          <div class="hero-title">The Rookie</div>
+        </div>
+      </div>
     </div>
-  </header>
+  </section>
 
-  <!-- =====================
-       MAIN CONTENT
-       ===================== -->
-  <main>
-
-    <!-- HERO ROW -->
-    <section class="row" data-row="0">
-      <div class="rail">
-        <div class="hero-card focused" tabindex="0">
-          <div class="hero-info">
-            <div class="hero-badge">Grabaciones</div>
-            <div class="hero-title">The Rookie</div>
-          </div>
+  <!-- ROW 1 -->
+  <section class="row" data-row="1">
+    <div class="row-title">Aufnahmen</div>
+    <div class="rail">
+      <div class="tile" tabindex="0"
+           style="background-image:url('https://picsum.photos/seed/serie2/600/400')">
+        <div class="tile-info">
+          <div class="title">Terra X – Wissen</div>
+          <div class="meta"><span class="channel"></span>14:10 Uhr · HD</div>
         </div>
       </div>
-    </section>
 
-    <!-- CONTENT ROW 1 -->
-    <section class="row" data-row="1">
-      <div class="row-title">Grabaciones</div>
-      <div class="rail">
-        <div class="tile" tabindex="0">
-          <div class="tile-info">
-            Como Sapiens
-            <div class="meta">14:10 · HD</div>
-          </div>
-        </div>
-
-        <div class="tile" tabindex="0">
-          <div class="tile-info">
-            La ruleta
-            <div class="meta">14:35</div>
-          </div>
-        </div>
-
-        <div class="tile" tabindex="0">
-          <div class="tile-info">
-            Back to Life
-            <div class="meta">Nueva</div>
-          </div>
-        </div>
-
-        <div class="tile" tabindex="0">
-          <div class="tile-info">
-            Personal Assistant
-            <div class="meta">Serie</div>
-          </div>
+      <div class="tile" tabindex="0"
+           style="background-image:url('https://picsum.photos/seed/serie3/600/400')">
+        <div class="tile-info">
+          <div class="title">Quizshow Spezial</div>
+          <div class="meta"><span class="channel"></span>14:35 Uhr</div>
         </div>
       </div>
-    </section>
 
-    <!-- CONTENT ROW 2 -->
-    <section class="row" data-row="2">
-      <div class="row-title">Tendencias</div>
-      <div class="rail">
-        <div class="tile" tabindex="0">
-          <div class="tile-info">
-            Rick Stein’s India
-            <div class="meta">Documental</div>
-          </div>
-        </div>
-
-        <div class="tile" tabindex="0">
-          <div class="tile-info">
-            Las claves
-            <div class="meta">Actualidad</div>
-          </div>
+      <div class="tile" tabindex="0"
+           style="background-image:url('https://picsum.photos/seed/serie4/600/400')">
+        <div class="tile-info">
+          <div class="title">Drama Serie</div>
+          <div class="meta">Neu</div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </main>
+  <!-- ROW 2 -->
+  <section class="row" data-row="2">
+    <div class="row-title">Trends</div>
+    <div class="rail">
+      <div class="tile" tabindex="0"
+           style="background-image:url('https://picsum.photos/seed/serie5/600/400')">
+        <div class="tile-info">
+          <div class="title">Dokumentation</div>
+          <div class="meta">Beliebt</div>
+        </div>
+      </div>
 
-  <!-- =====================
-       JAVASCRIPT LOGIC
-       ===================== -->
-  <script>
-    const rows = Array.from(document.querySelectorAll(".row"));
-    let currentRow = 0;
-    let currentIndex = 0;
+      <div class="tile" tabindex="0"
+           style="background-image:url('https://picsum.photos/seed/serie6/600/400')">
+        <div class="tile-info">
+          <div class="title">Spielfilm</div>
+          <div class="meta">Top 10</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    function updateFocus() {
-      rows.forEach((row, rIndex) => {
-        const items = row.querySelectorAll(".hero-card, .tile");
-        items.forEach((item, iIndex) => {
-          item.classList.toggle(
-            "focused",
-            rIndex === currentRow && iIndex === currentIndex
-          );
-          if (rIndex === currentRow && iIndex === currentIndex) {
-            item.focus();
-          }
-        });
+</main>
+
+<script>
+  const rows = [...document.querySelectorAll(".row")];
+  let rowIndex = 0;
+  let itemIndex = 0;
+
+  function updateFocus() {
+    rows.forEach((row, r) => {
+      const items = row.querySelectorAll(".hero, .tile");
+      items.forEach((item, i) => {
+        item.classList.toggle("focused", r === rowIndex && i === itemIndex);
+        if (r === rowIndex && i === itemIndex) item.focus();
       });
+    });
+  }
+
+  document.addEventListener("keydown", e => {
+    const items = rows[rowIndex].querySelectorAll(".hero, .tile");
+
+    switch (e.key) {
+      case "ArrowRight":
+        itemIndex = Math.min(itemIndex + 1, items.length - 1);
+        break;
+      case "ArrowLeft":
+        itemIndex = Math.max(itemIndex - 1, 0);
+        break;
+      case "ArrowDown":
+        if (rows[rowIndex + 1]) {
+          rowIndex++;
+          itemIndex = 0;
+        }
+        break;
+      case "ArrowUp":
+        if (rows[rowIndex - 1]) {
+          rowIndex--;
+          itemIndex = 0;
+        }
+        break;
+      case "Enter":
+        console.log("Content wird abgespielt …");
+        break;
     }
 
-    document.addEventListener("keydown", (e) => {
-      const items = rows[currentRow].querySelectorAll(".hero-card, .tile");
-
-      switch (e.key) {
-        case "ArrowRight":
-          currentIndex = Math.min(currentIndex + 1, items.length - 1);
-          break;
-
-        case "ArrowLeft":
-          currentIndex = Math.max(currentIndex - 1, 0);
-          break;
-
-        case "ArrowDown":
-          if (rows[currentRow + 1]) {
-            currentRow++;
-            currentIndex = 0;
-          }
-          break;
-
-        case "ArrowUp":
-          if (rows[currentRow - 1]) {
-            currentRow--;
-            currentIndex = 0;
-          }
-          break;
-
-        case "Enter":
-          console.log("Playing content...");
-          alert("Playing content…");
-          break;
-      }
-
-      updateFocus();
-    });
-
-    // Initial focus
     updateFocus();
-  </script>
+  });
+
+  updateFocus();
+
+  document.getElementById("loginBtn").addEventListener("click", () => {
+    alert("Hier kann später das Preference Center eingebunden werden.");
+  });
+</script>
 
 </body>
 </html>
