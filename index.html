@@ -1,415 +1,1135 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vodafone TV – Demo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TV Home Demo</title>
+  <style>
+    :root{
+      --bg-black:#050306;
+      --bg-deep:#12040b;
+      --bg-red:#2a0008;
+      --bg-wine:#3d0914;
+      --panel:rgba(10,10,15,0.46);
+      --panel-2:rgba(20,20,28,0.58);
+      --line:rgba(255,255,255,0.08);
+      --line-soft:rgba(255,255,255,0.04);
+      --text:#ffffff;
+      --muted:#c6c6cd;
+      --muted-2:#9d9ea7;
+      --focus:#f8f8fb;
+      --focus-glow:rgba(255,255,255,0.28);
+      --shadow:0 14px 35px rgba(0,0,0,0.38);
+      --card-radius:6px;
+      --nav-size:84px;
+      --top-h:88px;
+      --gap:10px;
+      --section-h:34px;
+      --apps-w:120px;
+      --left-rail-w:92px;
+      --hero-w:365px;
+      --hero-h:210px;
+      --left-lower-h:150px;
+      --middle-w:260px;
+      --middle-h:100px;
+      --poster-w:150px;
+      --poster-h:210px;
+      --screen-w:1365px;
+      --screen-h:768px;
+      --font: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
 
-<style>
-:root{
-  --bg0:#09000c;
-  --bg1:#1a001f;
-  --bg2:#3b0b1f;
-  --txt:#ffffff;
-  --muted:#c3bcc7;
-  --accent:#e60000;
-  --focus:#f0d89a;
-  --radius:4px;
-  --radiusSm:3px;
-  --navH:64px;
-  --railW:54px;
-}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      overflow:hidden;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 620px at 16% 88%, rgba(160,0,24,0.25), transparent 56%),
+        radial-gradient(860px 420px at 72% 10%, rgba(95,12,28,0.30), transparent 64%),
+        radial-gradient(780px 400px at 42% 0%, rgba(104,0,30,0.18), transparent 62%),
+        linear-gradient(180deg, #1a0108 0%, #070307 52%, #020203 100%);
+      display:grid;
+      place-items:center;
+    }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
+    .tv-screen{
+      position:relative;
+      width:min(100vw, calc(100vh * 16 / 9));
+      aspect-ratio:16 / 9;
+      overflow:hidden;
+      background:
+        radial-gradient(120% 100% at 50% 8%, rgba(255,255,255,0.05), transparent 45%),
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.03),
+        inset 0 -90px 120px rgba(0,0,0,0.2),
+        0 30px 60px rgba(0,0,0,0.5);
+    }
 
-body{
-  font-family:Segoe UI, Arial, sans-serif;
-  background:
-    radial-gradient(1000px 520px at 22% 0%, rgba(116,20,76,.55) 0%, transparent 58%),
-    radial-gradient(800px 400px at 100% 0%, rgba(90,0,40,.35) 0%, transparent 55%),
-    linear-gradient(180deg,#14000f 0%, #070008 65%, #030003 100%);
-  color:var(--txt);
-  overflow:hidden;
-}
+    .tv-screen::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(900px 400px at 38% 40%, rgba(255,60,80,0.12), transparent 58%),
+        radial-gradient(460px 320px at 85% 18%, rgba(255,255,255,0.04), transparent 60%),
+        radial-gradient(600px 380px at 24% 6%, rgba(255,255,255,0.025), transparent 45%);
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
 
-/* ================= HEADER ================= */
-header{
-  height:var(--navH);
-  display:flex;
-  align-items:center;
-  padding:0 22px;
-  background:linear-gradient(to bottom,rgba(0,0,0,.38),rgba(0,0,0,.06));
-}
+    .tv-screen::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), transparent 16%, transparent 80%, rgba(0,0,0,0.25)),
+        radial-gradient(circle at center, transparent 58%, rgba(0,0,0,0.32) 100%);
+      pointer-events:none;
+    }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  min-width:160px;
-  font-weight:600;
-  font-size:13px;
-  opacity:.96;
-}
-.brand-dot{
-  width:15px;
-  height:15px;
-  border-radius:50%;
-  background:var(--accent);
-  box-shadow:0 0 10px rgba(230,0,0,.65);
-}
-.brand span{font-weight:500}
+    .app{
+      position:relative;
+      z-index:1;
+      width:100%;
+      height:100%;
+      padding:28px 34px 28px 34px;
+      display:grid;
+      grid-template-rows: var(--top-h) 1fr 120px;
+      gap:0;
+    }
 
-.top-nav{
-  margin:0 auto;
-  display:flex;
-  gap:62px;
-  letter-spacing:.3px;
-  font-size:12px;
-  text-transform:uppercase;
-}
-.top-nav .active{
-  position:relative;
-  font-weight:600;
-}
-.top-nav .active::after{
-  content:"";
-  position:absolute;
-  bottom:-10px;
-  left:50%;
-  transform:translateX(-50%);
-  width:34px;
-  height:2px;
-  background:#fff;
-  border-radius:2px;
-}
+    /* Top Bar */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 6px 0 6px;
+    }
 
-.top-right{
-  min-width:160px;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:10px;
-}
-.clock{
-  font-size:11px;
-  opacity:.95;
-}
-.live-dot{
-  width:9px;
-  height:9px;
-  border-radius:50%;
-  background:var(--accent);
-  box-shadow:0 0 8px rgba(230,0,0,.7);
-}
-.profile-btn{
-  padding:5px 11px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.35);
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  font-size:11px;
-}
+    .top-left{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
 
-/* ================= APP ================= */
-.app{
-  height:calc(100vh - var(--navH));
-  display:grid;
-  grid-template-columns:var(--railW) 1fr;
-}
+    .top-left .search-text{
+      color:rgba(255,255,255,0.88);
+      font-weight:400;
+      font-size:clamp(18px,1.5vw,28px);
+      letter-spacing:.01em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      text-shadow:0 1px 2px rgba(0,0,0,.35);
+    }
 
-/* LEFT RAIL */
-.rail{
-  padding-top:8px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:10px;
-  background:linear-gradient(to right,rgba(0,0,0,.26),transparent);
-}
-.rail-btn{
-  width:34px;
-  height:34px;
-  border-radius:3px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.04);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.rail-btn svg{
-  width:16px;
-  height:16px;
-  stroke:#fff;
-  fill:none;
-  stroke-width:1.8;
-  opacity:.95;
-}
-.rail-btn.focused{
-  border-color:var(--focus);
-  box-shadow:0 0 0 1px rgba(240,216,154,.25);
-}
+    .top-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding-right:4px;
+      font-size:clamp(18px,1.5vw,28px);
+      font-weight:600;
+      text-shadow:0 1px 2px rgba(0,0,0,.4);
+    }
 
-/* CONTENT */
-main{
-  padding:8px 14px 14px 6px;
-  overflow:hidden;
-}
+    .vodafone-dot{
+      width:24px;
+      height:24px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 38% 38%, #ffffff 0 14%, transparent 15% 100%),
+        conic-gradient(from 300deg, #ef2f2f 0 78%, #fff 78% 90%, #ef2f2f 90% 100%);
+      box-shadow:0 0 10px rgba(239,47,47,.35);
+    }
 
-.top-grid{
-  display:grid;
-  grid-template-columns:430px 1fr;
-  gap:10px;
-}
-.stack{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.grid-right{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-}
+    /* Layout */
+    .content{
+      display:grid;
+      grid-template-columns: var(--left-rail-w) 1fr;
+      gap:18px;
+      align-items:start;
+    }
 
-/* CARDS */
-.card{
-  position:relative;
-  border-radius:var(--radius);
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.06);
-  background:#111;
-  transition:.2s;
-}
-.card.focused{
-  transform:scale(1.015);
-  box-shadow:0 0 0 2px var(--focus);
-  border-color:var(--focus);
-  z-index:5;
-}
+    .rail{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      padding-top:30px;
+    }
 
-.hero{height:170px}
-.feature{height:118px}
-.small{height:81px}
-.tile{width:220px;height:120px}
+    .rail-btn{
+      width:var(--nav-size);
+      height:var(--nav-size);
+      background:
+        linear-gradient(180deg, rgba(45,47,60,0.52), rgba(8,8,13,0.68));
+      border:1px solid var(--line-soft);
+      border-radius:0;
+      display:grid;
+      place-items:center;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        inset 0 -18px 40px rgba(0,0,0,0.18);
+      transition:transform .18s ease, filter .18s ease, box-shadow .18s ease, border-color .18s ease;
+      cursor:pointer;
+      user-select:none;
+    }
 
-.poster img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  filter:saturate(.95) contrast(1.02) brightness(.92);
-}
+    .rail-btn .icon{
+      width:34px;
+      height:34px;
+      color:#f7f7fa;
+      opacity:.95;
+    }
 
-.card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,.18) 54%, rgba(0,0,0,0) 100%);
-}
+    .rail-btn.active-look{
+      background:
+        linear-gradient(180deg, rgba(61,64,79,0.60), rgba(15,15,22,0.78));
+    }
 
-.overlay{
-  position:absolute;
-  left:10px;
-  bottom:8px;
-  right:10px;
-}
-.title{
-  font-size:14px;
-  font-weight:500;
-  line-height:1.1;
-  text-shadow:0 1px 2px rgba(0,0,0,.7);
-}
-.small .title,.tile .title{
-  font-size:11px;
-  font-weight:500;
-}
+    .main{
+      display:grid;
+      grid-template-columns: var(--hero-w) var(--middle-w) calc(var(--poster-w) * 2 + var(--gap)) var(--apps-w);
+      grid-template-rows: var(--section-h) calc(var(--hero-h) + var(--gap) + var(--left-lower-h));
+      column-gap:var(--gap);
+      row-gap:8px;
+      align-items:start;
+    }
 
-.meta{
-  display:none;
-  font-size:10px;
-  opacity:.9;
-  margin-top:3px;
-  color:#d9d6dd;
-}
-.recording .meta{display:block}
+    .section{
+      align-self:end;
+      color:rgba(255,255,255,0.92);
+      font-size:clamp(18px,1.25vw,22px);
+      font-weight:700;
+      letter-spacing:.02em;
+      text-align:center;
+      text-shadow:0 1px 2px rgba(0,0,0,.35);
+    }
 
-.badge{
-  position:absolute;
-  top:8px;
-  left:8px;
-  background:rgba(255,255,255,.92);
-  color:#222;
-  padding:2px 6px;
-  border-radius:2px;
-  font-size:9px;
-  font-weight:700;
-  letter-spacing:.2px;
-}
+    .left-stack{
+      display:grid;
+      grid-template-rows: var(--hero-h) var(--left-lower-h);
+      gap:var(--gap);
+    }
 
-/* SECTION */
-.section{margin-top:16px}
-.section-title{
-  margin-bottom:8px;
-  font-size:13px;
-  letter-spacing:.4px;
-  color:#ddd7df;
-}
-.carousel{display:flex;gap:8px}
+    .middle-stack{
+      display:grid;
+      grid-template-rows: repeat(4, var(--middle-h));
+      gap:var(--gap);
+    }
 
-/* PROFILE */
-#profileOverlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.75);
-  backdrop-filter:blur(14px);
-  display:none;
-}
-#profileOverlay.active{display:block}
-.profile-box{
-  width:900px;
-  max-width:90%;
-  margin:80px auto;
-  background:#0c0c14;
-  border-radius:18px;
-  padding:28px;
-}
+    .poster-grid{
+      display:grid;
+      grid-template-columns: repeat(2, var(--poster-w));
+      grid-template-rows: repeat(2, var(--poster-h));
+      gap:var(--gap);
+    }
 
-/* FOCUS */
-[tabindex="0"]:focus{outline:none}
-</style>
+    .apps-stack{
+      display:grid;
+      grid-template-rows: repeat(4, 100px);
+      gap:var(--gap);
+    }
+
+    /* Generic tile */
+    .tile{
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--card-radius);
+      border:1px solid rgba(255,255,255,0.05);
+      box-shadow:var(--shadow);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
+        linear-gradient(180deg, rgba(12,12,18,0.12), rgba(0,0,0,0.3));
+      transition:
+        transform .18s ease,
+        filter .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease,
+        opacity .18s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .tile::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.32));
+      pointer-events:none;
+    }
+
+    .tile::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+      pointer-events:none;
+    }
+
+    .tile:hover{
+      filter:brightness(1.04);
+    }
+
+    .tile.focused,
+    .rail-btn.focused{
+      transform:scale(1.018);
+      z-index:9;
+      border-color:rgba(255,255,255,0.92);
+      box-shadow:
+        0 0 0 2px rgba(255,255,255,0.92),
+        0 0 24px var(--focus-glow),
+        0 16px 40px rgba(0,0,0,0.55);
+      filter:brightness(1.08);
+    }
+
+    .tile.pressed,
+    .rail-btn.pressed{
+      animation:pressPulse .28s ease;
+    }
+
+    @keyframes pressPulse{
+      0%{transform:scale(1.018)}
+      45%{transform:scale(1.045)}
+      100%{transform:scale(1.018)}
+    }
+
+    .tile-content{
+      position:absolute;
+      inset:0;
+      padding:12px 14px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      z-index:2;
+    }
+
+    .meta-top{
+      position:absolute;
+      top:10px;
+      left:12px;
+      right:12px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      z-index:3;
+      font-size:12px;
+      color:rgba(255,255,255,0.82);
+      letter-spacing:.02em;
+    }
+
+    .kicker{
+      font-size:clamp(15px,0.95vw,18px);
+      font-weight:400;
+      color:rgba(255,255,255,0.9);
+      margin-bottom:2px;
+      text-shadow:0 1px 2px rgba(0,0,0,.45);
+    }
+
+    .title{
+      font-size:clamp(26px,1.65vw,36px);
+      line-height:1.02;
+      font-weight:600;
+      text-shadow:0 2px 10px rgba(0,0,0,.42);
+    }
+
+    .title.small{
+      font-size:clamp(14px,1vw,18px);
+      font-weight:500;
+      line-height:1.15;
+    }
+
+    .subtitle{
+      font-size:11px;
+      font-weight:700;
+      color:rgba(255,255,255,.74);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .time{
+      font-size:18px;
+      font-weight:500;
+      color:#dddde2;
+      margin-bottom:6px;
+    }
+
+    /* Artwork compositions */
+    .hero{
+      background:
+        radial-gradient(190px 120px at 30% 20%, rgba(255,120,160,0.65), transparent 48%),
+        radial-gradient(260px 170px at 66% 40%, rgba(255,30,30,0.55), transparent 54%),
+        linear-gradient(135deg, rgba(68,0,8,0.98), rgba(120,7,19,0.94) 48%, rgba(190,26,31,0.9) 100%);
+    }
+
+    .hero .voice-art{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(110deg, transparent 0 46%, rgba(255,255,255,0.08) 47% 48%, transparent 49%),
+        linear-gradient(70deg, transparent 0 60%, rgba(255,255,255,0.08) 61% 62%, transparent 63%),
+        radial-gradient(circle at 26% 25%, rgba(255,255,255,0.82) 0 2px, transparent 3px 100%),
+        radial-gradient(circle at 34% 15%, rgba(255,255,255,0.42) 0 2px, transparent 3px 100%),
+        radial-gradient(circle at 54% 18%, rgba(255,255,255,0.5) 0 2px, transparent 3px 100%),
+        radial-gradient(circle at 64% 28%, rgba(255,255,255,0.32) 0 2px, transparent 3px 100%);
+      opacity:.9;
+    }
+
+    .hero-logo{
+      position:absolute;
+      top:28px;
+      left:26px;
+      transform:rotate(-7deg);
+      font-weight:800;
+      line-height:.88;
+      text-transform:none;
+      letter-spacing:-0.03em;
+      text-shadow:
+        0 3px 0 rgba(125,0,5,0.9),
+        0 8px 14px rgba(0,0,0,0.38);
+      color:#ff2323;
+      -webkit-text-stroke: 2px #f8f6f7;
+      font-size:clamp(34px,2.7vw,58px);
+    }
+
+    .hero-logo span{
+      display:block;
+      font-size:clamp(20px,1.1vw,24px);
+      color:#f0efef;
+      -webkit-text-stroke: 0;
+      margin-left:44px;
+      margin-bottom:3px;
+      text-transform:lowercase;
+      font-weight:700;
+      transform:rotate(4deg);
+    }
+
+    .badge-circle{
+      position:absolute;
+      right:10px;
+      bottom:10px;
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 30% 36%, #fff 0 16%, transparent 17%),
+        linear-gradient(135deg, #ffc83d, #e23a3a 52%, #0b0b0b 53%, #0b0b0b 70%, #fff 71%, #fff 100%);
+      opacity:.95;
+      box-shadow:0 0 8px rgba(255,255,255,0.25);
+    }
+
+    .show-card{
+      background:
+        radial-gradient(220px 140px at 18% 70%, rgba(255,255,255,0.16), transparent 50%),
+        linear-gradient(180deg, rgba(98,79,64,0.72), rgba(48,34,30,0.92));
+    }
+
+    .person{
+      position:absolute;
+      left:90px;
+      bottom:0;
+      width:128px;
+      height:148px;
+      background:
+        radial-gradient(circle at 62% 18%, #efcfb1 0 12px, transparent 13px),
+        radial-gradient(circle at 60% 16%, #9d7d66 0 15px, transparent 16px),
+        linear-gradient(180deg, transparent 0 30%, #23354f 30% 100%);
+      border-radius:48% 48% 10% 10% / 22% 22% 6% 6%;
+      box-shadow:0 10px 18px rgba(0,0,0,.35);
+      transform:scale(1.12);
+      filter:brightness(.95);
+    }
+
+    .dog{
+      position:absolute;
+      left:52px;
+      bottom:12px;
+      width:54px;
+      height:46px;
+      background:
+        radial-gradient(circle at 38% 34%, #f0d0a8 0 10px, transparent 11px),
+        radial-gradient(circle at 66% 42%, #d5a26f 0 14px, transparent 15px),
+        linear-gradient(180deg, #aa794d, #7a532f);
+      border-radius:46% 42% 40% 38%;
+      transform:rotate(8deg);
+      box-shadow:0 6px 12px rgba(0,0,0,.3);
+    }
+
+    .program{
+      background:
+        linear-gradient(100deg, rgba(20,20,25,0.85), rgba(20,20,25,0.32)),
+        radial-gradient(160px 70px at 78% 50%, rgba(80,115,190,0.38), transparent 60%),
+        linear-gradient(90deg, #20232f, #303645 46%, #5f7ba8 100%);
+    }
+
+    .program.echt{
+      background:
+        linear-gradient(100deg, rgba(20,20,25,0.85), rgba(20,20,25,0.3)),
+        radial-gradient(160px 90px at 84% 50%, rgba(255,168,188,0.45), transparent 60%),
+        linear-gradient(90deg, #252531, #655445 50%, #d89aa9 100%);
+    }
+
+    .program.gross{
+      background:
+        linear-gradient(100deg, rgba(18,18,22,0.84), rgba(18,18,22,0.28)),
+        radial-gradient(160px 90px at 82% 52%, rgba(255,100,80,0.36), transparent 60%),
+        linear-gradient(90deg, #22242c, #3f434a 54%, #86504b 100%);
+    }
+
+    .program.sturm{
+      background:
+        linear-gradient(100deg, rgba(18,18,22,0.84), rgba(18,18,22,0.28)),
+        radial-gradient(160px 90px at 83% 54%, rgba(172,226,255,0.42), transparent 60%),
+        linear-gradient(90deg, #1c1f24, #53515a 52%, #8fc8e7 100%);
+    }
+
+    .channel-logo{
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.78);
+    }
+
+    .poster{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), transparent),
+        linear-gradient(180deg, #2b1e1c, #171215 72%, #0f0f12);
+    }
+
+    .poster.man{
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.28)),
+        radial-gradient(160px 120px at 52% 26%, rgba(255,255,255,.1), transparent 60%),
+        linear-gradient(180deg, #2d2f36 0%, #121318 64%, #09090c 100%);
+    }
+
+    .poster.man .figure{
+      position:absolute;
+      left:48px;
+      top:24px;
+      width:54px;
+      height:150px;
+      background:
+        radial-gradient(circle at 52% 12%, #f0cab7 0 9px, transparent 10px),
+        radial-gradient(circle at 52% 11%, #7f7f82 0 13px, transparent 14px),
+        linear-gradient(180deg, transparent 0 14%, #0d0d10 14% 100%);
+      border-radius:42% 42% 14% 14% / 12% 12% 5% 5%;
+      box-shadow:0 10px 14px rgba(0,0,0,.4);
+    }
+
+    .poster.man .poster-title{
+      position:absolute;
+      bottom:18px;
+      left:14px;
+      right:14px;
+      text-align:center;
+      font-size:14px;
+      line-height:1.12;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:#e7d2a5;
+      text-shadow:0 2px 6px rgba(0,0,0,.4);
+    }
+
+    .poster.paw{
+      background:
+        radial-gradient(120px 80px at 55% 24%, rgba(77,145,255,0.32), transparent 55%),
+        linear-gradient(180deg, #1d3562 0%, #30599d 46%, #f2be3d 47%, #d13b32 100%);
+    }
+
+    .paw-badge{
+      position:absolute;
+      top:18px;
+      left:14px;
+      right:14px;
+      font-size:42px;
+      font-weight:900;
+      color:#1e69d8;
+      text-align:center;
+      text-shadow:
+        0 0 0 #fff,
+        2px 2px 0 #fff,
+        -2px 2px 0 #fff,
+        2px -2px 0 #fff,
+        -2px -2px 0 #fff,
+        0 6px 18px rgba(0,0,0,.25);
+      letter-spacing:-.03em;
+    }
+
+    .paw-sub{
+      position:absolute;
+      top:78px;
+      left:24px;
+      right:24px;
+      text-align:center;
+      background:#f0c630;
+      color:#9c1618;
+      font-weight:800;
+      font-size:14px;
+      padding:4px 6px;
+      border-radius:4px;
+      text-transform:uppercase;
+    }
+
+    .pup{
+      position:absolute;
+      width:26px;
+      height:34px;
+      border-radius:40% 40% 35% 35%;
+      background:
+        radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px),
+        linear-gradient(180deg, #cf8d4d, #7c4f29);
+      box-shadow:0 5px 10px rgba(0,0,0,.25);
+    }
+    .p1{left:18px; top:34px;}
+    .p2{left:56px; top:26px; background:radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px), linear-gradient(180deg, #a15e2d, #573117);}
+    .p3{left:94px; top:34px; background:radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px), linear-gradient(180deg, #dcbdb0, #7e6a64);}
+    .p4{left:46px; top:110px; background:radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px), linear-gradient(180deg, #c8853f, #5b3418);}
+    .p5{left:84px; top:116px; background:radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px), linear-gradient(180deg, #815d43, #3d2b20);}
+
+    .poster.legs{
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.32)),
+        linear-gradient(180deg, #7ea9ae 0%, #8fb5b9 44%, #47686c 45%, #122126 100%);
+    }
+
+    .legs-shape{
+      position:absolute;
+      left:48px;
+      top:34px;
+      width:58px;
+      height:142px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.2), transparent 20%),
+        linear-gradient(180deg, #d6b5a0 0%, #d2ab95 68%, #6d4d38 68%, #5b3d2d 100%);
+      clip-path:polygon(34% 0, 66% 0, 78% 16%, 65% 100%, 52% 100%, 58% 18%, 42% 18%, 48% 100%, 35% 100%, 22% 16%);
+      box-shadow:0 8px 16px rgba(0,0,0,.22);
+    }
+
+    .old-title{
+      position:absolute;
+      bottom:16px;
+      left:18px;
+      font-size:34px;
+      color:#eff1ea;
+      letter-spacing:.06em;
+      font-weight:300;
+      text-transform:uppercase;
+      text-shadow:0 2px 8px rgba(0,0,0,.35);
+    }
+
+    .poster.bodyguard{
+      background:
+        radial-gradient(160px 100px at 28% 76%, rgba(255,140,20,0.24), transparent 60%),
+        linear-gradient(180deg, #c49c1f 0%, #d4b53a 18%, #553317 18.5%, #26160d 100%);
+    }
+
+    .bodyguard-title{
+      position:absolute;
+      top:20px;
+      left:12px;
+      right:12px;
+      font-size:18px;
+      line-height:1;
+      font-weight:900;
+      text-transform:uppercase;
+      color:#251b13;
+      text-align:center;
+      text-shadow:0 1px 0 rgba(255,255,255,.15);
+    }
+
+    .silhouette{
+      position:absolute;
+      bottom:18px;
+      width:42px;
+      height:88px;
+      border-radius:30% 30% 12% 12%;
+      background:
+        radial-gradient(circle at 50% 12%, #efcab2 0 7px, transparent 8px),
+        linear-gradient(180deg, transparent 0 15%, #351f15 15% 100%);
+      box-shadow:0 5px 10px rgba(0,0,0,.3);
+    }
+    .s1{left:28px}
+    .s2{left:64px; height:94px}
+    .s3{left:98px; height:82px}
+
+    /* App tiles */
+    .app-tile{
+      display:grid;
+      place-items:center;
+      color:#111;
+      font-weight:800;
+      letter-spacing:.01em;
+      font-size:25px;
+      background:#fff;
+      text-shadow:none;
+    }
+
+    .netflix{
+      color:#d91616;
+      font-size:30px;
+      font-weight:800;
+      letter-spacing:.02em;
+    }
+
+    .youtube{
+      gap:10px;
+    }
+
+    .yt-wrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:27px;
+      color:#111;
+      font-weight:700;
+    }
+
+    .yt-icon{
+      width:28px;
+      height:20px;
+      border-radius:6px;
+      background:#df1515;
+      position:relative;
+    }
+
+    .yt-icon::before{
+      content:"";
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-40%,-50%);
+      border-left:8px solid #fff;
+      border-top:5px solid transparent;
+      border-bottom:5px solid transparent;
+    }
+
+    .dazn{
+      background:#101215;
+      color:#fff;
+      font-size:22px;
+      letter-spacing:.14em;
+      position:relative;
+    }
+
+    .dazn::before{
+      content:"";
+      position:absolute;
+      inset:16px;
+      border:3px solid #fff;
+      clip-path:polygon(0 20%, 22% 20%, 22% 0, 78% 0, 78% 20%, 100% 20%, 100% 80%, 78% 80%, 78% 100%, 22% 100%, 22% 80%, 0 80%);
+      opacity:.9;
+    }
+
+    .prime{
+      background:#1f8bd9;
+      color:#fff;
+      font-size:18px;
+      line-height:1.02;
+      font-weight:700;
+      text-align:center;
+      position:relative;
+    }
+
+    .prime::after{
+      content:"";
+      position:absolute;
+      bottom:21px;
+      left:22px;
+      right:22px;
+      height:12px;
+      border-bottom:3px solid rgba(255,255,255,.95);
+      border-radius:0 0 50% 50%;
+      transform:rotate(-3deg);
+      opacity:.9;
+    }
+
+    /* Bottom info */
+    .info{
+      display:flex;
+      align-items:flex-start;
+      padding-left:126px;
+      padding-top:22px;
+    }
+
+    .info-inner{
+      max-width:420px;
+    }
+
+    .info h2{
+      margin:0 0 18px 0;
+      font-size:clamp(24px,1.7vw,34px);
+      font-weight:300;
+      color:#f2f2f4;
+      text-shadow:0 1px 2px rgba(0,0,0,.35);
+    }
+
+    .info p{
+      margin:0;
+      font-size:clamp(16px,1.04vw,19px);
+      line-height:1.5;
+      color:rgba(255,255,255,0.92);
+      text-shadow:0 1px 2px rgba(0,0,0,.35);
+    }
+
+    /* Small helpers */
+    svg{display:block}
+    .clock-dot{
+      width:14px;height:14px;border-radius:50%;
+      border:2px solid rgba(255,255,255,.8);
+      opacity:.9;
+      position:relative;
+    }
+    .clock-dot::before{
+      content:"";
+      position:absolute;
+      width:1.5px;height:4px;background:#fff;
+      left:50%;top:2px;transform:translateX(-50%);
+    }
+    .clock-dot::after{
+      content:"";
+      position:absolute;
+      width:4px;height:1.5px;background:#fff;
+      left:50%;top:50%;transform:translateY(-50%);
+    }
+
+    .muted{
+      color:rgba(255,255,255,.72);
+    }
+
+    .hd{
+      font-size:12px;
+      font-weight:800;
+      color:rgba(255,255,255,.88);
+      letter-spacing:.03em;
+    }
+
+    @media (max-width: 1200px){
+      .app{padding:20px 22px}
+      .main{
+        transform:scale(.92);
+        transform-origin:top left;
+      }
+      .info{padding-left:112px}
+    }
+
+    @media (max-width: 980px){
+      .main{
+        transform:scale(.78);
+        transform-origin:top left;
+      }
+      .top-left .search-text,
+      .top-right{
+        font-size:16px;
+      }
+      .info{
+        padding-left:100px;
+        padding-top:8px;
+      }
+      .info p{font-size:14px}
+    }
+  </style>
 </head>
-
 <body>
+  <div class="tv-screen">
+    <div class="app">
 
-<header>
-  <div class="brand"><div class="brand-dot"></div>Vodafone <span>TV</span></div>
-  <div class="top-nav">
-    <div class="active">MEIN TV</div>
-    <div>TV-GUIDE</div>
-    <div>JETZT ANSEHEN</div>
-  </div>
-  <div class="top-right">
-    <div class="clock" id="clock"></div>
-    <div class="live-dot"></div>
-    <button class="profile-btn" id="profileBtn" tabindex="0">Mein Profil</button>
-  </div>
-</header>
-
-<div class="app">
-  <aside class="rail">
-    <button class="rail-btn focused" tabindex="0"><svg viewBox="0 0 24 24"><path d="M3 7h18"/><path d="M5 7v10h14V7"/><path d="M10 20h4"/></svg></button>
-    <button class="rail-btn" tabindex="0"><svg viewBox="0 0 24 24"><path d="M7 5h10"/><path d="M7 12h10"/><path d="M7 19h10"/></svg></button>
-    <button class="rail-btn" tabindex="0"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2"/></svg></button>
-    <button class="rail-btn" tabindex="0"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a1.7 1.7 0 1 1-2.4 2.4l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a1.7 1.7 0 1 1-3.4 0v-.2a1 1 0 0 0-.7-.9 1 1 0 0 0-1.1.2l-.1.1a1.7 1.7 0 1 1-2.4-2.4l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H4a1.7 1.7 0 1 1 0-3.4h.2a1 1 0 0 0 .9-.7 1 1 0 0 0-.2-1.1l-.1-.1a1.7 1.7 0 1 1 2.4-2.4l.1.1a1 1 0 0 0 1.1.2H9a1 1 0 0 0 .6-.9V4a1.7 1.7 0 1 1 3.4 0v.2a1 1 0 0 0 .7.9 1 1 0 0 0 1.1-.2l.1-.1a1.7 1.7 0 1 1 2.4 2.4l-.1.1a1 1 0 0 0-.2 1.1V9c0 .4.2.8.6.9h.2A1.7 1.7 0 1 1 20 13.3h-.2a1 1 0 0 0-.9.7Z"/></svg></button>
-  </aside>
-
-  <main>
-    <section class="top-grid">
-      <div class="stack">
-        <div class="card hero recording focused" tabindex="0" data-title="The Rookie">
-          <div class="poster"><img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1600&q=80"></div>
-          <div class="badge">Grabaciones</div>
-          <div class="overlay">
-            <div class="title">The Rookie</div>
-            <div class="meta">14:10 Uhr</div>
+      <!-- Top bar -->
+      <header class="topbar">
+        <div class="top-left">
+          <div aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2.8l1.2 1.92a7.43 7.43 0 0 1 2.06.86l2.16-.62 1.5 2.6-1.63 1.54c.12.4.2.83.23 1.26l1.4 1.7-1.4 2.42-2.22-.18c-.52.43-1.1.77-1.73 1.01L12 21.2l-2.02-1.9a7.48 7.48 0 0 1-1.94-.89l-2.2.57-1.44-2.5 1.6-1.6A7.3 7.3 0 0 1 6 13.6l-1.4-1.66 1.42-2.47 2.14.12c.55-.47 1.16-.83 1.83-1.07L12 2.8Z" stroke="white" stroke-width="1.4" opacity=".9"/>
+              <circle cx="12" cy="12" r="3.2" stroke="white" stroke-width="1.4" opacity=".9"/>
+            </svg>
           </div>
-        </div>
-
-        <div class="card feature recording" tabindex="0" data-title="España desde el aire">
-          <div class="poster"><img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1600&q=80"></div>
-          <div class="overlay">
-            <div class="title">España desde el aire</div>
-            <div class="meta">Grabaciones</div>
+          <div aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="10.5" cy="10.5" r="6.2" stroke="white" stroke-width="1.6" opacity=".92"/>
+              <path d="M15.3 15.3L20.2 20.2" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity=".92"/>
+            </svg>
           </div>
+          <div class="search-text">Suche nach Filmen, Schauspielern, Serien...</div>
         </div>
-      </div>
 
-      <div class="grid-right">
-        <div class="card small" tabindex="0" data-title="Cosmo Sapiens"><div class="poster"><img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80"></div><div class="badge">1</div><div class="overlay"><div class="title">Cosmo Sapiens</div></div></div>
-        <div class="card small" tabindex="0" data-title="Carnets Sapiens"><div class="poster"><img src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=1200&q=80"></div><div class="badge">2</div><div class="overlay"><div class="title">Carnets Sapiens</div></div></div>
-        <div class="card small" tabindex="0" data-title="En terapia"><div class="poster"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">En terapia</div></div></div>
-        <div class="card small" tabindex="0" data-title="La ruleta de la suerte"><div class="poster"><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80"></div><div class="badge">HD</div><div class="overlay"><div class="title">La ruleta de la suerte</div></div></div>
-        <div class="card small" tabindex="0" data-title="Back to Life"><div class="poster"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">Back to Life</div></div></div>
-        <div class="card small" tabindex="0" data-title="Personal Assistant"><div class="poster"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"></div><div class="overlay"><div class="title">Personal Assistant</div></div></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-title">Grabaciones</div>
-      <div class="carousel">
-        <div class="card tile" tabindex="0" data-title="The Rookie">
-          <div class="poster"><img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80"></div>
-          <div class="overlay"><div class="title">The Rookie</div></div>
+        <div class="top-right">
+          <div class="clock-dot" aria-hidden="true"></div>
+          <div id="clock">15:39</div>
+          <div class="vodafone-dot" aria-hidden="true"></div>
         </div>
-        <div class="card tile" tabindex="0" data-title="España desde el aire">
-          <div class="poster"><img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1200&q=80"></div>
-          <div class="overlay"><div class="title">España desde el aire</div></div>
+      </header>
+
+      <!-- Main content -->
+      <main class="content">
+        <!-- Left rail -->
+        <nav class="rail" aria-label="Navigation">
+          <div class="rail-btn active-look" tabindex="0" data-id="nav-grid" data-up="app-prime" data-down="nav-play" data-left="app-prime" data-right="hero">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="4" width="6" height="6" fill="white" opacity=".92"/>
+              <rect x="14" y="4" width="6" height="6" fill="white" opacity=".92"/>
+              <rect x="4" y="14" width="6" height="6" fill="white" opacity=".92"/>
+              <rect x="14" y="14" width="6" height="6" fill="white" opacity=".92"/>
+            </svg>
+          </div>
+
+          <div class="rail-btn" tabindex="0" data-id="nav-play" data-up="nav-grid" data-down="nav-record" data-left="program4" data-right="recording">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="5" width="18" height="12" stroke="white" stroke-width="1.6" opacity=".9"/>
+              <path d="M10 8.5L15 11.1L10 13.9V8.5Z" fill="white" opacity=".95"/>
+              <path d="M8 20H16" stroke="white" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
+            </svg>
+          </div>
+
+          <div class="rail-btn" tabindex="0" data-id="nav-record" data-up="nav-play" data-down="nav-smile" data-left="program3" data-right="program1">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="4" width="16" height="16" rx="3.2" stroke="white" stroke-width="1.5" opacity=".92"/>
+              <path d="M8.2 17V7.4H12.9C15.1 7.4 16.5 8.65 16.5 10.65C16.5 12.2 15.5 13.25 13.95 13.55L16.5 17H14.2L11.85 13.75H10.2V17H8.2ZM10.2 12.15H12.55C13.8 12.15 14.45 11.58 14.45 10.62C14.45 9.68 13.8 9.1 12.55 9.1H10.2V12.15Z" fill="white"/>
+            </svg>
+          </div>
+
+          <div class="rail-btn" tabindex="0" data-id="nav-smile" data-up="nav-record" data-down="nav-grid" data-left="hero" data-right="program4">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="8.2" stroke="white" stroke-width="1.6" opacity=".92"/>
+              <circle cx="9.1" cy="10.2" r="1" fill="white"/>
+              <circle cx="14.9" cy="10.2" r="1" fill="white"/>
+              <path d="M8.5 14.2C9.5 15.5 10.7 16 12 16C13.3 16 14.5 15.5 15.5 14.2" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </nav>
+
+        <!-- Grid -->
+        <section class="main" aria-label="TV dashboard">
+          <div class="section">MEIN TV</div>
+          <div class="section">JETZT IM TV</div>
+          <div class="section">VIDEOTHEK</div>
+          <div class="section">APPS</div>
+
+          <!-- Mein TV -->
+          <div class="left-stack">
+            <article class="tile hero focused" tabindex="0" data-id="hero" data-up="nav-grid" data-down="recording" data-left="nav-grid" data-right="program1">
+              <div class="voice-art"></div>
+              <div class="hero-logo"><span>the</span>Voice<br>of Germany</div>
+              <div class="badge-circle" aria-hidden="true"></div>
+              <div class="tile-content">
+                <div class="kicker">Empfehlungen</div>
+                <div class="title">The Voice of Germany</div>
+              </div>
+            </article>
+
+            <article class="tile show-card" tabindex="0" data-id="recording" data-up="hero" data-down="info-link" data-left="nav-play" data-right="program4">
+              <div class="person"></div>
+              <div class="dog"></div>
+              <div class="tile-content">
+                <div class="kicker">Aufnahmen</div>
+                <div class="title small">Der Dicke</div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Jetzt im TV -->
+          <div class="middle-stack">
+            <article class="tile program" tabindex="0" data-id="program1" data-up="nav-record" data-down="program2" data-left="hero" data-right="poster1">
+              <div class="meta-top">
+                <div class="hd">ZDF HD</div>
+              </div>
+              <div class="tile-content">
+                <div class="time">14:05</div>
+                <div class="title small">sportstudio live</div>
+              </div>
+            </article>
+
+            <article class="tile program echt" tabindex="0" data-id="program2" data-up="program1" data-down="program3" data-left="hero" data-right="poster2">
+              <div class="tile-content">
+                <div class="time">15:00</div>
+                <div class="title small">Echt jetzt?! - m...</div>
+              </div>
+            </article>
+
+            <article class="tile program gross" tabindex="0" data-id="program3" data-up="program2" data-down="program4" data-left="nav-record" data-right="poster3">
+              <div class="meta-top">
+                <div class="channel-logo">SWR Fernsehen</div>
+              </div>
+              <div class="tile-content">
+                <div class="time">15:10</div>
+                <div class="title small">Großstadtrevier</div>
+              </div>
+            </article>
+
+            <article class="tile program sturm" tabindex="0" data-id="program4" data-up="program3" data-down="nav-play" data-left="recording" data-right="poster4">
+              <div class="meta-top">
+                <div class="hd">1 HD</div>
+              </div>
+              <div class="tile-content">
+                <div class="time">15:10</div>
+                <div class="title small">Sturm der Liebe</div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Videothek -->
+          <div class="poster-grid">
+            <article class="tile poster man" tabindex="0" data-id="poster1" data-up="nav-record" data-down="poster3" data-left="program1" data-right="app-netflix">
+              <div class="figure"></div>
+              <div class="poster-title">Keine Zeit<br>zu sterben</div>
+            </article>
+
+            <article class="tile poster paw" tabindex="0" data-id="poster2" data-up="nav-grid" data-down="poster4" data-left="program2" data-right="app-youtube">
+              <div class="paw-badge">PAW</div>
+              <div class="paw-sub">Der Kinofilm</div>
+              <div class="pup p1"></div>
+              <div class="pup p2"></div>
+              <div class="pup p3"></div>
+              <div class="pup p4"></div>
+              <div class="pup p5"></div>
+            </article>
+
+            <article class="tile poster legs" tabindex="0" data-id="poster3" data-up="poster1" data-down="nav-smile" data-left="program3" data-right="app-dazn">
+              <div class="legs-shape"></div>
+              <div class="old-title">OLD</div>
+            </article>
+
+            <article class="tile poster bodyguard" tabindex="0" data-id="poster4" data-up="poster2" data-down="nav-grid" data-left="program4" data-right="app-prime">
+              <div class="bodyguard-title">Killer's<br>Bodyguard</div>
+              <div class="silhouette s1"></div>
+              <div class="silhouette s2"></div>
+              <div class="silhouette s3"></div>
+            </article>
+          </div>
+
+          <!-- Apps -->
+          <div class="apps-stack">
+            <article class="tile app-tile netflix" tabindex="0" data-id="app-netflix" data-up="app-prime" data-down="app-youtube" data-left="poster1" data-right="nav-grid">NETFLIX</article>
+
+            <article class="tile app-tile youtube" tabindex="0" data-id="app-youtube" data-up="app-netflix" data-down="app-dazn" data-left="poster2" data-right="nav-play">
+              <div class="yt-wrap">
+                <div class="yt-icon"></div>
+                <div>YouTube</div>
+              </div>
+            </article>
+
+            <article class="tile app-tile dazn" tabindex="0" data-id="app-dazn" data-up="app-youtube" data-down="app-prime" data-left="poster3" data-right="nav-record">DAZN</article>
+
+            <article class="tile app-tile prime" tabindex="0" data-id="app-prime" data-up="app-dazn" data-down="app-netflix" data-left="poster4" data-right="nav-grid">
+              <div>prime<br>video</div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <!-- Bottom info -->
+      <section class="info">
+        <div class="info-inner">
+          <h2>Jetzt ansehen</h2>
+          <p id="info-text">Hier findest Du gesammelt Deine aktuellsten Aufnahmen, Empfehlungen und bereits gestarteten Inhalte</p>
+          <div id="info-link" tabindex="-1" aria-hidden="true"></div>
         </div>
-        <div class="card tile" tabindex="0" data-title="India">
-          <div class="poster"><img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=1200&q=80"></div>
-          <div class="overlay"><div class="title">India</div></div>
-        </div>
-        <div class="card tile" tabindex="0" data-title="Las claves">
-          <div class="poster"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80"></div>
-          <div class="overlay"><div class="title">Las claves</div></div>
-        </div>
-      </div>
-    </section>
-  </main>
-</div>
+      </section>
 
-<script>
-/* CLOCK */
-function pad(n){return String(n).padStart(2,"0")}
-function updateClock(){
-  const d=new Date();
-  document.getElementById("clock").textContent=`${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-updateClock();setInterval(updateClock,10000);
+    </div>
+  </div>
 
-/* SPATIAL REMOTE NAV */
-let current=document.querySelector('.card.hero');
+  <script>
+    (function(){
+      const items = Array.from(document.querySelectorAll('.tile, .rail-btn'));
+      const byId = Object.fromEntries(items.map(el => [el.dataset.id, el]));
+      const info = document.getElementById('info-text');
+      const clock = document.getElementById('clock');
 
-function focusables(){
-  return [...document.querySelectorAll('[tabindex="0"]')].filter(e=>e.offsetParent!==null);
-}
-function setFocus(el){
-  document.querySelectorAll('.focused').forEach(e=>e.classList.remove('focused'));
-  el.classList.add('focused');
-  el.focus();
-  current=el;
-}
-function center(r){return {x:r.left+r.width/2,y:r.top+r.height/2}}
+      const descriptions = {
+        hero: 'Hier findest Du gesammelt Deine aktuellsten Aufnahmen, Empfehlungen und bereits gestarteten Inhalte',
+        recording: 'Deine zuletzt aufgenommenen Inhalte. Schnell weitersehen, verwalten und erneut abspielen.',
+        program1: 'Live-Programm und aktuelle Sendungen im Überblick. Direkt in laufende Inhalte einsteigen.',
+        program2: 'Empfohlene laufende Sendungen mit Zeiten, Sendern und Vorschau auf einen Blick.',
+        program3: 'Kompakte Übersicht Deiner aktuellen TV-Sender und laufenden Programminhalte.',
+        program4: 'Jetzt im TV: laufende Serien, Sendungen und Empfehlungen für den direkten Einstieg.',
+        poster1: 'Highlights aus der Videothek mit Filmen, Serien und Premium-Inhalten auf Abruf.',
+        poster2: 'Familien- und Kinderinhalte in der Videothek mit beliebten Film- und Serienformaten.',
+        poster3: 'Filme und Thriller zum Abruf – übersichtlich, hochwertig und sofort verfügbar.',
+        poster4: 'Action-Highlights und Blockbuster jederzeit aus der Videothek starten.',
+        'app-netflix': 'Direkter Zugriff auf beliebte Streaming-Apps und Partnerdienste.',
+        'app-youtube': 'Apps starten, Inhalte öffnen und nahtlos zwischen TV und Streaming wechseln.',
+        'app-dazn': 'Sport- und Entertainment-Apps direkt aus der Startansicht aufrufen.',
+        'app-prime': 'Schneller Zugriff auf Streaming-Partner aus dem App-Bereich.'
+      };
 
-document.addEventListener('keydown',e=>{
-  const list=focusables();
-  if(!current)return;
-  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){
-    e.preventDefault();
-    const c=center(current.getBoundingClientRect());
-    let best=null,score=1e9;
-    list.forEach(el=>{
-      if(el===current)return;
-      const r=el.getBoundingClientRect();
-      const p=center(r);
-      const dx=p.x-c.x,dy=p.y-c.y;
-      if(e.key==='ArrowLeft'&&dx>=0)return;
-      if(e.key==='ArrowRight'&&dx<=0)return;
-      if(e.key==='ArrowUp'&&dy>=0)return;
-      if(e.key==='ArrowDown'&&dy<=0)return;
-      const s=Math.hypot(dx,dy);
-      if(s<score){score=s;best=el}
-    });
-    if(best)setFocus(best);
-  }
-  if(e.key==='Enter'&&current.dataset.title){
-    console.log('Abspielen:',current.dataset.title);
-  }
-});
+      let current = document.querySelector('.focused') || byId.hero;
 
-setFocus(current);
-</script>
+      function setClock(){
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        clock.textContent = `${hh}:${mm}`;
+      }
+      setClock();
+      setInterval(setClock, 30000);
 
+      function focusEl(el){
+        if(!el) return;
+        items.forEach(item => item.classList.remove('focused'));
+        el.classList.add('focused');
+        current = el;
+        if (descriptions[el.dataset.id]) {
+          info.textContent = descriptions[el.dataset.id];
+        }
+      }
+
+      function move(dir){
+        if(!current) return;
+        const targetId = current.dataset[dir];
+        if(targetId && byId[targetId]){
+          focusEl(byId[targetId]);
+        }
+      }
+
+      function pulse(el){
+        el.classList.remove('pressed');
+        void el.offsetWidth;
+        el.classList.add('pressed');
+      }
+
+      document.addEventListener('keydown', (e) => {
+        switch(e.key){
+          case 'ArrowUp':
+            e.preventDefault();
+            move('up');
+            break;
+          case 'ArrowDown':
+            e.preventDefault();
+            move('down');
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            move('left');
+            break;
+          case 'ArrowRight':
+            e.preventDefault();
+            move('right');
+            break;
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            if(current) pulse(current);
+            break;
+        }
+      });
+
+      items.forEach(el => {
+        el.addEventListener('mouseenter', () => focusEl(el));
+        el.addEventListener('click', () => {
+          focusEl(el);
+          pulse(el);
+        });
+        el.addEventListener('animationend', () => el.classList.remove('pressed'));
+      });
+
+      focusEl(current);
+    })();
+  </script>
 </body>
 </html>
