@@ -3,851 +3,465 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vodafone TV – Demo UI (Placeholder)</title>
+  <title>Vodafone TV</title>
+
   <style>
-    /* =========================================================
-       NOTE ABOUT FONTS
-       Vodafone's brand font is proprietary. This demo:
-       - Uses a close, clean system stack by default.
-       - Is ready to use "Vodafone" if you provide a licensed font.
-
-       If you have a licensed font file, uncomment + adjust:
-
-       @font-face {
-         font-family: "Vodafone";
-         src: url("./VodafoneRg.woff2") format("woff2");
-         font-weight: 400;
-         font-style: normal;
-       }
-       ========================================================= */
-
     :root{
-      --bg0:#050006;
-      --bg1:#120018;
-      --bg2:#2b0018;
-      --txt:#e9e9ee;
-      --muted:#a7a7b0;
-      --muted2:#7f7f8a;
-      --card:#14141a;
-      --stroke:rgba(255,255,255,.12);
-      --stroke2:rgba(255,255,255,.18);
-      --accent:#e60000;         /* Vodafone red */
-      --focus:#ffffff;          /* white focus like screenshot */
-      --shadow:rgba(0,0,0,.55);
+      --bg:#060006;
+      --panel:#0c0c12;
+      --txt:#ffffff;
+      --muted:#b5b5bd;
+      --accent:#e60000;
       --radius:14px;
-      --radiusSm:12px;
-      --navH:92px;
-      --railW:72px;
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
+
     body{
-      font-family: "Vodafone","Vodafone Rg","VodafoneRegular","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
-      background: radial-gradient(1200px 700px at 35% 0%, #2f0043 0%, var(--bg0) 65%) ,
-                  radial-gradient(900px 500px at 85% 20%, #350010 0%, transparent 60%),
-                  linear-gradient(135deg, var(--bg1), var(--bg0) 55%, var(--bg2));
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 40% 0%, #2a0038 0%, transparent 65%),
+        linear-gradient(180deg,#09000c,#000);
       color:var(--txt);
       overflow:hidden;
     }
 
-    /* subtle grain to feel like TV UI */
-    .grain{
-      pointer-events:none;
-      position:fixed; inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
-      mix-blend-mode:overlay;
-      opacity:.5;
-    }
-
-    /* vignette */
-    .vignette{
-      pointer-events:none;
-      position:fixed; inset:0;
-      background: radial-gradient(circle at 50% 35%, transparent 35%, rgba(0,0,0,.45) 75%, rgba(0,0,0,.75) 100%);
-    }
-
-    /* =========================================================
-       TOP BAR (matches screenshot: centered nav, clock + dot right)
-       ========================================================= */
+    /* ================= TOP BAR ================= */
     header{
-      position:fixed; top:0; left:0; right:0;
-      height:var(--navH);
-      display:flex; align-items:center;
-      padding:0 36px 0 24px;
-      z-index:20;
-      background: linear-gradient(to bottom, rgba(0,0,0,.72), rgba(0,0,0,.25));
+      height:90px;
+      display:flex;
+      align-items:center;
+      padding:0 40px;
+      background:linear-gradient(to bottom,rgba(0,0,0,.75),rgba(0,0,0,.25));
       backdrop-filter: blur(10px);
     }
 
     .brand{
-      display:flex; align-items:center;
-      gap:10px;
-      min-width: 230px;
-    }
-
-    .brand-dot{
-      width:26px; height:26px; border-radius:50%;
-      background:var(--accent);
-      box-shadow:0 0 14px rgba(230,0,0,.75);
-    }
-
-    .brand-text{
       font-size:22px;
-      letter-spacing:.2px;
-      font-weight:600;
-    }
-    .brand-text span{
       font-weight:700;
+      min-width:220px;
     }
+    .brand span{font-weight:400}
 
-    .top-nav{
+    nav{
       margin:0 auto;
       display:flex;
-      gap:84px;
-      align-items:center;
-      transform: translateX(-36px); /* optical centering like screenshot */
-    }
-    .top-nav .tab{
-      color:var(--muted);
+      gap:80px;
       font-size:18px;
-      text-transform:uppercase;
-      letter-spacing:.8px;
+      letter-spacing:.6px;
+    }
+    nav .active{
       position:relative;
-      user-select:none;
     }
-    .top-nav .tab.active{
-      color:var(--txt);
-    }
-    .top-nav .tab.active::after{
+    nav .active::after{
       content:"";
       position:absolute;
-      left:50%; transform:translateX(-50%);
+      left:50%;
+      transform:translateX(-50%);
       bottom:-14px;
-      width:54px; height:3px;
-      background:var(--txt);
-      opacity:.9;
-      border-radius:999px;
-      box-shadow:0 0 16px rgba(255,255,255,.45);
+      width:50px;
+      height:3px;
+      background:#fff;
+      border-radius:3px;
     }
 
     .top-right{
-      display:flex; align-items:center; gap:14px;
-      min-width: 260px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      min-width:260px;
       justify-content:flex-end;
     }
-    .clock{
-      font-variant-numeric: tabular-nums;
-      font-size:14px;
-      color:var(--txt);
-      opacity:.95;
-    }
-    .live-dot{
+
+    .clock{font-size:14px}
+    .dot{
       width:12px;height:12px;border-radius:50%;
       background:var(--accent);
-      box-shadow:0 0 10px rgba(230,0,0,.85);
+      box-shadow:0 0 8px var(--accent);
     }
-    .login{
-      margin-left:10px;
-      border:1px solid rgba(255,255,255,.65);
-      background:rgba(0,0,0,.18);
-      color:var(--txt);
-      padding:8px 16px;
-      border-radius:999px;
-      font-size:13px;
-      letter-spacing:.2px;
+
+    .profile-btn{
+      padding:8px 18px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.7);
+      background:rgba(0,0,0,.3);
+      color:#fff;
       cursor:pointer;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
     }
-    .login:focus-visible{
-      box-shadow:0 0 0 3px rgba(230,0,0,.85);
-    }
-    .login:hover{
-      background:rgba(255,255,255,.06);
+    .profile-btn:focus-visible{
+      outline:none;
+      box-shadow:0 0 0 3px var(--accent);
     }
 
-    /* =========================================================
-       TV CANVAS LAYOUT: left rail + content
-       ========================================================= */
+    /* ================= APP LAYOUT ================= */
     .app{
-      position:fixed;
-      inset: var(--navH) 0 0 0;
+      height:calc(100vh - 90px);
       display:grid;
-      grid-template-columns: var(--railW) 1fr;
-      height: calc(100vh - var(--navH));
+      grid-template-columns:70px 1fr;
     }
 
-    /* Left icon rail (like screenshot) */
+    /* LEFT RAIL */
     .rail{
-      padding-top: 14px;
+      padding-top:20px;
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:16px;
-      background: linear-gradient(to right, rgba(0,0,0,.48), rgba(0,0,0,0));
+      gap:18px;
+      background:linear-gradient(to right,rgba(0,0,0,.5),transparent);
     }
 
-    .rail-btn{
-      width:44px; height:44px;
+    .rail button{
+      width:44px;height:44px;
       border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);
-      display:flex; align-items:center; justify-content:center;
-      color:rgba(255,255,255,.80);
-      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      border:1px solid rgba(255,255,255,.2);
+      background:rgba(0,0,0,.3);
+      color:#fff;
+      cursor:pointer;
     }
-    .rail-btn svg{opacity:.9}
-    .rail-btn[data-active="true"]{
-      border-color: rgba(255,255,255,.35);
-      box-shadow: 0 0 0 2px rgba(255,255,255,.15);
-    }
-    .rail-btn.focused{
-      transform: scale(1.08);
-      box-shadow:0 0 0 3px rgba(255,255,255,.85);
-      border-color: rgba(255,255,255,.65);
+    .rail button.focused{
+      box-shadow:0 0 0 3px #fff;
+      transform:scale(1.08);
     }
 
-    /* Content area */
-    .content{
-      padding: 12px 28px 30px 22px;
+    /* ================= CONTENT ================= */
+    main{
+      padding:20px 32px;
       overflow:hidden;
     }
 
-    /* Top grid matches screenshot: big tile left + 2 rows of small tiles right */
     .top-grid{
       display:grid;
-      grid-template-columns: 560px 1fr;
-      gap: 18px 22px;
-      align-items:start;
+      grid-template-columns:560px 1fr;
+      gap:22px;
     }
 
-    .stack{
-      display:flex;
-      flex-direction:column;
-      gap: 18px;
-    }
-
+    .stack{display:flex;flex-direction:column;gap:18px}
     .grid-right{
       display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      align-content:start;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
     }
 
-    /* =========================================================
-       CARD / TILE STYLES
-       ========================================================= */
+    /* ================= CARDS ================= */
     .card{
       position:relative;
-      border-radius: var(--radius);
+      border-radius:var(--radius);
       overflow:hidden;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 18px 35px rgba(0,0,0,.55);
-      transform-origin:center;
-      transition: transform .32s ease, box-shadow .32s ease, border-color .32s ease;
-      user-select:none;
+      background:#111;
+      border:1px solid rgba(255,255,255,.12);
+      transition:transform .3s, box-shadow .3s;
+    }
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top,rgba(0,0,0,.75),transparent 55%);
     }
 
     .card.focused{
-      transform: scale(1.06);
-      border-color: rgba(255,255,255,.85);
-      box-shadow: 0 0 0 3px rgba(255,255,255,.92), 0 28px 55px rgba(0,0,0,.72);
-      z-index: 10;
+      transform:scale(1.08);
+      box-shadow:0 0 0 3px #fff, 0 30px 60px rgba(0,0,0,.8);
+      z-index:5;
     }
 
-    .card.small.focused{
-      transform: scale(1.11);
-      border-color: rgba(230,0,0,.95);
-      box-shadow: 0 0 0 3px rgba(230,0,0,.9), 0 26px 52px rgba(0,0,0,.75);
-    }
-
-    .card::after{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(to top, rgba(0,0,0,.86), rgba(0,0,0,.18) 55%, rgba(0,0,0,0) 78%);
-    }
+    .hero{height:315px}
+    .feature{height:165px}
+    .small{height:150px}
+    .tile{width:280px;height:158px}
 
     .poster{
-      position:absolute; inset:0;
+      position:absolute;inset:0;
       background-size:cover;
       background-position:center;
-      filter: saturate(1.05) contrast(1.05);
-      transform: scale(1.02);
-    }
-
-    .info{
-      position:absolute;
-      left: 16px;
-      right: 16px;
-      bottom: 14px;
-      z-index:2;
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-    }
-
-    .kicker{
-      display:inline-flex;
-      width:max-content;
-      padding: 4px 10px;
-      border-radius: 9px;
-      font-size: 12px;
-      color: rgba(255,255,255,.92);
-      background: rgba(0,0,0,.45);
-      border: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(6px);
     }
 
     .title{
-      font-size: 22px;
-      font-weight: 650;
-      letter-spacing:.2px;
-      color:#fff;
-      line-height:1.06;
+      position:absolute;
+      left:16px;
+      bottom:14px;
+      z-index:2;
+      font-size:20px;
+      font-weight:600;
+      text-shadow:0 2px 6px rgba(0,0,0,.9);
     }
+    .small .title{font-size:15px}
 
-    .meta{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      font-size: 12px;
-      color: rgba(255,255,255,.82);
-    }
-
-    .bubble{
-      width:18px;height:18px;border-radius:50%;
-      display:inline-block;
-      background:#1e90ff;
-      box-shadow:0 0 0 2px rgba(255,255,255,.12);
-    }
-    .bubble.orange{background:#ff7a18;}
-    .bubble.purple{background:#9b59ff;}
-    .bubble.red{background:#ff3b3b;}
-    .bubble.green{background:#19c37d;}
-
-    /* Sizes approximating screenshot */
-    .hero{ width:560px; height:315px; }
-    .feature{ width:560px; height:165px; border-radius: var(--radiusSm); }
-    .small{ height:150px; border-radius: var(--radiusSm); }
-    .small .title{ font-size:16px; font-weight:600; }
-    .small .kicker{ font-size:11px; padding:3px 8px; border-radius:8px; }
-
-    /* =========================================================
-       LOWER RAILS (horizontal carousels)
-       ========================================================= */
-    .section{
-      margin-top: 22px;
-    }
+    /* ================= LOWER SECTION ================= */
+    .section{margin-top:26px}
     .section-title{
-      margin: 18px 0 12px;
-      font-size: 18px;
-      color: rgba(255,255,255,.85);
-      text-transform: uppercase;
+      margin-bottom:14px;
       letter-spacing:.8px;
+      font-size:18px;
     }
     .carousel{
       display:flex;
-      gap: 16px;
+      gap:16px;
       overflow:hidden;
-      padding-bottom: 8px;
-    }
-    .tile{
-      width: 280px;
-      height: 158px;
-      border-radius: var(--radiusSm);
-    }
-    .tile .title{ font-size:15px }
-    .tile.focused{
-      transform: scale(1.10);
-      border-color: rgba(230,0,0,.95);
-      box-shadow: 0 0 0 3px rgba(230,0,0,.9), 0 24px 46px rgba(0,0,0,.75);
     }
 
-    /* =========================================================
-       Focus visibility for keyboard users
-       ========================================================= */
-    .focus-ring{
-      position:absolute;
-      inset:-9999px;
+    /* ================= PROFILE OVERLAY ================= */
+    #profileOverlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.85);
+      backdrop-filter:blur(12px);
+      display:none;
+      z-index:50;
     }
-    .sr-only{position:absolute; left:-9999px}
+    #profileOverlay.active{display:block}
 
-    /* TV safe area feel */
-    @media (max-width: 1280px){
-      header{padding:0 18px}
-      .top-nav{gap:42px}
-      .top-grid{grid-template-columns: 1fr}
-      .hero,.feature{width:100%}
-      .grid-right{grid-template-columns: repeat(2, 1fr)}
+    .profile-panel{
+      width:900px;
+      max-width:90%;
+      margin:60px auto;
+      background:#0c0c14;
+      border-radius:18px;
+      padding:32px 40px;
+    }
+
+    .back{
+      background:none;
+      border:none;
+      color:#fff;
+      font-size:16px;
+      margin-bottom:20px;
+      cursor:pointer;
+    }
+
+    .profile-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:24px;
+    }
+
+    .profile-card{
+      background:#15151d;
+      border-radius:14px;
+      padding:20px;
+    }
+    .profile-card h3{
+      margin-bottom:10px;
+      font-size:16px;
+      color:#fff;
+    }
+    .profile-card p{
+      font-size:14px;
+      color:#cfcfd6;
+      margin:4px 0;
+    }
+
+    .actions{
+      margin-top:24px;
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .actions button{
+      padding:10px 18px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.4);
+      background:rgba(0,0,0,.4);
+      color:#fff;
+      cursor:pointer;
+    }
+
+    /* ================= TOAST ================= */
+    #toast{
+      position:fixed;
+      bottom:34px;
+      left:50%;
+      transform:translateX(-50%);
+      padding:12px 18px;
+      border-radius:14px;
+      background:rgba(0,0,0,.7);
+      border:1px solid rgba(255,255,255,.2);
+      font-size:14px;
+      display:none;
+      z-index:100;
     }
   </style>
 </head>
 
 <body>
-  <div class="grain"></div>
-  <div class="vignette"></div>
-
-  <header>
-    <div class="brand" aria-label="Vodafone TV">
-      <div class="brand-dot" aria-hidden="true"></div>
-      <div class="brand-text"><span>Vodafone</span> TV</div>
-    </div>
-
-    <div class="top-nav" aria-label="Hauptnavigation">
-      <div class="tab active">MEIN TV</div>
-      <div class="tab">TV‑GUIDE</div>
-      <div class="tab">JETZT ANSEHEN</div>
-    </div>
-
-    <div class="top-right">
-      <div class="clock" id="clock">14:39</div>
-      <div class="live-dot" aria-label="Live"></div>
-      <button class="login" id="loginBtn">Anmelden</button>
-    </div>
-  </header>
-
-  <div class="app">
-    <!-- Left rail -->
-    <aside class="rail" aria-label="Seitenleiste">
-      <div class="rail-btn focused" tabindex="0" data-active="true" data-nav="rail">
-        <!-- TV icon -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M4 7.5C4 6.12 5.12 5 6.5 5h11C18.88 5 20 6.12 20 7.5v8c0 1.38-1.12 2.5-2.5 2.5h-11C5.12 18 4 16.88 4 15.5v-8Z" stroke="currentColor" stroke-width="2"/>
-          <path d="M9 21h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-
-      <div class="rail-btn" tabindex="0" data-nav="rail">
-        <!-- Recordings icon -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M7 7h10v10H7V7Z" stroke="currentColor" stroke-width="2"/>
-          <path d="M9 4h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="2"/>
-        </svg>
-      </div>
-
-      <div class="rail-btn" tabindex="0" data-nav="rail">
-        <!-- Search icon -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/>
-          <path d="M20 20l-4.2-4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-    </aside>
-
-    <!-- Content -->
-    <main class="content" aria-label="Inhalte">
-      <!-- Top area like screenshot -->
-      <section class="top-grid" aria-label="Startbereich">
-        <div class="stack">
-          <div class="card hero focused" tabindex="0"
-               data-nav="card"
-               data-title="The Rookie"
-               data-kicker="Aufnahmen"
-               data-meta="Heute · 14:10 Uhr · HD"
-               data-bubble="blue">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Aufnahmen</div>
-              <div class="title">The Rookie</div>
-              <div class="meta"><span class="bubble"></span> Heute · 14:10 Uhr · HD</div>
-            </div>
-          </div>
-
-          <div class="card feature" tabindex="0"
-               data-nav="card"
-               data-title="Ersparte: Alles oder Nichts"
-               data-kicker="Aufnahmen"
-               data-meta="Heute · 13:45 Uhr"
-               data-bubble="purple">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Aufnahmen</div>
-              <div class="title">Ersparte: Alles oder Nichts</div>
-              <div class="meta"><span class="bubble purple"></span> Heute · 13:45 Uhr</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid-right">
-          <div class="card small" tabindex="0"
-               data-nav="card"
-               data-title="Cosmo Sapiens"
-               data-kicker="Doku"
-               data-meta="14:10 Uhr · HD"
-               data-bubble="orange">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Doku</div>
-              <div class="title">Cosmo Sapiens</div>
-              <div class="meta"><span class="bubble orange"></span> 14:10 Uhr · HD</div>
-            </div>
-          </div>
-
-          <div class="card small" tabindex="0"
-               data-nav="card"
-               data-title="Die Rezepte des Tages"
-               data-kicker="Kochen"
-               data-meta="15:05 Uhr"
-               data-bubble="green">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Kochen</div>
-              <div class="title">Die Rezepte des Tages</div>
-              <div class="meta"><span class="bubble green"></span> 15:05 Uhr</div>
-            </div>
-          </div>
-
-          <div class="card small" tabindex="0"
-               data-nav="card"
-               data-title="In Therapie"
-               data-kicker="Drama"
-               data-meta="Neu · Staffel 1"
-               data-bubble="red">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Drama</div>
-              <div class="title">In Therapie</div>
-              <div class="meta"><span class="bubble red"></span> Neu · Staffel 1</div>
-            </div>
-          </div>
-
-          <div class="card small" tabindex="0"
-               data-nav="card"
-               data-title="Kanal Spotlight"
-               data-kicker="Entertainment"
-               data-meta="Jetzt"
-               data-bubble="blue">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Entertainment</div>
-              <div class="title">Kanal Spotlight</div>
-              <div class="meta"><span class="bubble"></span> Jetzt</div>
-            </div>
-          </div>
-
-          <div class="card small" tabindex="0"
-               data-nav="card"
-               data-title="Back to Life"
-               data-kicker="Serie"
-               data-meta="Top‑Titel"
-               data-bubble="purple">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Serie</div>
-              <div class="title">Back to Life</div>
-              <div class="meta"><span class="bubble purple"></span> Top‑Titel</div>
-            </div>
-          </div>
-
-          <div class="card small" tabindex="0"
-               data-nav="card"
-               data-title="Personal Assistant"
-               data-kicker="Thriller"
-               data-meta="Empfohlen"
-               data-bubble="orange">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Thriller</div>
-              <div class="title">Personal Assistant</div>
-              <div class="meta"><span class="bubble orange"></span> Empfohlen</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Lower carousel like screenshot -->
-      <section class="section" aria-label="Aufnahmen">
-        <div class="section-title">Aufnahmen</div>
-        <div class="carousel" id="carousel1">
-          <div class="card tile" tabindex="0" data-nav="card"
-               data-title="The Rookie – Folge 3" data-kicker="Aufnahmen" data-meta="HD · 48 Min" data-bubble="blue">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Aufnahmen</div>
-              <div class="title">The Rookie – Folge 3</div>
-              <div class="meta"><span class="bubble"></span> HD · 48 Min</div>
-            </div>
-          </div>
-
-          <div class="card tile" tabindex="0" data-nav="card"
-               data-title="Rick Steins Reise" data-kicker="Doku" data-meta="Neu" data-bubble="green">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Doku</div>
-              <div class="title">Rick Steins Reise</div>
-              <div class="meta"><span class="bubble green"></span> Neu</div>
-            </div>
-          </div>
-
-          <div class="card tile" tabindex="0" data-nav="card"
-               data-title="Die großen Fragen" data-kicker="Wissen" data-meta="Heute" data-bubble="purple">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Wissen</div>
-              <div class="title">Die großen Fragen</div>
-              <div class="meta"><span class="bubble purple"></span> Heute</div>
-            </div>
-          </div>
-
-          <div class="card tile" tabindex="0" data-nav="card"
-               data-title="Filmabend" data-kicker="Spielfilm" data-meta="Top 10" data-bubble="orange">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Spielfilm</div>
-              <div class="title">Filmabend</div>
-              <div class="meta"><span class="bubble orange"></span> Top 10</div>
-            </div>
-          </div>
-
-          <div class="card tile" tabindex="0" data-nav="card"
-               data-title="Krimi Nacht" data-kicker="Krimi" data-meta="Empfohlen" data-bubble="red">
-            <div class="poster"></div>
-            <div class="info">
-              <div class="kicker">Krimi</div>
-              <div class="title">Krimi Nacht</div>
-              <div class="meta"><span class="bubble red"></span> Empfohlen</div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+<header>
+  <div class="brand">Vodafone <span>TV</span></div>
+  <nav>
+    <div class="active">MEIN TV</div>
+    <div>TV‑GUIDE</div>
+    <div>JETZT ANSEHEN</div>
+  </nav>
+  <div class="top-right">
+    <div class="clock" id="clock">12:06</div>
+    <div class="dot"></div>
+    <button class="profile-btn" id="profileBtn" tabindex="0">Mein Profil</button>
   </div>
+</header>
 
-  <script>
-    /************************************************************
-     * 1) CLOCK (top right)
-     ************************************************************/
-    function pad(n){return String(n).padStart(2,"0")}
-    function updateClock(){
-      const d = new Date();
-      document.getElementById("clock").textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+<div class="app">
+  <aside class="rail">
+    <button tabindex="0" class="focused">🏠</button>
+    <button tabindex="0">⏺</button>
+    <button tabindex="0">🔍</button>
+  </aside>
+
+  <main>
+    <section class="top-grid">
+      <div class="stack">
+        <div class="card hero focused" tabindex="0" data-title="The Rookie"
+             style="--img:url('https://source.unsplash.com/1200x675/?police,city,night')">
+          <div class="poster"></div>
+          <div class="title">The Rookie</div>
+        </div>
+
+        <div class="card feature" tabindex="0" data-title="Ersparte: Alles oder Nichts"
+             style="--img:url('https://source.unsplash.com/1200x675/?money,drama,dark')">
+          <div class="poster"></div>
+          <div class="title">Ersparte: Alles oder Nichts</div>
+        </div>
+      </div>
+
+      <div class="grid-right">
+        <div class="card small" tabindex="0" data-title="Cosmo Sapiens"
+             style="--img:url('https://source.unsplash.com/800x450/?science,space')">
+          <div class="poster"></div><div class="title">Cosmo Sapiens</div>
+        </div>
+        <div class="card small" tabindex="0" data-title="Die Rezepte des Tages"
+             style="--img:url('https://source.unsplash.com/800x450/?cooking,kitchen')">
+          <div class="poster"></div><div class="title">Die Rezepte des Tages</div>
+        </div>
+        <div class="card small" tabindex="0" data-title="In Therapie"
+             style="--img:url('https://source.unsplash.com/800x450/?therapy,room,dark')">
+          <div class="poster"></div><div class="title">In Therapie</div>
+        </div>
+        <div class="card small" tabindex="0" data-title="Kanal Spotlight"
+             style="--img:url('https://source.unsplash.com/800x450/?stage,lights')">
+          <div class="poster"></div><div class="title">Kanal Spotlight</div>
+        </div>
+        <div class="card small" tabindex="0" data-title="Back to Life"
+             style="--img:url('https://source.unsplash.com/800x450/?woman,city,evening')">
+          <div class="poster"></div><div class="title">Back to Life</div>
+        </div>
+        <div class="card small" tabindex="0" data-title="Personal Assistant"
+             style="--img:url('https://source.unsplash.com/800x450/?office,night,thriller')">
+          <div class="poster"></div><div class="title">Personal Assistant</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">AUFNAHMEN</div>
+      <div class="carousel">
+        <div class="card tile" tabindex="0" data-title="The Rookie – Folge 3"
+             style="--img:url('https://source.unsplash.com/800x450/?police,street,night')">
+          <div class="poster"></div><div class="title">The Rookie – Folge 3</div>
+        </div>
+        <div class="card tile" tabindex="0" data-title="Rick Steins Reise"
+             style="--img:url('https://source.unsplash.com/800x450/?travel,food')">
+          <div class="poster"></div><div class="title">Rick Steins Reise</div>
+        </div>
+        <div class="card tile" tabindex="0" data-title="Die großen Fragen"
+             style="--img:url('https://source.unsplash.com/800x450/?philosophy,library')">
+          <div class="poster"></div><div class="title">Die großen Fragen</div>
+        </div>
+        <div class="card tile" tabindex="0" data-title="Filmabend"
+             style="--img:url('https://source.unsplash.com/800x450/?cinema,screen')">
+          <div class="poster"></div><div class="title">Filmabend</div>
+        </div>
+        <div class="card tile" tabindex="0" data-title="Krimi Nacht"
+             style="--img:url('https://source.unsplash.com/800x450/?crime,city,night')">
+          <div class="poster"></div><div class="title">Krimi Nacht</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- PROFILE OVERLAY -->
+<section id="profileOverlay" aria-hidden="true">
+  <div class="profile-panel">
+    <button class="back" id="closeProfile">← Zurück</button>
+
+    <div class="profile-grid">
+      <div class="profile-card">
+        <h3>Profil</h3>
+        <p><strong>Name:</strong> Anuschka Mader</p>
+        <p><strong>Geburtstag:</strong> 05.02.1998</p>
+        <p><strong>E‑Mail:</strong> anuschka.mader@example.com</p>
+        <p><strong>Adresse:</strong> Musterstraße 12, 10115 Berlin</p>
+      </div>
+
+      <div class="profile-card">
+        <h3>Konto</h3>
+        <p><strong>Account‑ID:</strong> VF-DE-83492017</p>
+        <p><strong>Zahlung:</strong> VISA •••• 4242 (08/28)</p>
+        <p><strong>IBAN:</strong> DE** **** **** **** **** ** (Demo)</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button>Profil bearbeiten</button>
+      <button>Zahlungsarten verwalten</button>
+      <button>Datenschutz & Präferenzen</button>
+      <button>Abmelden</button>
+    </div>
+  </div>
+</section>
+
+<div id="toast"></div>
+
+<script>
+  /* clock */
+  function pad(n){return String(n).padStart(2,"0")}
+  function updateClock(){
+    const d=new Date();
+    document.getElementById("clock").textContent=`${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  updateClock(); setInterval(updateClock,10000);
+
+  /* posters */
+  document.querySelectorAll(".card").forEach(c=>{
+    const img=c.style.getPropertyValue("--img");
+    c.querySelector(".poster").style.backgroundImage=img;
+  });
+
+  /* profile overlay */
+  const overlay=document.getElementById("profileOverlay");
+  const profileBtn=document.getElementById("profileBtn");
+  const closeBtn=document.getElementById("closeProfile");
+  let lastFocus=null;
+
+  function openProfile(){
+    lastFocus=document.activeElement;
+    overlay.classList.add("active");
+    overlay.setAttribute("aria-hidden","false");
+    closeBtn.focus();
+  }
+  function closeProfile(){
+    overlay.classList.remove("active");
+    overlay.setAttribute("aria-hidden","true");
+    lastFocus && lastFocus.focus();
+  }
+
+  profileBtn.addEventListener("click",openProfile);
+  closeBtn.addEventListener("click",closeProfile);
+
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape" && overlay.classList.contains("active")){
+      closeProfile();
     }
-    updateClock();
-    setInterval(updateClock, 10_000);
-
-    /************************************************************
-     * 2) SAFE "POSTERS" THAT MATCH TITLES (SVG-as-image)
-     *    - Creates modern TV-like artwork without copyright.
-     *    - The visual always matches the tile title.
-     ************************************************************/
-    const palette = [
-      ["#0b1020","#1a4fff","#9b59ff"],
-      ["#180b22","#e60000","#ff7a18"],
-      ["#07141a","#19c37d","#1e90ff"],
-      ["#11070d","#ff3b3b","#9b59ff"],
-      ["#0c0c12","#5b5bff","#ff7a18"],
-    ];
-
-    function svgPoster({title, kicker, meta, c1, c2, c3}) {
-      const safeTitle = (title || "").replace(/[<>&]/g, "");
-      const safeKicker = (kicker || "").replace(/[<>&]/g, "");
-      const safeMeta = (meta || "").replace(/[<>&]/g, "");
-
-      const svg =
-`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675">
-  <defs>
-    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0" stop-color="${c1}"/>
-      <stop offset="0.55" stop-color="${c2}"/>
-      <stop offset="1" stop-color="${c3}"/>
-    </linearGradient>
-    <radialGradient id="v" cx="50%" cy="40%" r="80%">
-      <stop offset="0" stop-color="rgba(255,255,255,0.10)"/>
-      <stop offset="1" stop-color="rgba(0,0,0,0.55)"/>
-    </radialGradient>
-    <filter id="soft">
-      <feGaussianBlur stdDeviation="18" result="b"/>
-      <feColorMatrix in="b" type="matrix"
-        values="1 0 0 0 0
-                0 1 0 0 0
-                0 0 1 0 0
-                0 0 0 0.85 0" result="bb"/>
-      <feBlend in="SourceGraphic" in2="bb" mode="screen"/>
-    </filter>
-  </defs>
-
-  <rect width="1200" height="675" fill="url(#g)"/>
-  <rect width="1200" height="675" fill="url(#v)"/>
-
-  <!-- abstract shapes -->
-  <g filter="url(#soft)" opacity="0.9">
-    <circle cx="260" cy="250" r="190" fill="rgba(255,255,255,0.10)"/>
-    <circle cx="980" cy="180" r="220" fill="rgba(255,255,255,0.10)"/>
-    <path d="M-50 620 C 220 470, 380 790, 680 610 C 980 430, 1140 690, 1280 560 L 1280 760 L -50 760 Z"
-      fill="rgba(0,0,0,0.18)"/>
-  </g>
-
-  <!-- top label -->
-  <g>
-    <rect x="58" y="52" rx="18" ry="18" width="260" height="54" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.18)"/>
-    <text x="88" y="88" font-family="Segoe UI, Arial" font-size="24" fill="rgba(255,255,255,0.92)" letter-spacing="1.2">${safeKicker.toUpperCase()}</text>
-  </g>
-
-  <!-- title -->
-  <text x="60" y="600" font-family="Segoe UI, Arial" font-size="62" font-weight="700"
-        fill="#fff" opacity="0.96">${safeTitle}</text>
-
-  <!-- meta -->
-  <text x="64" y="640" font-family="Segoe UI, Arial" font-size="26"
-        fill="rgba(255,255,255,0.88)">${safeMeta}</text>
-</svg>`;
-      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    if(e.key==="Enter" && document.activeElement.classList.contains("card")){
+      toast(`Abspielen: ${document.activeElement.dataset.title}`);
     }
+  });
 
-    function assignPosters(){
-      const cards = document.querySelectorAll(".card");
-      cards.forEach((card, i) => {
-        const poster = card.querySelector(".poster");
-        if(!poster) return;
-
-        const title = card.dataset.title || "Titel";
-        const kicker = card.dataset.kicker || "Kategorie";
-        const meta = card.dataset.meta || "";
-        const p = palette[i % palette.length];
-        const url = svgPoster({ title, kicker, meta, c1:p[0], c2:p[1], c3:p[2] });
-        poster.style.backgroundImage = `url("${url}")`;
-      });
-    }
-    assignPosters();
-
-    /************************************************************
-     * 3) "TV REMOTE" NAVIGATION (spatial)
-     *    - Closer to real TV behavior than row/col indexes
-     *    - Arrow keys choose nearest element in that direction
-     *    - Includes left rail + all cards + login button
-     ************************************************************/
-    const focusables = () => Array.from(document.querySelectorAll('[tabindex="0"], #loginBtn'));
-    let current = document.querySelector(".card.hero") || focusables()[0];
-
-    function setFocused(el){
-      // remove focus class
-      document.querySelectorAll(".focused").forEach(x => x.classList.remove("focused"));
-
-      // apply per type
-      if(el.classList.contains("rail-btn")) el.classList.add("focused");
-      if(el.classList.contains("card")) el.classList.add("focused");
-
-      el.focus({preventScroll:true});
-      current = el;
-
-      // keep focused card visible in carousel by scrolling slightly
-      const parent = el.closest(".carousel");
-      if(parent){
-        const pr = parent.getBoundingClientRect();
-        const er = el.getBoundingClientRect();
-        const pad = 30;
-        if(er.left < pr.left + pad) parent.scrollLeft -= (pr.left + pad - er.left);
-        if(er.right > pr.right - pad) parent.scrollLeft += (er.right - (pr.right - pad));
-      }
-    }
-
-    function centerOf(rect){ return {x: rect.left + rect.width/2, y: rect.top + rect.height/2}; }
-
-    function nextInDirection(dir){
-      const all = focusables().filter(el => el.offsetParent !== null);
-      const curRect = current.getBoundingClientRect();
-      const c = centerOf(curRect);
-
-      let best = null;
-      let bestScore = Infinity;
-
-      for(const el of all){
-        if(el === current) continue;
-        const r = el.getBoundingClientRect();
-        const p = centerOf(r);
-
-        const dx = p.x - c.x;
-        const dy = p.y - c.y;
-
-        // direction filter
-        const ok =
-          (dir === "left"  && dx < -8) ||
-          (dir === "right" && dx >  8) ||
-          (dir === "up"    && dy < -8) ||
-          (dir === "down"  && dy >  8);
-        if(!ok) continue;
-
-        // score: primary axis distance + small penalty for off-axis
-        const primary = (dir==="left"||dir==="right") ? Math.abs(dx) : Math.abs(dy);
-        const offAxis = (dir==="left"||dir==="right") ? Math.abs(dy) : Math.abs(dx);
-        const score = primary + offAxis * 0.35;
-
-        if(score < bestScore){
-          bestScore = score;
-          best = el;
-        }
-      }
-      return best;
-    }
-
-    document.addEventListener("keydown", (e) => {
-      const key = e.key;
-
-      if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(key)){
-        e.preventDefault();
-        const dir = key.replace("Arrow","").toLowerCase();
-        const nxt = nextInDirection(dir);
-        if(nxt) setFocused(nxt);
-        return;
-      }
-
-      if(key === "Enter"){
-        e.preventDefault();
-        if(current && current.id === "loginBtn"){
-          document.getElementById("loginBtn").click();
-          return;
-        }
-        // demo action
-        const t = current?.dataset?.title || "Inhalt";
-        console.log("Abspielen:", t);
-        toast(`Abspielen: ${t}`);
-      }
-    });
-
-    // initialize focus to match UI
-    // set hero card focused, but also keep sidebar first icon visually active
-    document.querySelectorAll(".rail-btn")[0]?.setAttribute("data-active","true");
-    setFocused(document.querySelector(".card.hero"));
-
-    /************************************************************
-     * 4) Login button hook for your future preference center
-     ************************************************************/
-    document.getElementById("loginBtn").addEventListener("click", () => {
-      toast("Anmelden (Platzhalter) – hier kann später das Preference Center eingebunden werden.");
-    });
-
-    /************************************************************
-     * 5) Minimal toast (TV-friendly feedback)
-     ************************************************************/
-    let toastTimer;
-    function toast(msg){
-      let el = document.getElementById("toast");
-      if(!el){
-        el = document.createElement("div");
-        el.id = "toast";
-        el.style.position = "fixed";
-        el.style.left = "50%";
-        el.style.bottom = "34px";
-        el.style.transform = "translateX(-50%)";
-        el.style.padding = "12px 16px";
-        el.style.borderRadius = "12px";
-        el.style.background = "rgba(0,0,0,.65)";
-        el.style.border = "1px solid rgba(255,255,255,.18)";
-        el.style.color = "#fff";
-        el.style.fontSize = "14px";
-        el.style.backdropFilter = "blur(10px)";
-        el.style.boxShadow = "0 18px 40px rgba(0,0,0,.55)";
-        el.style.zIndex = "999";
-        document.body.appendChild(el);
-      }
-      el.textContent = msg;
-      el.style.opacity = "1";
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.style.opacity = "0", 2200);
-    }
-  </script>
+  function toast(msg){
+    const t=document.getElementById("toast");
+    t.textContent=msg;
+    t.style.display="block";
+    clearTimeout(t._timer);
+    t._timer=setTimeout(()=>t.style.display="none",2000);
+  }
+</script>
 </body>
 </html>
-``
