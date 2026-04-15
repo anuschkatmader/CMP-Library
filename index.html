@@ -1,771 +1,357 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>TV App UI – Vodafone‑style</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- OneTrust Cookies Consent Notice start for anuschkatmader.github.io/CMP-Library/ -->
-<script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-language="en" type="text/javascript" charset="UTF-8" data-domain-script="019d8c56-5d1b-7a59-90be-200432151806" ></script>
-<script type="text/javascript">
-function OptanonWrapper() { }
-</script>
-<!-- OneTrust Cookies Consent Notice end for anuschkatmader.github.io/CMP-Library/ -->
-
-  <title>DNB – Personal Banking</title>
-
   <style>
-    *,
-    *::before,
-    *::after{
-      box-sizing:border-box;
+    /* =====================
+       GLOBAL RESET & BASICS
+       ===================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    html,body{
-      margin:0;
-      padding:0;
+    body {
+      background: linear-gradient(135deg, #1b0125, #000000, #2b0000);
+      color: #ddd;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
     }
 
-    body{
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      background:#f6f5f3;
-      color:#2d3233;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
+    :focus {
+      outline: none;
     }
 
-    body.modal-open{
-      overflow:hidden;
+    /* =====================
+       TOP NAVIGATION BAR
+       ===================== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      padding: 0 60px;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(8px);
+      z-index: 10;
     }
 
-    img{
-      display:block;
-      max-width:100%;
+    .menu {
+      display: flex;
+      gap: 50px;
     }
 
-    a{
-      color:inherit;
-      text-decoration:none;
+    .menu-item {
+      font-size: 20px;
+      text-transform: uppercase;
+      color: #aaa;
+      cursor: pointer;
+      position: relative;
     }
 
-    button{
-      font:inherit;
+    .menu-item.active {
+      color: #fff;
     }
 
-    :root{
-      --bg:#f6f5f3;
-      --surface:#ffffff;
-      --ink:#2b3132;
-      --muted:#5f6d70;
-      --line:#dde3de;
-      --line-soft:#e8ede9;
-      --teal:#0b7b81;
-      --teal-dark:#176f73;
-      --teal-text:#0b7b81;
-      --hero-text:#f7f8f7;
-      --container:1080px;
-      --header-height:66px;
-      --overlay:rgba(26,34,34,.38);
+    .menu-item.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      width: 100%;
+      height: 3px;
+      background: #e60000;
+      box-shadow: 0 0 12px #e60000;
     }
 
-    .site-header{
-      background:#fff;
-      border-top:1px solid #d8d5d1;
-      border-bottom:1px solid var(--line);
-      position:relative;
-      z-index:5;
+    .nav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: #fff;
     }
 
-    .header-inner{
-      max-width:calc(var(--container) + 64px);
-      margin:0 auto;
-      padding:0 32px;
-      height:var(--header-height);
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      align-items:center;
+    .live-dot {
+      width: 12px;
+      height: 12px;
+      background: #e60000;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #e60000;
     }
 
-    .header-left,
-    .header-right{
-      display:flex;
-      align-items:center;
+    /* =====================
+       MAIN CONTENT AREA
+       ===================== */
+    main {
+      padding-top: 120px;
+      padding-left: 60px;
+      padding-right: 60px;
     }
 
-    .header-right{
-      justify-content:flex-end;
-      gap:26px;
+    /* =====================
+       ROW STRUCTURE
+       ===================== */
+    .row {
+      margin-bottom: 50px;
     }
 
-    .menu-link,
-    .icon-link,
-    .icon-button{
-      color:var(--teal-text);
-      font-size:14px;
-      line-height:1.1;
-      font-weight:400;
-      background:none;
-      border:0;
-      padding:0;
-      cursor:pointer;
+    .row-title {
+      font-size: 22px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      color: #bbb;
     }
 
-    .menu-link{
-      display:inline-flex;
-      flex-direction:column;
-      align-items:center;
-      gap:2px;
+    .rail {
+      display: flex;
+      gap: 24px;
+      transition: transform 0.35s ease;
     }
 
-    .icon-link,
-    .icon-button{
-      display:inline-flex;
-      flex-direction:column;
-      align-items:center;
-      gap:2px;
+    /* =====================
+       HERO CARD
+       ===================== */
+    .hero-card {
+      width: 520px;
+      height: 290px;
+      border-radius: 12px;
+      background: linear-gradient(120deg, #333, #111);
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
     }
 
-    .logo{
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    .hero-card.focused {
+      transform: scale(1.07);
+      box-shadow: 0 0 0 3px #fff, 0 25px 50px rgba(0,0,0,0.8);
     }
 
-    .logo-wordmark{
-      display:inline-flex;
-      align-items:flex-end;
-      color:var(--teal-text);
-      font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-      font-weight:300;
-      letter-spacing:-0.08em;
-      line-height:1;
-      gap:0;
+    .hero-info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
     }
 
-    .logo-d,
-    .logo-n,
-    .logo-b{
-      display:inline-block;
-      line-height:.88;
-      font-weight:300;
+    .hero-badge {
+      font-size: 12px;
+      background: rgba(0,0,0,0.6);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      display: inline-block;
     }
 
-    .logo-d,
-    .logo-b{
-      font-size:34px;
+    .hero-title {
+      font-size: 26px;
+      color: #fff;
     }
 
-    .logo-n{
-      font-size:36px;
-      margin-left:-1px;
-      margin-right:0;
+    /* =====================
+       CONTENT TILES
+       ===================== */
+    .tile {
+      width: 240px;
+      height: 135px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #444, #222);
+      position: relative;
+      flex-shrink: 0;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
     }
 
-    .icon{
-      width:24px;
-      height:24px;
-      stroke:currentColor;
-      fill:none;
-      stroke-width:1.7;
-      stroke-linecap:round;
-      stroke-linejoin:round;
+    .tile.focused {
+      transform: scale(1.12);
+      box-shadow: 0 0 0 3px #e60000, 0 20px 40px rgba(0,0,0,0.7);
+      z-index: 2;
     }
 
-    .page{
-      max-width:calc(var(--container) + 64px);
-      margin:0 auto;
-      padding:42px 32px 70px;
+    .tile-info {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: #fff;
     }
 
-    .top-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:24px;
-      margin-bottom:28px;
+    .meta {
+      font-size: 11px;
+      color: #ccc;
+      margin-top: 4px;
     }
 
-    .top-row-left{
-      display:flex;
-      align-items:center;
-      gap:34px;
-    }
-
-    .top-personal{
-      font-size:24px;
-      font-weight:600;
-      color:var(--ink);
-      line-height:1.1;
-    }
-
-    .top-business{
-      display:inline-flex;
-      align-items:center;
-      gap:9px;
-      color:var(--teal-text);
-      font-size:17px;
-      font-weight:400;
-    }
-
-    .contact-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:44px;
-      padding:0 20px;
-      border-radius:999px;
-      border:1px solid #e6ebe7;
-      background:#fafbfa;
-      color:var(--teal-text);
-      font-size:17px;
-      box-shadow:0 2px 10px rgba(0,0,0,.04);
-    }
-
-    .hero-shell{
-      margin-bottom:68px;
-    }
-
-    .hero{
-      background:var(--teal-dark);
-      display:grid;
-      grid-template-columns:1.05fr .88fr;
-      gap:34px;
-      padding:30px 30px 30px 44px;
-    }
-
-    .hero-copy{
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      min-height:390px;
-    }
-
-    .hero h1{
-      margin:0 0 30px;
-      max-width:470px;
-      color:var(--hero-text);
-      font-size:58px;
-      line-height:1.12;
-      font-weight:300;
-      letter-spacing:-0.03em;
-    }
-
-    .hero-cta{
-      display:inline-flex;
-      align-items:center;
-      gap:12px;
-      align-self:flex-start;
-      min-height:36px;
-      padding:0 18px 0 20px;
-      border-radius:999px;
-      background:#fff;
-      color:var(--teal-text);
-      font-size:15px;
-      font-weight:400;
-      margin-bottom:42px;
-    }
-
-    .hero-disclaimer{
-      max-width:470px;
-      margin:0;
-      color:rgba(255,255,255,.93);
-      font-size:12px;
-      line-height:1.4;
-      font-weight:400;
-    }
-
-    .hero-media{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:390px;
-    }
-
-    .hero-media img{
-      width:100%;
-      height:338px;
-      object-fit:cover;
-      object-position:center;
-    }
-
-    .category-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:34px;
-    }
-
-    .category-title{
-      display:inline-block;
-      color:var(--teal-text);
-      font-size:21px;
-      line-height:1.1;
-      font-weight:400;
-      padding-bottom:6px;
-      border-bottom:2px solid currentColor;
-      margin-bottom:78px;
-    }
-
-    .support-link{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      color:var(--teal-text);
-      font-size:18px;
-      line-height:1.25;
-      padding-bottom:14px;
-      border-bottom:1px solid #cad7d1;
-      min-height:56px;
-    }
-
-    .strip,
-    .section,
-    .consent{
-      display:none !important;
-    }
-
-    .pc-overlay{
-      position:fixed;
-      inset:0;
-      background:var(--overlay);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:28px;
-      z-index:1000;
-    }
-
-    .pc-overlay.is-open{
-      display:flex;
-    }
-
-    .pc-modal{
-      width:min(880px, 100%);
-      background:#fff;
-      border-radius:16px;
-      box-shadow:0 20px 60px rgba(0,0,0,.18);
-      overflow:hidden;
-      position:relative;
-    }
-
-    .pc-modal-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:18px 20px;
-      border-bottom:1px solid #e7ebe7;
-      background:#fff;
-    }
-
-    .pc-modal-title{
-      font-size:18px;
-      font-weight:500;
-      color:var(--ink);
-    }
-
-    .pc-close{
-      width:40px;
-      height:40px;
-      border-radius:999px;
-      border:1px solid #dfe6e1;
-      background:#fff;
-      color:var(--teal-text);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      flex:none;
-    }
-
-    .pc-close svg{
-      width:18px;
-      height:18px;
-      stroke:currentColor;
-      fill:none;
-      stroke-width:2;
-      stroke-linecap:round;
-      stroke-linejoin:round;
-    }
-
-    .ot-form-wrapper{
-      width:100%;
-      max-width:none;
-      height:800px;
-      border:0;
-      margin:0;
-      background:#fff;
-    }
-
-    .ot-form-wrapper iframe{
-      width:100%;
-      height:100%;
-      border:none;
-      display:block;
-    }
-
-    @media (max-width: 1000px){
-      .hero{
-        grid-template-columns:1fr;
-        gap:24px;
-        padding:26px;
-      }
-
-      .hero-copy{
-        min-height:auto;
-      }
-
-      .hero h1{
-        font-size:46px;
-        max-width:100%;
-      }
-
-      .hero-media{
-        min-height:auto;
-      }
-
-      .hero-media img{
-        height:320px;
-      }
-
-      .category-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:28px 22px;
-      }
-
-      .category-title{
-        margin-bottom:30px;
-      }
-    }
-
-    @media (max-width: 700px){
-      .header-inner{
-        padding:0 18px;
-      }
-
-      .page{
-        padding:28px 18px 52px;
-      }
-
-      .top-row{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:16px;
-      }
-
-      .top-row-left{
-        gap:20px;
-        flex-wrap:wrap;
-      }
-
-      .top-personal{
-        font-size:22px;
-      }
-
-      .hero{
-        padding:20px;
-      }
-
-      .hero h1{
-        font-size:36px;
-        line-height:1.14;
-      }
-
-      .hero-media img{
-        height:250px;
-      }
-
-      .category-grid{
-        grid-template-columns:1fr;
-        gap:24px;
-      }
-
-      .category-title{
-        margin-bottom:18px;
-      }
-
-      .support-link{
-        font-size:18px;
-      }
-
-      .logo-d,
-      .logo-b{
-        font-size:28px;
-      }
-
-      .logo-n{
-        font-size:30px;
-      }
-
-      .pc-overlay{
-        padding:12px;
-      }
-
-      .pc-modal{
-        border-radius:12px;
-      }
-
-      .pc-modal-header{
-        padding:14px 14px;
-      }
-
-      .pc-modal-title{
-        font-size:16px;
-      }
-
-      .ot-form-wrapper{
-        height:min(78vh, 800px);
-      }
+    /* =====================
+       ACCESSIBILITY HELPER
+       ===================== */
+    .sr-only {
+      position: absolute;
+      left: -9999px;
     }
   </style>
 </head>
+
 <body>
 
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-left">
-      <a href="#" class="menu-link" aria-label="Menu">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 6.5h16"></path>
-          <path d="M4 12h16"></path>
-          <path d="M4 17.5h16"></path>
-        </svg>
-        <span>Menu</span>
-      </a>
+  <!-- =====================
+       TOP NAVIGATION
+       ===================== -->
+  <header class="top-nav">
+    <nav class="menu">
+      <div class="menu-item active">MI TV</div>
+      <div class="menu-item">GUÍA TV</div>
+      <div class="menu-item">VER AHORA</div>
+    </nav>
+
+    <div class="nav-right">
+      <span id="clock">14:39</span>
+      <span class="live-dot"></span>
     </div>
+  </header>
 
-    <div class="logo" aria-label="DNB">
-      <div class="logo-wordmark" aria-hidden="true">
-        <span class="logo-d">D</span>
-        <span class="logo-n">N</span>
-        <span class="logo-b">B</span>
-      </div>
-    </div>
+  <!-- =====================
+       MAIN CONTENT
+       ===================== -->
+  <main>
 
-    <div class="header-right">
-      <a href="#" class="icon-link" aria-label="Search">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="10.5" cy="10.5" r="6.5"></circle>
-          <path d="M16 16l4 4"></path>
-        </svg>
-        <span>Search</span>
-      </a>
-
-      <button type="button" class="icon-button" id="openCreateAccount" aria-label="Create account">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 5v14"></path>
-          <path d="M5 12h14"></path>
-          <circle cx="12" cy="12" r="8"></circle>
-        </svg>
-        <span>Create account</span>
-      </button>
-
-      <button type="button" class="icon-button" id="openPreferenceCenter" aria-label="Log in">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M15 4h2.5A1.5 1.5 0 0 1 19 5.5v13A1.5 1.5 0 0 1 17.5 20H15"></path>
-          <path d="M10 8l-4 4 4 4"></path>
-          <path d="M6 12h9"></path>
-        </svg>
-        <span>Log in</span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<main class="page">
-  <div class="top-row">
-    <div class="top-row-left">
-      <div class="top-personal">Personal</div>
-      <a href="#" class="top-business">
-        <span>Go to Business</span>
-        <svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M8 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    </div>
-
-    <a href="#" class="contact-btn">Contact</a>
-  </div>
-
-  <section class="hero-shell">
-    <div class="hero">
-      <div class="hero-copy">
-        <h1>We believe your<br>mortgage will be<br>better off with us</h1>
-
-        <a href="#" class="hero-cta">
-          <span>Request a mortgage offer</span>
-          <svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M8 5l7 7-7 7"></path>
-          </svg>
-        </a>
-
-        <p class="hero-disclaimer">
-          Nominal floating interest rate from 4.99 %, annual percentage rate of charge (APRC) from 5.18 %. Annuity loan NOK 2 000 000 o/25 years with monthly payment NOK 11 745. The total amount payable would be NOK 3 526 690 made up of the loan amount plus interest of NOK 1 526 690. Presupposes a mortgage on the home.
-        </p>
-      </div>
-
-     <div class="hero-media">
-  <img
-    src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80"
-    alt="Modern Nordic house in nature"
-  />
-</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="category-grid">
-    <div>
-      <a href="#" class="category-title">Loans</a>
-      <a href="#" class="support-link">
-        <span>Become a customer</span>
-        <svg class="icon" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 12h14"></path>
-          <path d="M13 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    </div>
-
-    <div>
-      <a href="#" class="category-title">Insurance</a>
-      <a href="#" class="support-link">
-        <span>Find customer program</span>
-        <svg class="icon" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 12h14"></path>
-          <path d="M13 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    </div>
-
-    <div>
-      <a href="#" class="category-title">Saving</a>
-      <a href="#" class="support-link">
-        <span>Get loan offers</span>
-        <svg class="icon" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 12h14"></path>
-          <path d="M13 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    </div>
-
-    <div>
-      <a href="#" class="category-title">Cards</a>
-      <a href="#" class="support-link">
-        <span>See our cards</span>
-        <svg class="icon" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 12h14"></path>
-          <path d="M13 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    </div>
-  </section>
-
-  <section class="strip">
-    <div class="strip-inner">
-      <div>
-        <h4>Accounts & cards</h4>
-        <p>Everyday banking with full digital control.</p>
-      </div>
-      <div>
-        <h4>Loans & mortgages</h4>
-        <p>Flexible financing for life’s big decisions.</p>
-      </div>
-      <div>
-        <h4>Savings & investments</h4>
-        <p>Solutions to help your money grow over time.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section-inner">
-      <h2>Why choose DNB</h2>
-      <p class="lead">Trusted financial services built around your life goals.</p>
-
-      <div class="grid">
-        <div class="card">
-          <h3>Secure banking</h3>
-          <p>Advanced security and fraud protection across all digital services.</p>
-        </div>
-        <div class="card">
-          <h3>Personal advice</h3>
-          <p>Guidance and tools tailored to your financial situation.</p>
-        </div>
-        <div class="card">
-          <h3>Digital first</h3>
-          <p>Modern mobile and online banking designed for simplicity.</p>
+    <!-- HERO ROW -->
+    <section class="row" data-row="0">
+      <div class="rail">
+        <div class="hero-card focused" tabindex="0">
+          <div class="hero-info">
+            <div class="hero-badge">Grabaciones</div>
+            <div class="hero-title">The Rookie</div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section consent">
-    <div class="section-inner">
-      <div class="consent-box">
-        <h3>Privacy & consent</h3>
-        <p>Manage your consent preferences and understand how we use data responsibly.</p>
-        <a href="#">Manage consent settings</a>
+    <!-- CONTENT ROW 1 -->
+    <section class="row" data-row="1">
+      <div class="row-title">Grabaciones</div>
+      <div class="rail">
+        <div class="tile" tabindex="0">
+          <div class="tile-info">
+            Como Sapiens
+            <div class="meta">14:10 · HD</div>
+          </div>
+        </div>
+
+        <div class="tile" tabindex="0">
+          <div class="tile-info">
+            La ruleta
+            <div class="meta">14:35</div>
+          </div>
+        </div>
+
+        <div class="tile" tabindex="0">
+          <div class="tile-info">
+            Back to Life
+            <div class="meta">Nueva</div>
+          </div>
+        </div>
+
+        <div class="tile" tabindex="0">
+          <div class="tile-info">
+            Personal Assistant
+            <div class="meta">Serie</div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
-</main>
+    </section>
 
-<div class="pc-overlay" id="preferenceCenterOverlay" aria-hidden="true">
-  <div class="pc-modal" role="dialog" aria-modal="true" aria-labelledby="pcModalTitle">
-    <div class="pc-modal-header">
-      <div class="pc-modal-title" id="pcModalTitle">Preference Center</div>
-      <button type="button" class="pc-close" id="closePreferenceCenter" aria-label="Close preference center">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 6l12 12"></path>
-          <path d="M18 6L6 18"></path>
-        </svg>
-      </button>
-    </div>
+    <!-- CONTENT ROW 2 -->
+    <section class="row" data-row="2">
+      <div class="row-title">Tendencias</div>
+      <div class="rail">
+        <div class="tile" tabindex="0">
+          <div class="tile-info">
+            Rick Stein’s India
+            <div class="meta">Documental</div>
+          </div>
+        </div>
 
-    <!-- OneTrust Web Form start -->
-    <div class="ot-form-wrapper">
-      <iframe
-        title="OneTrust Preference Center"
-        src="https://privacyportaltrial.onetrust.com/ui/#/preferences/multipage/login/99936133-1336-4d3d-b3ec-758f12d89222">
-      </iframe>
-    </div>
-    <!-- OneTrust Web Form end -->
-  </div>
-</div>
+        <div class="tile" tabindex="0">
+          <div class="tile-info">
+            Las claves
+            <div class="meta">Actualidad</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<script>
-  (function () {
-    const openBtn = document.getElementById('openPreferenceCenter');
-    const closeBtn = document.getElementById('closePreferenceCenter');
-    const overlay = document.getElementById('preferenceCenterOverlay');
+  </main>
 
-    function openPreferenceCenter() {
-      overlay.classList.add('is-open');
-      overlay.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('modal-open');
+  <!-- =====================
+       JAVASCRIPT LOGIC
+       ===================== -->
+  <script>
+    const rows = Array.from(document.querySelectorAll(".row"));
+    let currentRow = 0;
+    let currentIndex = 0;
+
+    function updateFocus() {
+      rows.forEach((row, rIndex) => {
+        const items = row.querySelectorAll(".hero-card, .tile");
+        items.forEach((item, iIndex) => {
+          item.classList.toggle(
+            "focused",
+            rIndex === currentRow && iIndex === currentIndex
+          );
+          if (rIndex === currentRow && iIndex === currentIndex) {
+            item.focus();
+          }
+        });
+      });
     }
 
-    function closePreferenceCenter() {
-      overlay.classList.remove('is-open');
-      overlay.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('modal-open');
-    }
+    document.addEventListener("keydown", (e) => {
+      const items = rows[currentRow].querySelectorAll(".hero-card, .tile");
 
-    openBtn.addEventListener('click', openPreferenceCenter);
-    closeBtn.addEventListener('click', closePreferenceCenter);
+      switch (e.key) {
+        case "ArrowRight":
+          currentIndex = Math.min(currentIndex + 1, items.length - 1);
+          break;
 
-    overlay.addEventListener('click', function (event) {
-      if (event.target === overlay) {
-        closePreferenceCenter();
+        case "ArrowLeft":
+          currentIndex = Math.max(currentIndex - 1, 0);
+          break;
+
+        case "ArrowDown":
+          if (rows[currentRow + 1]) {
+            currentRow++;
+            currentIndex = 0;
+          }
+          break;
+
+        case "ArrowUp":
+          if (rows[currentRow - 1]) {
+            currentRow--;
+            currentIndex = 0;
+          }
+          break;
+
+        case "Enter":
+          console.log("Playing content...");
+          alert("Playing content…");
+          break;
       }
+
+      updateFocus();
     });
 
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && overlay.classList.contains('is-open')) {
-        closePreferenceCenter();
-      }
-    });
-  })();
-</script>
+    // Initial focus
+    updateFocus();
+  </script>
 
 </body>
 </html>
+``
