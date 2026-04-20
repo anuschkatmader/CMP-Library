@@ -7,76 +7,69 @@
 
 <style>
 /* =====================
-   BASE / RESET
+   BASE
 ===================== */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #111;
-  background: #f5f9fc;
+  color: #0b1f33;
+  background: #eef5fb;
 }
 
 /* =====================
-   HEADER
+   HEADER (optimized)
 ===================== */
 .site-header {
   position: absolute;
-  top: 16px;
+  top: 12px;
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);
   max-width: 1240px;
   background: #ffffff;
-  border-radius: 6px;
-  padding: 10px 16px;
+  border-radius: 4px;
+  padding: 6px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   z-index: 20;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
 .site-header img {
-  height: 28px;
-}
-
-.site-header nav {
-  display: flex;
-  align-items: center;
+  height: 24px;
 }
 
 .site-header nav a {
   color: #003c8f;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  margin: 0 10px;
+  margin: 0 8px;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .site-header nav a::after {
   content: " ▾";
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .site-header .right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   color: #003c8f;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* =====================
-   HERO
+   HERO (farmers image)
 ===================== */
 .hero {
   position: relative;
-  height: 78vh;
+  height: 75vh;
   min-height: 520px;
   overflow: hidden;
   background: #000;
@@ -94,10 +87,10 @@ body {
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(0, 0, 0, 0.65) 0%,
-    rgba(0, 0, 0, 0.35) 45%,
-    rgba(0, 0, 0, 0.1) 65%,
-    rgba(0, 0, 0, 0) 75%
+    rgba(0,0,0,0.65) 0%,
+    rgba(0,0,0,0.35) 45%,
+    rgba(0,0,0,0.1) 65%,
+    rgba(0,0,0,0) 75%
   );
 }
 
@@ -106,19 +99,17 @@ body {
   inset: 0;
   display: flex;
   align-items: center;
-  z-index: 5;
 }
 
 .hero-inner {
   max-width: 560px;
-  color: #ffffff;
+  color: white;
   padding-left: clamp(24px, 6vw, 96px);
 }
 
 .hero h1 {
   font-size: clamp(30px, 4vw, 44px);
-  font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .hero p {
@@ -131,30 +122,89 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 18px;
+  margin-top: 16px;
   background: #0076d6;
-  color: #ffffff;
-  padding: 10px 18px;
+  color: white;
+  padding: 9px 16px;
   border-radius: 4px;
   font-size: 14px;
   text-decoration: none;
 }
 
 /* =====================
-   CONTENT
+   SECTIONS
 ===================== */
-main {
-  background: #ffffff;
-  padding: 48px 24px;
-}
-
 .container {
   max-width: 1240px;
   margin: 0 auto;
+  padding: 0 24px;
 }
 
-h2 {
-  font-size: 24px;
+.section {
+  padding: 48px 0;
+}
+
+/* Schnellstart */
+.schnellstart {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+}
+
+.schnellstart h2 {
+  margin-bottom: 16px;
+}
+
+.schnellstart ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.schnellstart li {
+  padding: 12px 16px;
+  background: #e8f2fb;
+  border-bottom: 1px solid #d6e6f5;
+  font-size: 14px;
+}
+
+.event-box {
+  background: white;
+  border-radius: 4px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Enabling Moments */
+.enabling {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.enabling img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+}
+
+.enabling .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+}
+
+.enabling .content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 48px;
+  color: white;
+  z-index: 2;
+}
+
+.enabling h2 {
   margin-bottom: 12px;
 }
 
@@ -162,35 +212,29 @@ h2 {
    FOOTER
 ===================== */
 footer {
-  background: #ffffff;
-  padding: 24px;
+  background: white;
   text-align: center;
+  padding: 24px;
   font-size: 13px;
-  color: #555;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #e1e1e1;
 }
 
 /* =====================
    RESPONSIVE
 ===================== */
 @media (max-width: 900px) {
-  .site-header nav {
-    display: none;
-  }
+  .site-header nav { display: none; }
+  .schnellstart { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- =====================
-     HEADER
-===================== -->
+<!-- HEADER -->
 <header class="site-header">
-
   <a href="index.html">
-    <img src="https://www.metroag.de/-/media/project/mag/shared/global/common/metro-logo-full_facelift.svg"
-         alt="METRO">
+    <img src="https://www.metroag.de/-/media/project/mag/shared/global/common/metro-logo-full_facelift.svg" alt="METRO">
   </a>
 
   <nav>
@@ -202,51 +246,64 @@ footer {
     <a href="kontakt.html">Kontakt</a>
   </nav>
 
-  <div class="right">
-    🔍 🌐
-  </div>
-
+  <div class="right">🔍 🌐</div>
 </header>
 
-<!-- =====================
-     HERO
-===================== -->
+<!-- HERO -->
 <section class="hero">
-  <img
-    src="https://www.metroag.de/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-still-169.jpg"
-    alt="METRO Chef Kalbfleisch">
-
+  <img src="https://www.metroag.de/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-herrmann-kraeuter-21.jpg" alt="">
   <div class="hero-content">
     <div class="hero-inner">
-      <h1>METRO Chef Kalbfleisch</h1>
+      <h1>Wurzeln mit Zukunft</h1>
       <p>
-        Unser METRO Chef Kalbfleisch steht für Premiumqualität in der Profiküche.
-        Für Frische, die überzeugt. Für Verantwortung, die man schmeckt.
-        Zartheit und Saftigkeit bei jedem Bissen.
+        Tradition trifft Technik: Wie Familie Herrmann Profi‑Kräuter für METRO
+        anbaut – nachhaltig, präzise und mit Liebe fürs Produkt.
       </p>
-
-      <a href="#" class="btn">▶ Spielen</a>
+      <a class="btn" href="#">METRO Stories</a>
     </div>
   </div>
 </section>
 
-<!-- =====================
-     MAIN CONTENT
-===================== -->
-<main>
-  <div class="container">
-    <h2>Schnellstart</h2>
-    <p>Weitere Inhalte folgen hier …</p>
-  </div>
-</main>
+<!-- SCHNELLSTART -->
+<section class="section">
+  <div class="container schnellstart">
+    <div>
+      <h2>Schnellstart</h2>
+      <ul>
+        <li>Jahrespressekonferenz 2025</li>
+        <li>Geschäftsbericht 2024/25</li>
+        <li>METRO AG verlängert Vorstandsverträge bis 2030</li>
+        <li>ESG Ratings</li>
+      </ul>
+    </div>
 
-<!-- =====================
-     FOOTER
-===================== -->
+    <div class="event-box">
+      <strong>06 Mai 2026</strong>
+      <p>Halbjahresfinanzbericht H1/Q2 2025/26</p>
+    </div>
+  </div>
+</section>
+
+<!-- ENABLING MOMENTS -->
+<section class="section">
+  <div class="container">
+    <div class="enabling">
+      <img src="https://www.metroag.de/-/media/project/mag/shared/global/newsroom-media/videos/corporate-movie-2024-still-169.jpg" alt="">
+      <div class="overlay"></div>
+      <div class="content">
+        <div>
+          <h2>Enabling Moments</h2>
+          <a class="btn" href="#">▶ Spielen</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
   © 2025 METRO AG – Static GitHub Pages Demo
 </footer>
 
 </body>
 </html>
-``
