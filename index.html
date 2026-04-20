@@ -5,73 +5,138 @@
   <title>METRO AG – Static Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet">
+  <!-- Bootstrap -->
+  https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* HEADER */
+    .main-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .main-nav a {
+      color: #003c8f;
+      font-weight: 500;
+      margin: 0 0.75rem;
+    }
+
+    .main-nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      color: white;
+    }
+
+    .hero img {
+      width: 100%;
+      height: 70vh;
+      object-fit: cover;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.65),
+        rgba(0, 0, 0, 0.3)
+      );
+    }
+
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="py-3">
-  <div class="container d-flex align-items-center">
-    <img src="https://www.metroag.de/-/media/project/mag/shared/global/common/metro-logo-full_facelift.svg"
-         alt="METRO"
-         height="32">
+<!-- HEADER -->
+<header class="main-header py-3">
+  <div class="container d-flex align-items-center justify-content-between">
+
+    <!-- Logo -->
+    <a href="index.html">
+      <img
+        src="https://www.metroag.de/-/media/project/mag/shared/global/common/metro-logo-full_facelift.svg"
+        alt="METRO"
+        height="32">
+    </a>
+
+    <!-- Navigation -->
+    <nav class="main-nav d-none d-md-flex">
+      <a href="ueber-uns.html">Über uns</a>
+      <a href="investoren.html">Investoren</a>
+      <a href="verantwortung.html">Verantwortung</a>
+      <a href="newsroom.html">Newsroom</a>
+      <a href="karriere.html">Karriere</a>
+      <a href="kontakt.html">Kontakt</a>
+    </nav>
+
+    <!-- Right side placeholders -->
+    <div class="d-flex align-items-center gap-3 text-primary">
+      🔍 🌐
+    </div>
+
   </div>
 </header>
 
-<main>
-
 <!-- HERO -->
-<section class="container my-5">
-  <div class="swiper">
-    <div class="swiper-wrapper">
+<section class="hero">
 
-      <div class="swiper-slide">
-        <img class="img-fluid"
-             alt="METRO Chef Kalbfleisch"
-             src="https://www.metroag.de/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-still-169.jpg">
-        <h1 class="mt-3">METRO Chef Kalbfleisch</h1>
-        <p>Premiumqualität für die Profiküche.</p>
+  <img
+    src="https://www.metroag.de/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-still-169.jpg"
+    alt="METRO Chef Kalbfleisch">
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="container">
+      <div class="col-md-7">
+
+        <h1 class="fw-bold display-5">
+          METRO Chef Kalbfleisch
+        </h1>
+
+        <p class="lead mt-3">
+          Unser METRO Chef Kalbfleisch steht für Premiumqualität in der
+          Profiküche. Für Frische, die überzeugt. Für Verantwortung,
+          die man schmeckt. Zartheit und Saftigkeit bei jedem Bissen.
+        </p>
+
+        <a href="#" class="btn btn-primary btn-lg mt-3">
+          ▶ Spielen
+        </a>
+
       </div>
-
-      <div class="swiper-slide">
-        <img class="img-fluid"
-             alt="Wurzeln mit Zukunft"
-             src="https://www.metroag.de/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-herrmann-kraeuter-21.jpg">
-        <h1 class="mt-3">Wurzeln mit Zukunft</h1>
-        <p>Tradition trifft Technik.</p>
-      </div>
-
     </div>
-    <div class="swiper-pagination"></div>
   </div>
+
 </section>
 
-<!-- CONTENT -->
-<section class="container my-5">
-  <h2>METRO steht für Großhandel</h2>
-  <p>
-    Großhandel ist unsere Leidenschaft. Seit über 60 Jahren sind wir Partner
-    für professionelle Kunden in Gastronomie und Handel.
-  </p>
-</section>
-
+<!-- PLACEHOLDER FOR NEXT SECTIONS -->
+<main class="container my-5">
+  <h2>Schnellstart</h2>
+  <p>Weitere Inhalte folgen hier …</p>
 </main>
 
-<footer class="py-4 mt-5">
+<!-- FOOTER (unchanged / simple) -->
+<footer class="py-4 bg-light">
   <div class="container">
-    <p class="mb-0">© 2025 METRO AG – Static GitHub Pages Demo</p>
+    <p class="mb-0 text-muted">© 2025 METRO AG – Static GitHub Pages Demo</p>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script>
-  new Swiper('.swiper', {
-    loop: true,
-    pagination: { el: '.swiper-pagination' }
-  });
-</script>
-
 </body>
 </html>
-``
