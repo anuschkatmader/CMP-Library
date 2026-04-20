@@ -1,1135 +1,1215 @@
+
 <!DOCTYPE html>
-<html lang="de">
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="de">
+<!--<![endif]-->
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TV Home Demo</title>
-  <style>
-    :root{
-      --bg-black:#050306;
-      --bg-deep:#12040b;
-      --bg-red:#2a0008;
-      --bg-wine:#3d0914;
-      --panel:rgba(10,10,15,0.46);
-      --panel-2:rgba(20,20,28,0.58);
-      --line:rgba(255,255,255,0.08);
-      --line-soft:rgba(255,255,255,0.04);
-      --text:#ffffff;
-      --muted:#c6c6cd;
-      --muted-2:#9d9ea7;
-      --focus:#f8f8fb;
-      --focus-glow:rgba(255,255,255,0.28);
-      --shadow:0 14px 35px rgba(0,0,0,0.38);
-      --card-radius:6px;
-      --nav-size:84px;
-      --top-h:88px;
-      --gap:10px;
-      --section-h:34px;
-      --apps-w:120px;
-      --left-rail-w:92px;
-      --hero-w:365px;
-      --hero-h:210px;
-      --left-lower-h:150px;
-      --middle-w:260px;
-      --middle-h:100px;
-      --poster-w:150px;
-      --poster-h:210px;
-      --screen-w:1365px;
-      --screen-h:768px;
-      --font: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0}
-    body{
-      overflow:hidden;
-      font-family:var(--font);
-      color:var(--text);
-      background:
-        radial-gradient(1200px 620px at 16% 88%, rgba(160,0,24,0.25), transparent 56%),
-        radial-gradient(860px 420px at 72% 10%, rgba(95,12,28,0.30), transparent 64%),
-        radial-gradient(780px 400px at 42% 0%, rgba(104,0,30,0.18), transparent 62%),
-        linear-gradient(180deg, #1a0108 0%, #070307 52%, #020203 100%);
-      display:grid;
-      place-items:center;
-    }
-
-    .tv-screen{
-      position:relative;
-      width:min(100vw, calc(100vh * 16 / 9));
-      aspect-ratio:16 / 9;
-      overflow:hidden;
-      background:
-        radial-gradient(120% 100% at 50% 8%, rgba(255,255,255,0.05), transparent 45%),
-        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.03),
-        inset 0 -90px 120px rgba(0,0,0,0.2),
-        0 30px 60px rgba(0,0,0,0.5);
-    }
-
-    .tv-screen::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(900px 400px at 38% 40%, rgba(255,60,80,0.12), transparent 58%),
-        radial-gradient(460px 320px at 85% 18%, rgba(255,255,255,0.04), transparent 60%),
-        radial-gradient(600px 380px at 24% 6%, rgba(255,255,255,0.025), transparent 45%);
-      pointer-events:none;
-      mix-blend-mode:screen;
-    }
-
-    .tv-screen::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), transparent 16%, transparent 80%, rgba(0,0,0,0.25)),
-        radial-gradient(circle at center, transparent 58%, rgba(0,0,0,0.32) 100%);
-      pointer-events:none;
-    }
-
-    .app{
-      position:relative;
-      z-index:1;
-      width:100%;
-      height:100%;
-      padding:28px 34px 28px 34px;
-      display:grid;
-      grid-template-rows: var(--top-h) 1fr 120px;
-      gap:0;
-    }
-
-    /* Top Bar */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 6px 0 6px;
-    }
-
-    .top-left{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      min-width:0;
-    }
-
-    .top-left .search-text{
-      color:rgba(255,255,255,0.88);
-      font-weight:400;
-      font-size:clamp(18px,1.5vw,28px);
-      letter-spacing:.01em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      text-shadow:0 1px 2px rgba(0,0,0,.35);
-    }
-
-    .top-right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding-right:4px;
-      font-size:clamp(18px,1.5vw,28px);
-      font-weight:600;
-      text-shadow:0 1px 2px rgba(0,0,0,.4);
-    }
-
-    .vodafone-dot{
-      width:24px;
-      height:24px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 38% 38%, #ffffff 0 14%, transparent 15% 100%),
-        conic-gradient(from 300deg, #ef2f2f 0 78%, #fff 78% 90%, #ef2f2f 90% 100%);
-      box-shadow:0 0 10px rgba(239,47,47,.35);
-    }
-
-    /* Layout */
-    .content{
-      display:grid;
-      grid-template-columns: var(--left-rail-w) 1fr;
-      gap:18px;
-      align-items:start;
-    }
-
-    .rail{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      padding-top:30px;
-    }
-
-    .rail-btn{
-      width:var(--nav-size);
-      height:var(--nav-size);
-      background:
-        linear-gradient(180deg, rgba(45,47,60,0.52), rgba(8,8,13,0.68));
-      border:1px solid var(--line-soft);
-      border-radius:0;
-      display:grid;
-      place-items:center;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.05),
-        inset 0 -18px 40px rgba(0,0,0,0.18);
-      transition:transform .18s ease, filter .18s ease, box-shadow .18s ease, border-color .18s ease;
-      cursor:pointer;
-      user-select:none;
-    }
-
-    .rail-btn .icon{
-      width:34px;
-      height:34px;
-      color:#f7f7fa;
-      opacity:.95;
-    }
-
-    .rail-btn.active-look{
-      background:
-        linear-gradient(180deg, rgba(61,64,79,0.60), rgba(15,15,22,0.78));
-    }
-
-    .main{
-      display:grid;
-      grid-template-columns: var(--hero-w) var(--middle-w) calc(var(--poster-w) * 2 + var(--gap)) var(--apps-w);
-      grid-template-rows: var(--section-h) calc(var(--hero-h) + var(--gap) + var(--left-lower-h));
-      column-gap:var(--gap);
-      row-gap:8px;
-      align-items:start;
-    }
-
-    .section{
-      align-self:end;
-      color:rgba(255,255,255,0.92);
-      font-size:clamp(18px,1.25vw,22px);
-      font-weight:700;
-      letter-spacing:.02em;
-      text-align:center;
-      text-shadow:0 1px 2px rgba(0,0,0,.35);
-    }
-
-    .left-stack{
-      display:grid;
-      grid-template-rows: var(--hero-h) var(--left-lower-h);
-      gap:var(--gap);
-    }
-
-    .middle-stack{
-      display:grid;
-      grid-template-rows: repeat(4, var(--middle-h));
-      gap:var(--gap);
-    }
-
-    .poster-grid{
-      display:grid;
-      grid-template-columns: repeat(2, var(--poster-w));
-      grid-template-rows: repeat(2, var(--poster-h));
-      gap:var(--gap);
-    }
-
-    .apps-stack{
-      display:grid;
-      grid-template-rows: repeat(4, 100px);
-      gap:var(--gap);
-    }
-
-    /* Generic tile */
-    .tile{
-      position:relative;
-      overflow:hidden;
-      border-radius:var(--card-radius);
-      border:1px solid rgba(255,255,255,0.05);
-      box-shadow:var(--shadow);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
-        linear-gradient(180deg, rgba(12,12,18,0.12), rgba(0,0,0,0.3));
-      transition:
-        transform .18s ease,
-        filter .18s ease,
-        box-shadow .18s ease,
-        border-color .18s ease,
-        opacity .18s ease;
-      cursor:pointer;
-      user-select:none;
-    }
-
-    .tile::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.32));
-      pointer-events:none;
-    }
-
-    .tile::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
-      pointer-events:none;
-    }
-
-    .tile:hover{
-      filter:brightness(1.04);
-    }
-
-    .tile.focused,
-    .rail-btn.focused{
-      transform:scale(1.018);
-      z-index:9;
-      border-color:rgba(255,255,255,0.92);
-      box-shadow:
-        0 0 0 2px rgba(255,255,255,0.92),
-        0 0 24px var(--focus-glow),
-        0 16px 40px rgba(0,0,0,0.55);
-      filter:brightness(1.08);
-    }
-
-    .tile.pressed,
-    .rail-btn.pressed{
-      animation:pressPulse .28s ease;
-    }
-
-    @keyframes pressPulse{
-      0%{transform:scale(1.018)}
-      45%{transform:scale(1.045)}
-      100%{transform:scale(1.018)}
-    }
-
-    .tile-content{
-      position:absolute;
-      inset:0;
-      padding:12px 14px;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-end;
-      z-index:2;
-    }
-
-    .meta-top{
-      position:absolute;
-      top:10px;
-      left:12px;
-      right:12px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      z-index:3;
-      font-size:12px;
-      color:rgba(255,255,255,0.82);
-      letter-spacing:.02em;
-    }
-
-    .kicker{
-      font-size:clamp(15px,0.95vw,18px);
-      font-weight:400;
-      color:rgba(255,255,255,0.9);
-      margin-bottom:2px;
-      text-shadow:0 1px 2px rgba(0,0,0,.45);
-    }
-
-    .title{
-      font-size:clamp(26px,1.65vw,36px);
-      line-height:1.02;
-      font-weight:600;
-      text-shadow:0 2px 10px rgba(0,0,0,.42);
-    }
-
-    .title.small{
-      font-size:clamp(14px,1vw,18px);
-      font-weight:500;
-      line-height:1.15;
-    }
-
-    .subtitle{
-      font-size:11px;
-      font-weight:700;
-      color:rgba(255,255,255,.74);
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .time{
-      font-size:18px;
-      font-weight:500;
-      color:#dddde2;
-      margin-bottom:6px;
-    }
-
-    /* Artwork compositions */
-    .hero{
-      background:
-        radial-gradient(190px 120px at 30% 20%, rgba(255,120,160,0.65), transparent 48%),
-        radial-gradient(260px 170px at 66% 40%, rgba(255,30,30,0.55), transparent 54%),
-        linear-gradient(135deg, rgba(68,0,8,0.98), rgba(120,7,19,0.94) 48%, rgba(190,26,31,0.9) 100%);
-    }
-
-    .hero .voice-art{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(110deg, transparent 0 46%, rgba(255,255,255,0.08) 47% 48%, transparent 49%),
-        linear-gradient(70deg, transparent 0 60%, rgba(255,255,255,0.08) 61% 62%, transparent 63%),
-        radial-gradient(circle at 26% 25%, rgba(255,255,255,0.82) 0 2px, transparent 3px 100%),
-        radial-gradient(circle at 34% 15%, rgba(255,255,255,0.42) 0 2px, transparent 3px 100%),
-        radial-gradient(circle at 54% 18%, rgba(255,255,255,0.5) 0 2px, transparent 3px 100%),
-        radial-gradient(circle at 64% 28%, rgba(255,255,255,0.32) 0 2px, transparent 3px 100%);
-      opacity:.9;
-    }
-
-    .hero-logo{
-      position:absolute;
-      top:28px;
-      left:26px;
-      transform:rotate(-7deg);
-      font-weight:800;
-      line-height:.88;
-      text-transform:none;
-      letter-spacing:-0.03em;
-      text-shadow:
-        0 3px 0 rgba(125,0,5,0.9),
-        0 8px 14px rgba(0,0,0,0.38);
-      color:#ff2323;
-      -webkit-text-stroke: 2px #f8f6f7;
-      font-size:clamp(34px,2.7vw,58px);
-    }
-
-    .hero-logo span{
-      display:block;
-      font-size:clamp(20px,1.1vw,24px);
-      color:#f0efef;
-      -webkit-text-stroke: 0;
-      margin-left:44px;
-      margin-bottom:3px;
-      text-transform:lowercase;
-      font-weight:700;
-      transform:rotate(4deg);
-    }
-
-    .badge-circle{
-      position:absolute;
-      right:10px;
-      bottom:10px;
-      width:26px;
-      height:26px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 30% 36%, #fff 0 16%, transparent 17%),
-        linear-gradient(135deg, #ffc83d, #e23a3a 52%, #0b0b0b 53%, #0b0b0b 70%, #fff 71%, #fff 100%);
-      opacity:.95;
-      box-shadow:0 0 8px rgba(255,255,255,0.25);
-    }
-
-    .show-card{
-      background:
-        radial-gradient(220px 140px at 18% 70%, rgba(255,255,255,0.16), transparent 50%),
-        linear-gradient(180deg, rgba(98,79,64,0.72), rgba(48,34,30,0.92));
-    }
-
-    .person{
-      position:absolute;
-      left:90px;
-      bottom:0;
-      width:128px;
-      height:148px;
-      background:
-        radial-gradient(circle at 62% 18%, #efcfb1 0 12px, transparent 13px),
-        radial-gradient(circle at 60% 16%, #9d7d66 0 15px, transparent 16px),
-        linear-gradient(180deg, transparent 0 30%, #23354f 30% 100%);
-      border-radius:48% 48% 10% 10% / 22% 22% 6% 6%;
-      box-shadow:0 10px 18px rgba(0,0,0,.35);
-      transform:scale(1.12);
-      filter:brightness(.95);
-    }
-
-    .dog{
-      position:absolute;
-      left:52px;
-      bottom:12px;
-      width:54px;
-      height:46px;
-      background:
-        radial-gradient(circle at 38% 34%, #f0d0a8 0 10px, transparent 11px),
-        radial-gradient(circle at 66% 42%, #d5a26f 0 14px, transparent 15px),
-        linear-gradient(180deg, #aa794d, #7a532f);
-      border-radius:46% 42% 40% 38%;
-      transform:rotate(8deg);
-      box-shadow:0 6px 12px rgba(0,0,0,.3);
-    }
-
-    .program{
-      background:
-        linear-gradient(100deg, rgba(20,20,25,0.85), rgba(20,20,25,0.32)),
-        radial-gradient(160px 70px at 78% 50%, rgba(80,115,190,0.38), transparent 60%),
-        linear-gradient(90deg, #20232f, #303645 46%, #5f7ba8 100%);
-    }
-
-    .program.echt{
-      background:
-        linear-gradient(100deg, rgba(20,20,25,0.85), rgba(20,20,25,0.3)),
-        radial-gradient(160px 90px at 84% 50%, rgba(255,168,188,0.45), transparent 60%),
-        linear-gradient(90deg, #252531, #655445 50%, #d89aa9 100%);
-    }
-
-    .program.gross{
-      background:
-        linear-gradient(100deg, rgba(18,18,22,0.84), rgba(18,18,22,0.28)),
-        radial-gradient(160px 90px at 82% 52%, rgba(255,100,80,0.36), transparent 60%),
-        linear-gradient(90deg, #22242c, #3f434a 54%, #86504b 100%);
-    }
-
-    .program.sturm{
-      background:
-        linear-gradient(100deg, rgba(18,18,22,0.84), rgba(18,18,22,0.28)),
-        radial-gradient(160px 90px at 83% 54%, rgba(172,226,255,0.42), transparent 60%),
-        linear-gradient(90deg, #1c1f24, #53515a 52%, #8fc8e7 100%);
-    }
-
-    .channel-logo{
-      font-size:11px;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.78);
-    }
-
-    .poster{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), transparent),
-        linear-gradient(180deg, #2b1e1c, #171215 72%, #0f0f12);
-    }
-
-    .poster.man{
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.28)),
-        radial-gradient(160px 120px at 52% 26%, rgba(255,255,255,.1), transparent 60%),
-        linear-gradient(180deg, #2d2f36 0%, #121318 64%, #09090c 100%);
-    }
-
-    .poster.man .figure{
-      position:absolute;
-      left:48px;
-      top:24px;
-      width:54px;
-      height:150px;
-      background:
-        radial-gradient(circle at 52% 12%, #f0cab7 0 9px, transparent 10px),
-        radial-gradient(circle at 52% 11%, #7f7f82 0 13px, transparent 14px),
-        linear-gradient(180deg, transparent 0 14%, #0d0d10 14% 100%);
-      border-radius:42% 42% 14% 14% / 12% 12% 5% 5%;
-      box-shadow:0 10px 14px rgba(0,0,0,.4);
-    }
-
-    .poster.man .poster-title{
-      position:absolute;
-      bottom:18px;
-      left:14px;
-      right:14px;
-      text-align:center;
-      font-size:14px;
-      line-height:1.12;
-      font-weight:700;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:#e7d2a5;
-      text-shadow:0 2px 6px rgba(0,0,0,.4);
-    }
-
-    .poster.paw{
-      background:
-        radial-gradient(120px 80px at 55% 24%, rgba(77,145,255,0.32), transparent 55%),
-        linear-gradient(180deg, #1d3562 0%, #30599d 46%, #f2be3d 47%, #d13b32 100%);
-    }
-
-    .paw-badge{
-      position:absolute;
-      top:18px;
-      left:14px;
-      right:14px;
-      font-size:42px;
-      font-weight:900;
-      color:#1e69d8;
-      text-align:center;
-      text-shadow:
-        0 0 0 #fff,
-        2px 2px 0 #fff,
-        -2px 2px 0 #fff,
-        2px -2px 0 #fff,
-        -2px -2px 0 #fff,
-        0 6px 18px rgba(0,0,0,.25);
-      letter-spacing:-.03em;
-    }
-
-    .paw-sub{
-      position:absolute;
-      top:78px;
-      left:24px;
-      right:24px;
-      text-align:center;
-      background:#f0c630;
-      color:#9c1618;
-      font-weight:800;
-      font-size:14px;
-      padding:4px 6px;
-      border-radius:4px;
-      text-transform:uppercase;
-    }
-
-    .pup{
-      position:absolute;
-      width:26px;
-      height:34px;
-      border-radius:40% 40% 35% 35%;
-      background:
-        radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px),
-        linear-gradient(180deg, #cf8d4d, #7c4f29);
-      box-shadow:0 5px 10px rgba(0,0,0,.25);
-    }
-    .p1{left:18px; top:34px;}
-    .p2{left:56px; top:26px; background:radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px), linear-gradient(180deg, #a15e2d, #573117);}
-    .p3{left:94px; top:34px; background:radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px), linear-gradient(180deg, #dcbdb0, #7e6a64);}
-    .p4{left:46px; top:110px; background:radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px), linear-gradient(180deg, #c8853f, #5b3418);}
-    .p5{left:84px; top:116px; background:radial-gradient(circle at 50% 18%, #f1d4ba 0 5px, transparent 6px), linear-gradient(180deg, #815d43, #3d2b20);}
-
-    .poster.legs{
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.32)),
-        linear-gradient(180deg, #7ea9ae 0%, #8fb5b9 44%, #47686c 45%, #122126 100%);
-    }
-
-    .legs-shape{
-      position:absolute;
-      left:48px;
-      top:34px;
-      width:58px;
-      height:142px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.2), transparent 20%),
-        linear-gradient(180deg, #d6b5a0 0%, #d2ab95 68%, #6d4d38 68%, #5b3d2d 100%);
-      clip-path:polygon(34% 0, 66% 0, 78% 16%, 65% 100%, 52% 100%, 58% 18%, 42% 18%, 48% 100%, 35% 100%, 22% 16%);
-      box-shadow:0 8px 16px rgba(0,0,0,.22);
-    }
-
-    .old-title{
-      position:absolute;
-      bottom:16px;
-      left:18px;
-      font-size:34px;
-      color:#eff1ea;
-      letter-spacing:.06em;
-      font-weight:300;
-      text-transform:uppercase;
-      text-shadow:0 2px 8px rgba(0,0,0,.35);
-    }
-
-    .poster.bodyguard{
-      background:
-        radial-gradient(160px 100px at 28% 76%, rgba(255,140,20,0.24), transparent 60%),
-        linear-gradient(180deg, #c49c1f 0%, #d4b53a 18%, #553317 18.5%, #26160d 100%);
-    }
-
-    .bodyguard-title{
-      position:absolute;
-      top:20px;
-      left:12px;
-      right:12px;
-      font-size:18px;
-      line-height:1;
-      font-weight:900;
-      text-transform:uppercase;
-      color:#251b13;
-      text-align:center;
-      text-shadow:0 1px 0 rgba(255,255,255,.15);
-    }
-
-    .silhouette{
-      position:absolute;
-      bottom:18px;
-      width:42px;
-      height:88px;
-      border-radius:30% 30% 12% 12%;
-      background:
-        radial-gradient(circle at 50% 12%, #efcab2 0 7px, transparent 8px),
-        linear-gradient(180deg, transparent 0 15%, #351f15 15% 100%);
-      box-shadow:0 5px 10px rgba(0,0,0,.3);
-    }
-    .s1{left:28px}
-    .s2{left:64px; height:94px}
-    .s3{left:98px; height:82px}
-
-    /* App tiles */
-    .app-tile{
-      display:grid;
-      place-items:center;
-      color:#111;
-      font-weight:800;
-      letter-spacing:.01em;
-      font-size:25px;
-      background:#fff;
-      text-shadow:none;
-    }
-
-    .netflix{
-      color:#d91616;
-      font-size:30px;
-      font-weight:800;
-      letter-spacing:.02em;
-    }
-
-    .youtube{
-      gap:10px;
-    }
-
-    .yt-wrap{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-size:27px;
-      color:#111;
-      font-weight:700;
-    }
-
-    .yt-icon{
-      width:28px;
-      height:20px;
-      border-radius:6px;
-      background:#df1515;
-      position:relative;
-    }
-
-    .yt-icon::before{
-      content:"";
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-40%,-50%);
-      border-left:8px solid #fff;
-      border-top:5px solid transparent;
-      border-bottom:5px solid transparent;
-    }
-
-    .dazn{
-      background:#101215;
-      color:#fff;
-      font-size:22px;
-      letter-spacing:.14em;
-      position:relative;
-    }
-
-    .dazn::before{
-      content:"";
-      position:absolute;
-      inset:16px;
-      border:3px solid #fff;
-      clip-path:polygon(0 20%, 22% 20%, 22% 0, 78% 0, 78% 20%, 100% 20%, 100% 80%, 78% 80%, 78% 100%, 22% 100%, 22% 80%, 0 80%);
-      opacity:.9;
-    }
-
-    .prime{
-      background:#1f8bd9;
-      color:#fff;
-      font-size:18px;
-      line-height:1.02;
-      font-weight:700;
-      text-align:center;
-      position:relative;
-    }
-
-    .prime::after{
-      content:"";
-      position:absolute;
-      bottom:21px;
-      left:22px;
-      right:22px;
-      height:12px;
-      border-bottom:3px solid rgba(255,255,255,.95);
-      border-radius:0 0 50% 50%;
-      transform:rotate(-3deg);
-      opacity:.9;
-    }
-
-    /* Bottom info */
-    .info{
-      display:flex;
-      align-items:flex-start;
-      padding-left:126px;
-      padding-top:22px;
-    }
-
-    .info-inner{
-      max-width:420px;
-    }
-
-    .info h2{
-      margin:0 0 18px 0;
-      font-size:clamp(24px,1.7vw,34px);
-      font-weight:300;
-      color:#f2f2f4;
-      text-shadow:0 1px 2px rgba(0,0,0,.35);
-    }
-
-    .info p{
-      margin:0;
-      font-size:clamp(16px,1.04vw,19px);
-      line-height:1.5;
-      color:rgba(255,255,255,0.92);
-      text-shadow:0 1px 2px rgba(0,0,0,.35);
-    }
-
-    /* Small helpers */
-    svg{display:block}
-    .clock-dot{
-      width:14px;height:14px;border-radius:50%;
-      border:2px solid rgba(255,255,255,.8);
-      opacity:.9;
-      position:relative;
-    }
-    .clock-dot::before{
-      content:"";
-      position:absolute;
-      width:1.5px;height:4px;background:#fff;
-      left:50%;top:2px;transform:translateX(-50%);
-    }
-    .clock-dot::after{
-      content:"";
-      position:absolute;
-      width:4px;height:1.5px;background:#fff;
-      left:50%;top:50%;transform:translateY(-50%);
-    }
-
-    .muted{
-      color:rgba(255,255,255,.72);
-    }
-
-    .hd{
-      font-size:12px;
-      font-weight:800;
-      color:rgba(255,255,255,.88);
-      letter-spacing:.03em;
-    }
-
-    @media (max-width: 1200px){
-      .app{padding:20px 22px}
-      .main{
-        transform:scale(.92);
-        transform-origin:top left;
-      }
-      .info{padding-left:112px}
-    }
-
-    @media (max-width: 980px){
-      .main{
-        transform:scale(.78);
-        transform-origin:top left;
-      }
-      .top-left .search-text,
-      .top-right{
-        font-size:16px;
-      }
-      .info{
-        padding-left:100px;
-        padding-top:8px;
-      }
-      .info p{font-size:14px}
-    }
-  </style>
+<link href="/-/media/feature/mag/bootstrap-45/bootstrap-45/styles/optimized-min.css?rev=169290ab-54ac-4651-ae20-36fd0b0557a0&t=20240321T072750Z&hash=53EC79A423B136A4193AA026A9741FA8" rel="stylesheet"><link href="/-/media/themes/mag/metroag/metro-components/styles/optimized-min.css?rev=d8b6957d-523f-43c5-b5f6-4ddcb6ef4ef0&t=20260325T081412Z&hash=E42EEDE5763F4EE07AD4D03FFB68DCF0" rel="stylesheet"><link href="/-/media/themes/mag/metroag/metro-white/styles/optimized-min.css?rev=9012eb41-192b-4ea8-9eb6-ab63ffa979ba&t=20260407T144721Z&hash=C5493F372A64E42ABE7E247E453D665C" rel="stylesheet"><link href="/-/media/project/mag/shared/global/ui-references/pageheadslider.css?rev=bb9ad386-ad22-4876-9486-c863d7fa9799" rel="stylesheet"  />
+
+    
+    
+
+
+
+    <title>Großhandel ist unsere Leidenschaft | METRO AG</title>
+
+
+
+<meta  name="robots" content="index,follow">
+    <link href="/-/media/project/mag/shared/global/common/favmetro.ico?rev=766e616d-b554-497e-bca3-42c57ca33002" rel="shortcut icon" />
+
+
+
+
+<meta property="og:description"  content="METRO ist Partner der vielen kleinen und mittelgroßen selbstständigen Unternehmen. Ihr Erfolg ist unser Geschäft. An der Spitze des Konzerns steht die METRO AG als zentrale Managementholding."><meta property="og:type"  content="website"><meta property="og:image"  content="https://www.metroag.de/-/media/project/mag/corporate/metro-ag/images/teasers/metro-flags.jpg?rev=744c3a2c-ae12-4a87-9e83-31828394058f"><meta property="og:title"  content="METRO AG"><meta property="og:url"  content="https://www.metroag.de/de">
+
+
+
+<meta  name="description" content="METRO ist Partner der vielen kleinen und mittelgroßen selbstständigen Unternehmen. Ihr Erfolg ist unser Geschäft. An der Spitze des Konzerns steht die METRO AG als zentrale Managementholding.">
+
+
+
+<meta property="twitter:site"  content="@METRO_News"><meta property="twitter:image"  content="https://www.metroag.de/-/media/project/mag/corporate/metro-ag/images/teasers/metro-flags.jpg?rev=744c3a2c-ae12-4a87-9e83-31828394058f"><meta property="twitter:description"  content="METRO ist Partner der vielen kleinen und mittelgroßen selbstständigen Unternehmen. Ihr Erfolg ist unser Geschäft. An der Spitze des Konzerns steht die METRO AG als zentrale Managementholding."><meta property="twitter:title"  content="METRO AG"><meta property="twitter:card"  content="summary">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+
+    <!--siteimprove-->
+        <link rel="preconnect" href="https://siteimproveanalytics.com" />
+        <script type="text/javascript">
+            (function () {
+                var sz = document.createElement('script'); sz.type = 'text/javascript'; sz.defer = true;
+                sz.src = '//siteimproveanalytics.com/js/siteanalyze_1634.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sz, s);
+            })();
+        </script>
+    <!-- Meta tag for Global site tag (gtag.js) - Google Analytics -->
+        <meta name="GA4MeasurementId" content="G-YFRH6F1TRX" />
+    <!-- Google Tag Manager -->
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <script>
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js' });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.defer = true;
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+
+            function gtag() { dataLayer.push(arguments); }
+
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied'
+            });
+
+        })(window, document, 'script', 'dataLayer', 'GTM-57TPZPQ');
+        </script>
+
+
+
+
+
+        <link rel="apple-touch-icon" href="https://www.metroag.de/-/media/project/mag/shared/global/logo/apple-touch-metro-icon-144x144-precomposed.png?rev=dc4a1696-86ed-45eb-aaca-62e6fb05438f" />
+    <link rel="canonical" href="https://www.metroag.de/de" />
+<link rel="me,nofollow" href="https://home.social/@metro" /><Meta  Name="google-site-verification" Content="P7yw3xWJW-YEJrkmgosuHfixnOwiObZbr4hC-9wXAXE"/>        <link rel="alternate" hreflang="en" href="https://www.metroag.de/en" />
+        <link rel="alternate" hreflang="de" href="https://www.metroag.de/de" />
+
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="pingdomString" content="d6424ced1425349e84d3d908eaeefcd3">
+
+
+
+    <link href="/-/media/project/mag/corporate/metro-ag/css/20231004-custom-nav.css?rev=e9b369ab-6d3b-4015-9a37-b2dae88bc505" rel="stylesheet" type="text/css" />
+
 </head>
-<body>
-  <div class="tv-screen">
-    <div class="app">
+<body class="no-breadcrumb default-device bodyclass">
+    
 
-      <!-- Top bar -->
-      <header class="topbar">
-        <div class="top-left">
-          <div aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2.8l1.2 1.92a7.43 7.43 0 0 1 2.06.86l2.16-.62 1.5 2.6-1.63 1.54c.12.4.2.83.23 1.26l1.4 1.7-1.4 2.42-2.22-.18c-.52.43-1.1.77-1.73 1.01L12 21.2l-2.02-1.9a7.48 7.48 0 0 1-1.94-.89l-2.2.57-1.44-2.5 1.6-1.6A7.3 7.3 0 0 1 6 13.6l-1.4-1.66 1.42-2.47 2.14.12c.55-.47 1.16-.83 1.83-1.07L12 2.8Z" stroke="white" stroke-width="1.4" opacity=".9"/>
-              <circle cx="12" cy="12" r="3.2" stroke="white" stroke-width="1.4" opacity=".9"/>
-            </svg>
-          </div>
-          <div aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="10.5" cy="10.5" r="6.2" stroke="white" stroke-width="1.6" opacity=".92"/>
-              <path d="M15.3 15.3L20.2 20.2" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity=".92"/>
-            </svg>
-          </div>
-          <div class="search-text">Suche nach Filmen, Schauspielern, Serien...</div>
-        </div>
 
-        <div class="top-right">
-          <div class="clock-dot" aria-hidden="true"></div>
-          <div id="clock">15:39</div>
-          <div class="vodafone-dot" aria-hidden="true"></div>
-        </div>
-      </header>
 
-      <!-- Main content -->
-      <main class="content">
-        <!-- Left rail -->
-        <nav class="rail" aria-label="Navigation">
-          <div class="rail-btn active-look" tabindex="0" data-id="nav-grid" data-up="app-prime" data-down="nav-play" data-left="app-prime" data-right="hero">
-            <svg class="icon" viewBox="0 0 24 24" fill="none">
-              <rect x="4" y="4" width="6" height="6" fill="white" opacity=".92"/>
-              <rect x="14" y="4" width="6" height="6" fill="white" opacity=".92"/>
-              <rect x="4" y="14" width="6" height="6" fill="white" opacity=".92"/>
-              <rect x="14" y="14" width="6" height="6" fill="white" opacity=".92"/>
-            </svg>
-          </div>
+<script>
+	function setSVGAttributes(object) {
+	if(object){
+			var obj = object;  // jQuery object for the <object> tag
+			var svgDoc = object.contentDocument || object.contentWindow.document;
+			var svgElement = svgDoc ? svgDoc.querySelector('svg') : null;
 
-          <div class="rail-btn" tabindex="0" data-id="nav-play" data-up="nav-grid" data-down="nav-record" data-left="program4" data-right="recording">
-            <svg class="icon" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="5" width="18" height="12" stroke="white" stroke-width="1.6" opacity=".9"/>
-              <path d="M10 8.5L15 11.1L10 13.9V8.5Z" fill="white" opacity=".95"/>
-              <path d="M8 20H16" stroke="white" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
-            </svg>
-          </div>
+			if (svgElement && !svgElement.classList.contains('viewBox')) {
+				var svgWidth = svgElement.getAttribute('width');
+				var svgHeight = svgElement.getAttribute('height');
+				var viewBox = svgElement.getAttribute("viewBox");
+				//If viewBox doesnot exist run below 
+				if (!viewBox && svgWidth != null && svgHeight != null) {
+				svgElement.setAttribute('viewBox', `0 0 ${svgWidth} ${svgHeight}`);
+				svgElement.classList.add('viewBox');
+				}
+			}
+		}
+	}
+</script>
 
-          <div class="rail-btn" tabindex="0" data-id="nav-record" data-up="nav-play" data-down="nav-smile" data-left="program3" data-right="program1">
-            <svg class="icon" viewBox="0 0 24 24" fill="none">
-              <rect x="4" y="4" width="16" height="16" rx="3.2" stroke="white" stroke-width="1.5" opacity=".92"/>
-              <path d="M8.2 17V7.4H12.9C15.1 7.4 16.5 8.65 16.5 10.65C16.5 12.2 15.5 13.25 13.95 13.55L16.5 17H14.2L11.85 13.75H10.2V17H8.2ZM10.2 12.15H12.55C13.8 12.15 14.45 11.58 14.45 10.62C14.45 9.68 13.8 9.1 12.55 9.1H10.2V12.15Z" fill="white"/>
-            </svg>
-          </div>
 
-          <div class="rail-btn" tabindex="0" data-id="nav-smile" data-up="nav-record" data-down="nav-grid" data-left="hero" data-right="program4">
-            <svg class="icon" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="8.2" stroke="white" stroke-width="1.6" opacity=".92"/>
-              <circle cx="9.1" cy="10.2" r="1" fill="white"/>
-              <circle cx="14.9" cy="10.2" r="1" fill="white"/>
-              <path d="M8.5 14.2C9.5 15.5 10.7 16 12 16C13.3 16 14.5 15.5 15.5 14.2" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </nav>
 
-        <!-- Grid -->
-        <section class="main" aria-label="TV dashboard">
-          <div class="section">MEIN TV</div>
-          <div class="section">JETZT IM TV</div>
-          <div class="section">VIDEOTHEK</div>
-          <div class="section">APPS</div>
 
-          <!-- Mein TV -->
-          <div class="left-stack">
-            <article class="tile hero focused" tabindex="0" data-id="hero" data-up="nav-grid" data-down="recording" data-left="nav-grid" data-right="program1">
-              <div class="voice-art"></div>
-              <div class="hero-logo"><span>the</span>Voice<br>of Germany</div>
-              <div class="badge-circle" aria-hidden="true"></div>
-              <div class="tile-content">
-                <div class="kicker">Empfehlungen</div>
-                <div class="title">The Voice of Germany</div>
-              </div>
-            </article>
+    <!-- Siteimprove Script -->
+        <script defer src="/-/media/project/mag/shared/global/ui-references/siteimprove-event/siteimprove.js?rev=91407a16-b8f2-45d3-983d-cfff35857fbf"></script>
+    <!-- Google Tag Manager -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-57TPZPQ" height="0" width="0" style="display: none; visibility: hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
 
-            <article class="tile show-card" tabindex="0" data-id="recording" data-up="hero" data-down="info-link" data-left="nav-play" data-right="program4">
-              <div class="person"></div>
-              <div class="dog"></div>
-              <div class="tile-content">
-                <div class="kicker">Aufnahmen</div>
-                <div class="title small">Der Dicke</div>
-              </div>
-            </article>
-          </div>
 
-          <!-- Jetzt im TV -->
-          <div class="middle-stack">
-            <article class="tile program" tabindex="0" data-id="program1" data-up="nav-record" data-down="program2" data-left="hero" data-right="poster1">
-              <div class="meta-top">
-                <div class="hd">ZDF HD</div>
-              </div>
-              <div class="tile-content">
-                <div class="time">14:05</div>
-                <div class="title small">sportstudio live</div>
-              </div>
-            </article>
-
-            <article class="tile program echt" tabindex="0" data-id="program2" data-up="program1" data-down="program3" data-left="hero" data-right="poster2">
-              <div class="tile-content">
-                <div class="time">15:00</div>
-                <div class="title small">Echt jetzt?! - m...</div>
-              </div>
-            </article>
-
-            <article class="tile program gross" tabindex="0" data-id="program3" data-up="program2" data-down="program4" data-left="nav-record" data-right="poster3">
-              <div class="meta-top">
-                <div class="channel-logo">SWR Fernsehen</div>
-              </div>
-              <div class="tile-content">
-                <div class="time">15:10</div>
-                <div class="title small">Großstadtrevier</div>
-              </div>
-            </article>
-
-            <article class="tile program sturm" tabindex="0" data-id="program4" data-up="program3" data-down="nav-play" data-left="recording" data-right="poster4">
-              <div class="meta-top">
-                <div class="hd">1 HD</div>
-              </div>
-              <div class="tile-content">
-                <div class="time">15:10</div>
-                <div class="title small">Sturm der Liebe</div>
-              </div>
-            </article>
-          </div>
-
-          <!-- Videothek -->
-          <div class="poster-grid">
-            <article class="tile poster man" tabindex="0" data-id="poster1" data-up="nav-record" data-down="poster3" data-left="program1" data-right="app-netflix">
-              <div class="figure"></div>
-              <div class="poster-title">Keine Zeit<br>zu sterben</div>
-            </article>
-
-            <article class="tile poster paw" tabindex="0" data-id="poster2" data-up="nav-grid" data-down="poster4" data-left="program2" data-right="app-youtube">
-              <div class="paw-badge">PAW</div>
-              <div class="paw-sub">Der Kinofilm</div>
-              <div class="pup p1"></div>
-              <div class="pup p2"></div>
-              <div class="pup p3"></div>
-              <div class="pup p4"></div>
-              <div class="pup p5"></div>
-            </article>
-
-            <article class="tile poster legs" tabindex="0" data-id="poster3" data-up="poster1" data-down="nav-smile" data-left="program3" data-right="app-dazn">
-              <div class="legs-shape"></div>
-              <div class="old-title">OLD</div>
-            </article>
-
-            <article class="tile poster bodyguard" tabindex="0" data-id="poster4" data-up="poster2" data-down="nav-grid" data-left="program4" data-right="app-prime">
-              <div class="bodyguard-title">Killer's<br>Bodyguard</div>
-              <div class="silhouette s1"></div>
-              <div class="silhouette s2"></div>
-              <div class="silhouette s3"></div>
-            </article>
-          </div>
-
-          <!-- Apps -->
-          <div class="apps-stack">
-            <article class="tile app-tile netflix" tabindex="0" data-id="app-netflix" data-up="app-prime" data-down="app-youtube" data-left="poster1" data-right="nav-grid">NETFLIX</article>
-
-            <article class="tile app-tile youtube" tabindex="0" data-id="app-youtube" data-up="app-netflix" data-down="app-dazn" data-left="poster2" data-right="nav-play">
-              <div class="yt-wrap">
-                <div class="yt-icon"></div>
-                <div>YouTube</div>
-              </div>
-            </article>
-
-            <article class="tile app-tile dazn" tabindex="0" data-id="app-dazn" data-up="app-youtube" data-down="app-prime" data-left="poster3" data-right="nav-record">DAZN</article>
-
-            <article class="tile app-tile prime" tabindex="0" data-id="app-prime" data-up="app-dazn" data-down="app-netflix" data-left="poster4" data-right="nav-grid">
-              <div>prime<br>video</div>
-            </article>
-          </div>
-        </section>
-      </main>
-
-      <!-- Bottom info -->
-      <section class="info">
-        <div class="info-inner">
-          <h2>Jetzt ansehen</h2>
-          <p id="info-text">Hier findest Du gesammelt Deine aktuellsten Aufnahmen, Empfehlungen und bereits gestarteten Inhalte</p>
-          <div id="info-link" tabindex="-1" aria-hidden="true"></div>
-        </div>
-      </section>
-
+<div class="cookie-hidden-info" data-deleteCookieList=none data-categorycookieValue="preferences:i|statistics:i|third-party:i,google:i+youtube:i+flockler:i+starred:i" data-categorycookie=metro-ag#allowedusercookiecategories data-allowedcookie=metro-ag#allowedcookie data-futureconsentcookie=metro-ag#consentfuture data-langfuture=metro-ag#langfuture|de data-theme="metro-ag#theme" data-themefuture="metro-ag#themefuture" data-classicsearch="metro-ag#searchtype" data-classicsearchfuture="metro-ag#searchtypefuture" data-savedJobs="metro-ag#savedjobs" data-savedJobsfuture="metro-ag#savedjobsfuture" data-savedJobsConsent="False" style="display:none;"></div>
+<div id="cg-sites">
+        <img class="loadCookie" data-src="https://newsroom.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="loadCookie" data-src="https://responsibility.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="loadCookie" data-src="https://verantwortung.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="loadCookie" data-src="https://investors.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="loadCookie" data-src="https://investoren.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="loadCookie" data-src="https://www.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="loadCookie" data-src="https://careers.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="loadCookie" data-src="https://karriere.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+            <img class="themeCookie" data-src="https://www.metro-sourcing.hk/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www.metro-gsc.in/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www.miag.com/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www.metro-gsc.pl/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www.metro-potentials.com/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://politics.metroag.eu/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://politik.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://newsroom.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www.metro-properties.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www.metro-campus.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://responsibility.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://verantwortung.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://investors.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://investoren.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www.metro-vto.es/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www.metro-properties.com.tr/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://careers.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://karriere.metroag.de/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www-p.careers.metro-gsc.pl/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www-p.careers.metro-gsc.in/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
+        <img class="themeCookie" data-src="https://www-p.kariera.metro-gsc.pl/-/media/Project/MAG/shared/Global/Common/metro-logo-full.svg" style="display: none" />
     </div>
+
+
+
+    
+<!-- #wrapper -->
+<div id="wrapper">
+    <!-- #header -->
+    <header>
+        <div id="header" class="">
+            
+
+
+<nav class="main_nav  ">
+
+    <div class="container">
+        <div class="main_nav__container">
+            <div class="main_nav__logo">
+
+                <a href="/de" title="METRO">
+                    <img src="/-/media/project/mag/shared/global/common/metro-logo-full_facelift.svg?rev=139269df-1a50-4ca0-a804-a16cbb2b3e1e" alt="METRO" class="li" height="32" width="133" />
+                    <img src="/-/media/project/mag/shared/global/common/metro-logo-full-darkmode_facelift.svg?rev=d24ae65d-6263-4b9e-8736-33f5af98ec95" alt="METRO" class="da" height="32" width="133"/>
+                </a>
+
+            </div>
+            <div class="main_nav__navi" id="mainNav">
+
+                
+
+<ul class="main_nav__navi__tree tree_page_1">
+    <li class="main_nav__navi__tree__item">
+        <a class="has-level-2" aria-haspopup="true" aria-expanded="false" aria-controls="submenu-&#220;ber uns" role="button"
+           href="/de/ueber-uns"><span>&#220;ber uns</span></a>
+        <nav class="level-2" id="submenu-&#220;ber uns">
+            <div class="level-2-container">
+                <ul class="main_nav__navi__tree__level-2">
+                    <li class="main_nav__navi__tree__level-2__item">
+                        <a href="/de/ueber-uns"><span>&#220;ber uns</span></a>
+                    </li>
+
+
+    <li class="main_nav__navi__tree__level-2__item">
+            <a href="/de/ueber-uns/strategie"><span>Strategie</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a href="/de/ueber-uns/marken"><span>Marken</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a href="/de/ueber-uns/vorstand"><span>Vorstand</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a href="/de/ueber-uns/aufsichtsrat"><span>Aufsichtsrat</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a href="/de/ueber-uns/corporate-governance"><span>Corporate Governance</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a href="/de/ueber-uns/compliance"><span>Compliance</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a href="/de/ueber-uns/konzernweiter-datenschutz"><span>Konzernweiter Datenschutz</span></a>
+    </li>
+
+
+                </ul>
+                <div class="main_nav__navi__tree__level-2__shortlinks">
+<div class="teaser teaser--vertical"><div class="teaser__link" title="Über uns" href="https://www.metroag.de/de/ueber-uns"></div><div class="teaser__container"><figure class="teaser__figure" itemscope itemtype="https://schema.org/ImageObject"><picture class=""><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/metro-flags-teaser-11.jpg?w=600&amp;rev=7622f76e-a806-4ddc-8248-abdac9519fcf&amp;hash=B4D7092E72DA28F0C41A3C1212CEB063" media="(min-width: 1600px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/metro-flags-teaser-11.jpg?w=500&amp;rev=7622f76e-a806-4ddc-8248-abdac9519fcf&amp;hash=B11EFE31C362D464552A00924AB7E3C6" media="(min-width: 1200px)"></source><img src="/-/media/project/mag/shared/global/newsroom-media/images/teasers/metro-flags-teaser-11.jpg?w=10&rev=7622f76e-a806-4ddc-8248-abdac9519fcf" class="img-fluid teaser__figure__image" loading="lazy" width="600" height="600" itemprop="contentUrl" alt="Flaggen am METRO Hauptsitz" /><span itemprop="height" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="600" /></span><span itemprop="width" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="600" /></span><meta itemprop="encodingFormat"  content="image/jpeg" /><meta itemprop="contentSize"  content="194286" /><meta itemprop="copyrightNotice"  content="© 2025 METRO AG" /></picture></figure><div class="teaser__content"><div class="teaser__body__content"><h3 class="teaser-title field-teaser-title">Über uns</h3><p class="text-text field-teaser-description">METRO ist ein führender internationaler Lebensmittelgroßhändler, spezialisiert auf HoReCa und Traders.</p></div></div></div></div>                </div>
+            </div>
+        </nav>
+    </li>
+    <li class="main_nav__navi__tree__item">
+        <a class="has-level-2 " aria-haspopup="true" aria-expanded="false" aria-controls="submenu-Investoren" role="button"
+           href="https://investoren.metroag.de/" target="" alt="Investoren"><span>Investoren</span></a>
+        <nav class="level-2" id="submenu-Investoren">
+            <div class="level-2-container">
+                <ul class="main_nav__navi__tree__level-2">
+                    <li class="main_nav__navi__tree__level-2__item">
+                        <a class="" href="https://investoren.metroag.de/" target="" alt="Investoren"><span>Investoren</span></a>
+                    </li>
+
+
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://investoren.metroag.de/anleihen" target="" alt="Anleihen"><span>Anleihen</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://investoren.metroag.de/news" target="" alt="News"><span>News</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://investoren.metroag.de/veranstaltungen" target="" alt="Veranstaltungen"><span>Veranstaltungen</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://investoren.metroag.de/downloads" target="" alt="Downloads"><span>Downloads</span></a>
+    </li>
+
+
+                </ul>
+                <div class="main_nav__navi__tree__level-2__shortlinks">
+<div class="teaser teaser--vertical"></div>                </div>
+            </div>
+        </nav>
+    </li>
+    <li class="main_nav__navi__tree__item">
+        <a class="has-level-2 " aria-haspopup="true" aria-expanded="false" aria-controls="submenu-Verantwortung" role="button"
+           href="https://verantwortung.metroag.de/" target="" alt="Verantwortung"><span>Verantwortung</span></a>
+        <nav class="level-2" id="submenu-Verantwortung">
+            <div class="level-2-container">
+                <ul class="main_nav__navi__tree__level-2">
+                    <li class="main_nav__navi__tree__level-2__item">
+                        <a class="" href="https://verantwortung.metroag.de/" target="" alt="Verantwortung"><span>Verantwortung</span></a>
+                    </li>
+
+
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://verantwortung.metroag.de/ansatz/metro-sustainable" target="" alt="ESG Strategie"><span>ESG Strategie</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://verantwortung.metroag.de/esg-prioritaeten/klima-und-co2" target="" alt="ESG Priorit&#228;ten"><span>ESG Priorit&#228;ten</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://verantwortung.metroag.de/verpflichtungen" target="" alt="Verpflichtungen"><span>Verpflichtungen</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://verantwortung.metroag.de/publikationen" target="" alt="Publikationen"><span>Publikationen</span></a>
+    </li>
+
+
+                </ul>
+                <div class="main_nav__navi__tree__level-2__shortlinks">
+<div class="teaser teaser--vertical"></div>                </div>
+            </div>
+        </nav>
+    </li>
+    <li class="main_nav__navi__tree__item">
+        <a class="has-level-2 " aria-haspopup="true" aria-expanded="false" aria-controls="submenu-Newsroom" role="button"
+           href="https://newsroom.metroag.de/de" target="" alt="Newsroom"><span>Newsroom</span></a>
+        <nav class="level-2" id="submenu-Newsroom">
+            <div class="level-2-container">
+                <ul class="main_nav__navi__tree__level-2">
+                    <li class="main_nav__navi__tree__level-2__item">
+                        <a class="" href="https://newsroom.metroag.de/de" target="" alt="Newsroom"><span>Newsroom</span></a>
+                    </li>
+
+
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://newsroom.metroag.de/de/news" target="" alt="News"><span>News</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://newsroom.metroag.de/de/termine" target="" alt="Termine"><span>Termine</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://newsroom.metroag.de/de/downloads" target="" alt="Publikationen"><span>Publikationen</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://newsroom.metroag.de/de/rechtliche-mitteilungen" target="" alt="Rechtliche Mitteilungen"><span>Rechtliche Mitteilungen</span></a>
+    </li>
+
+
+                </ul>
+                <div class="main_nav__navi__tree__level-2__shortlinks">
+<div class="teaser teaser--vertical"></div>                </div>
+            </div>
+        </nav>
+    </li>
+    <li class="main_nav__navi__tree__item">
+        <a class="has-level-2 " aria-haspopup="true" aria-expanded="false" aria-controls="submenu-Karriere" role="button"
+           href="https://karriere.metroag.de" target="" alt="Karriere"><span>Karriere</span></a>
+        <nav class="level-2" id="submenu-Karriere">
+            <div class="level-2-container">
+                <ul class="main_nav__navi__tree__level-2">
+                    <li class="main_nav__navi__tree__level-2__item">
+                        <a class="" href="https://karriere.metroag.de" target="" alt="Karriere"><span>Karriere</span></a>
+                    </li>
+
+
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://karriere.metroag.de/stellenangebote" target="" alt="Stellenangebote"><span>Stellenangebote</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://karriere.metroag.de/arbeiten-bei-metro" target="" alt="Arbeiten bei METRO"><span>Arbeiten bei METRO</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://karriere.metroag.de/junge-talente" target="" alt="Junge Talente"><span>Junge Talente</span></a>
+    </li>
+    <li class="main_nav__navi__tree__level-2__item">
+            <a class="" href="https://karriere.metroag.de/berufstaetige" target="" alt="Berufst&#228;tige"><span>Berufst&#228;tige</span></a>
+    </li>
+
+
+                </ul>
+                <div class="main_nav__navi__tree__level-2__shortlinks">
+<div class="teaser teaser--vertical"></div>                </div>
+            </div>
+        </nav>
+    </li>
+    <li class="main_nav__navi__tree__item navi-tree-switch">
+        <div>
+            <button class="btn-plain btn-icon-horizontal-toggle" data-toggle="nav-tree" aria-expanded="false" aria-haspopup="true">
+                <span>mehr</span>
+            </button>
+        </div>
+    </li>
+</ul>
+<ul class="main_nav__navi__tree tree_page_2">
+</ul>
+
+
+
+
+
+
+                <aside class="main_nav__navi__helper">
+                    <ul class="main_nav__navi__helper__tree">
+
+
+                            <li class="main_nav__navi__helper__tree__item">
+                                <a class="" href="/de/kontakt" title="Kontakt">
+                                    <span class="ct_title">Kontakt</span>
+                                </a>
+                            </li>
+                        <li class="main_nav__navi__helper__tree__item main_nav__page_search header-searchbox">
+                            
+                            
+<div class="component mag-search-box horizontal" data-properties='{"endpoint":"/de/sxa/search/results/","suggestionEndpoint":"/de/sxa/search/suggestions/","suggestionsMode":"ShowSearchResults","resultPage":"/de/search","targetSignature":"","v":"{CA6ADC8D-E36A-42ED-A793-83041CA63207}","s":"","p":5,"l":"","languageSource":"SearchResultsLanguage","searchResultsSignature":"","itemid":"{F9C94780-5AFD-48D1-A8BD-043ED63AC8DE}","minSuggestionsTriggerCharacterCount":100}'>
+    <div class="component-content input-group">
+        
+                <div class="dropdown main_nav__page_search">
+
+                    <button class="btn-plain btn-icon-search" type="button" id="page-search-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" alt="Suche &#246;ffnen">
+                        <span class="sr-only">Suche &#246;ffnen</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="page-search-menu" role="search">
+                        <form action="#" method="#">
+<div class="dropdown-menu-content input-group">
+                                    <input type="search" class="form-control form-control-lg search-box-input" aria-describedby="button-page-search" data-cssformat="form-control form-control-lg"
+                                           data-role="tagsinput" autocomplete="off" name="tagsinput" data-typesearch="true" placeholder="Suchbegriff eingeben" />
+                                    <div class="input-group-append">
+                                            <button id="button-page-search" type="submit" class="btn btn-primary btn-square search-box-button-with-redirect">
+                                                <span class="sr-only">
+                                                    Suchen
+                                                </span>
+                                                <span class="icon_search"></span>
+                                            </button>
+                                    </div>
+                                </div>
+
+                        </form>
+                    </div>
+                </div>
+    </div>
+</div>
+
+                        </li>
+                            <li class="main_nav__navi__helper__tree__item">
+                                <div class="dropdown main_nav__mode_menu">
+                                    <button class="btn-plain btn-icon-color-mode" title="Darstellung w&#228;hlen" aria-label="Darstellung w&#228;hlen" data-color-mode="off" id="mode-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Darstellung w&#228;hlen</span>
+                                    </button>
+                                    <div class="dropdown-menu mode_dropdown" aria-labelledby="mode-menu">
+                                        <span class="text-secondary my-2 d-block">Darstellung w&#228;hlen</span>
+                                        <div class="dropdown-menu-content">
+                                            <ul role="menu">
+                                                <li id="mode_light" class="lightmode text-nowrap" role="menuitem"><a title="Lichtmodus ausw&#228;hlen" href="#">Hell</a></li>
+                                                <li id="mode_dark" class="darkmode text-nowrap" role="menuitem"><a title="W&#228;hlen Sie den dunklen Modus" href="#">Dunkel</a></li>
+                                                <li id="mode_default" class="systemmode text-nowrap" role="menuitem"><a title="Lassen Sie Ihr System entscheiden" href="#">System (auto)</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                                                <li class="main_nav__navi__helper__tree__item">
+                            
+
+
+
+
+        <div class="dropdown main_nav__lang_menu" data-language-code="de" data-country-code="de">
+            <button title="Sprache ausw&#228;hlen" aria-label="Sprache ausw&#228;hlen" id="language-menu" type="button" class="btn-plain" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="icon_language"></span>
+            </button>
+            <div class="dropdown-menu language_dropdown" aria-labelledby="language-menu">
+                <span class="text-secondary my-2 d-block">Sprache ausw&#228;hlen</span>
+                <div class="dropdown-menu-content">
+                    <ul role="menu">
+                            <li class="no-bullet" role="menuitem">
+                                <a class="language-selector-select-link" role="option" href="/en" data-language-code="en" data-country-code="us" onclick=XA.cookies.createCookie(&#39;metro-ag#lang&#39;,&#39;en&#39;,0) title="English">
+                                    English
+                                </a>
+                            </li>
+                            <li class="no-bullet" role="menuitem">
+                                <a class="language-selector-select-link" role="option" href="/de" data-language-code="de" data-country-code="de" onclick=XA.cookies.createCookie(&#39;metro-ag#lang&#39;,&#39;de&#39;,0) title="Deutsch">
+                                    Deutsch
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+                        </li>
+                    </ul>
+                </aside>
+
+            </div>
+            <button class="main_nav__toggler btn btn-secondary btn-square" aria-expanded="false" aria-label="Toggle navigation" aria-controls="mainNav">
+                <span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+        </div>
+    </header>
+    <!-- /#header -->
+    <!-- #content -->
+    <main>
+        <div id="content" class="">
+            
+
+    <div class="component content-container main_wrapper">
+        <div class="component-content">
+    <div class="component pagehead-slider consent-parent video-in-overlay">
+        <div class="component-content">
+
+                <div class="slick-slider-component" data-slides-per-view="" data-slick-slide-interval="15000" data-slick-show-navigations="true" data-slick-show-indicators="true" data-slick-slide-autoplay="true" data-slick-infinite="true">
+
+<header class="main_header_slider"><div class="swiper"><div class="swiper-wrapper"><section class="swiper-slide" role="group">
+    <div class="component pagehead main_header bg-metro main_header--lg">
+        <div class="component-content">
+<figure class="main_header__figure" itemscope itemtype="https://schema.org/ImageObject"><picture class=""><source srcset="/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-still-169.jpg?w=1900&amp;rev=3639fc85-cb68-45f3-a07a-95ff7068b663&amp;hash=70CF6118EC3B573F58E686D523CA98E0" media="(min-width: 1500px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-still-169.jpg?w=1500&amp;rev=3639fc85-cb68-45f3-a07a-95ff7068b663&amp;hash=7A3DA7EAD74902A8F19E098FB86CEB04" media="(min-width: 1200px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-still-169.jpg?w=1200&amp;rev=3639fc85-cb68-45f3-a07a-95ff7068b663&amp;hash=1188A065D95CA110CDFC8224DD3E688D" media="(min-width: 992px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-still-169.jpg?w=992&amp;rev=3639fc85-cb68-45f3-a07a-95ff7068b663&amp;hash=6B3C1CD21A761C197B4547A20B097D01" media="(min-width: 768px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-still-169.jpg?w=700&amp;rev=3639fc85-cb68-45f3-a07a-95ff7068b663&amp;hash=2D5ECD4A94B65CB83DDAED35F9E879ED" media="(min-width: 320px)"></source><img src="/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-still-169.jpg?w=320&rev=3639fc85-cb68-45f3-a07a-95ff7068b663" class="img-fluid" width="1900" height="1060" itemprop="contentUrl" alt="METRO Chef Kalbfleisch" fetchpriority="high" /><span itemprop="height" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="1060" /></span><span itemprop="width" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="1900" /></span><meta itemprop="encodingFormat"  content="image/jpeg" /><meta itemprop="contentSize"  content="681477" /><meta itemprop="copyrightNotice"  content="© 2025 METRO AG" /></picture><video class="headerVideoPreview" src="https://www.metroag.de/-/media/project/mag/shared/global/newsroom-media/videos/20260225-metro-chef-veal-tloop-169.mp4?rev=cb528be2-3ee1-48b3-b019-d2bdb97150aa" muted="true" autoplay="true" loop="true" preload="metadata" playsinline="true"></video></figure><div class="main_header__content consent-parent video-in-overlay"><div class="container"><h1 class="field-headline">METRO Chef Kalbfleisch</h1><div class="main_header__content__description"><p class="field-subheadline">Unser METRO Chef Kalbfleisch steht für Premiumqualität in der Profiküche. Für Frische, die überzeugt. Für Verantwortung, die man schmeckt. Zartheit und Saftigkeit bei jedem Bissen.</p><span class="btn btn-primary btn-iframe-consent btn-lg" data-toggle="modal" data-target="#eP9kkWKeWnR8"><span class="icon_play"></span><span class="field-text">Spielen</span></span><i class="d-none field-videoid">P9kkWKeWnR8</i><div class="disclaimer consentText"><div class="disclaimer__content disclaimer__content--light field-value"><p>Ich akzeptiere YouTube Cookies. Siehe <span style="white-space: nowrap;"><a class="link-underlined" rel="noopener noreferrer" href="https://policies.google.com/privacy?hl=de" target="_blank" title="Google Datenschutzerklärung">Google Datenschutzerkl&auml;rung</a>.</span></p></div></div><div class="modal fade headerVideo" id="eP9kkWKeWnR8" tabindex="-1" role="dialog" aria-hidden="true"><div class="modal-dialog modal-xl modal-dialog-centered" role="document"><div class="modal-content"><div class="modal-header" ratio="16/9"><h3 class="mb-0 field-videotitle">METRO Chef Kalbfleisch</h3><button class="close" data-dismiss="modal" type="button"></button></div><div class="modal-body"><div class="video-fluid" itemscope itemtype="https://schema.org/VideoObject"><iframe shorts="16/9" frameborder="0" class="consentIframe  in-overlay" data-video-id="P9kkWKeWnR8" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true" data-element="iframe" data-src-url="//www.youtube.com/embed/P9kkWKeWnR8?autoplay=1" data-provider="youtube" data-attr="src"></iframe><meta itemprop="thumbnailUrl" content="https://img.youtube.com/vi/P9kkWKeWnR8/hqdefault.jpg"></meta><meta  itemprop="name" content="METRO Chef Kalbfleisch">
+<meta  itemprop="description" content="Unser METRO Chef Kalbfleisch steht für Premiumqualität in der Profiküche. Für Frische, die überzeugt. Für Verantwortung, die man schmeckt. Zartheit und Saftigkeit bei jedem Bissen.">
+
+   <meta itemprop="contentUrl" content="https://www.youtube.com/watch?v=P9kkWKeWnR8">
+
+<meta itemprop="uploadDate" content="2026-03-02T08:32:49.000Z"></meta></div></div></div></div></div></div></div></div>        </div>
+    </div>
+</section><section class="swiper-slide" role="group">
+    <div class="component pagehead main_header bg-metro main_header--lg">
+        <div class="component-content">
+<figure class="main_header__figure" itemscope itemtype="https://schema.org/ImageObject"><picture class=""><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-herrmann-kraeuter-21.jpg?w=1900&amp;rev=2b46a34b-74fb-4cf1-b0a4-d886a9d79cf6&amp;hash=44C3354DA3C76001EED011A336E15EE9" media="(min-width: 1500px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-herrmann-kraeuter-21.jpg?w=1500&amp;rev=2b46a34b-74fb-4cf1-b0a4-d886a9d79cf6&amp;hash=FF7BB0CA8D21719FCE5848287D9ED21A" media="(min-width: 1200px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-herrmann-kraeuter-21.jpg?w=1200&amp;rev=2b46a34b-74fb-4cf1-b0a4-d886a9d79cf6&amp;hash=0FFB88B72F789EE488A1C18A911FDA7E" media="(min-width: 992px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-herrmann-kraeuter-21.jpg?w=992&amp;rev=2b46a34b-74fb-4cf1-b0a4-d886a9d79cf6&amp;hash=E841E1BFF7A9F7CF2F4C29697CAA3F56" media="(min-width: 768px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-herrmann-kraeuter-21.jpg?w=700&amp;rev=2b46a34b-74fb-4cf1-b0a4-d886a9d79cf6&amp;hash=4A06952ACF6160661EAD0CD389C5F43E" media="(min-width: 320px)"></source><img src="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-herrmann-kraeuter-21.jpg?w=320&rev=2b46a34b-74fb-4cf1-b0a4-d886a9d79cf6" class="img-fluid" width="1800" height="900" itemprop="contentUrl" alt="Herrmann Kräuter - Wurzeln mit Zukunft" /><span itemprop="height" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="900" /></span><span itemprop="width" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="1800" /></span><meta itemprop="encodingFormat"  content="image/jpeg" /><meta itemprop="contentSize"  content="791068" /><meta itemprop="copyrightNotice"  content="© 2025 METRO AG" /></picture></figure><div class="main_header__content consent-parent video-in-overlay"><div class="container"><h1 class="field-headline">Wurzeln mit Zukunft</h1><div class="main_header__content__description"><p class="field-subheadline">Tradition trifft Technik: Wie Familie Herrmann Profi-Kräuter für METRO anbaut – nachhaltig, präzise und mit Liebe fürs Produkt.</p><a class="btn btn-primary btn-lg" target="_blank" title="METRO Stories" href="https://stories.metroag.de/de/lieferant/wurzeln-mit-zukunft"><span>METRO Stories</span><span class="icon_arrow_right"></span></a></div></div></div>        </div>
+    </div>
+</section><section class="swiper-slide" role="group">
+    <div class="component pagehead main_header bg-metro main_header--lg">
+        <div class="component-content">
+<figure class="main_header__figure" itemscope itemtype="https://schema.org/ImageObject"><picture class=""><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-dish-pos-kir-dinerxbar-sa-21.jpg?w=1900&amp;rev=8f9de30b-9b33-468a-b182-7cbbec0e4cd4&amp;hash=EA0C16D208A0FA0BB996F3BC5551D62F" media="(min-width: 1500px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-dish-pos-kir-dinerxbar-sa-21.jpg?w=1500&amp;rev=8f9de30b-9b33-468a-b182-7cbbec0e4cd4&amp;hash=FE0FA9BE09F6C40B37AC26FA3CDF0AE1" media="(min-width: 1200px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-dish-pos-kir-dinerxbar-sa-21.jpg?w=1200&amp;rev=8f9de30b-9b33-468a-b182-7cbbec0e4cd4&amp;hash=B8D312C831810613C18FB199FC754F3E" media="(min-width: 992px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-dish-pos-kir-dinerxbar-sa-21.jpg?w=992&amp;rev=8f9de30b-9b33-468a-b182-7cbbec0e4cd4&amp;hash=EF9BE7F343F15D0A1165D77ABFFBC3A2" media="(min-width: 768px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-dish-pos-kir-dinerxbar-sa-21.jpg?w=700&amp;rev=8f9de30b-9b33-468a-b182-7cbbec0e4cd4&amp;hash=7C1E0BA283D3B2EAF3B05F8073178AA7" media="(min-width: 320px)"></source><img src="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-dish-pos-kir-dinerxbar-sa-21.jpg?w=320&rev=8f9de30b-9b33-468a-b182-7cbbec0e4cd4" class="img-fluid" width="1800" height="900" itemprop="contentUrl" alt="DISH POS: Konzentration auf das Wesentliche" /><span itemprop="height" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="900" /></span><span itemprop="width" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="1800" /></span><meta itemprop="encodingFormat"  content="image/jpeg" /><meta itemprop="contentSize"  content="616209" /><meta itemprop="copyrightNotice"  content="© 2025 METRO AG" /></picture></figure><div class="main_header__content consent-parent video-in-overlay"><div class="container"><h1 class="field-headline">Konzentration auf das, was wirklich zählt</h1><div class="main_header__content__description"><p class="field-subheadline">DISH POS hilft Gastronomen, sich auf das Wesentliche konzentrieren, denn das cloudbasierte Kassensystem spart Zeit.</p><a class="btn btn-primary btn-lg" target="_blank" title="METRO Stories" href="https://stories.metroag.de/de/gastronomie/konzentration-auf-das-was-wirklich-zaehlt"><span>METRO Stories</span><span class="icon_arrow_right"></span></a></div></div></div>        </div>
+    </div>
+</section><section class="swiper-slide" role="group">
+    <div class="component pagehead main_header bg-metro main_header--lg">
+        <div class="component-content">
+<figure class="main_header__figure" itemscope itemtype="https://schema.org/ImageObject"><picture class=""><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-metro-cemoi-cocoa-sa-21.jpg?w=1900&amp;rev=42dfafc4-573a-4069-add5-fffc83636c78&amp;hash=FFE624BADE1BA5A43DA888BDDB04F818" media="(min-width: 1500px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-metro-cemoi-cocoa-sa-21.jpg?w=1500&amp;rev=42dfafc4-573a-4069-add5-fffc83636c78&amp;hash=BCEF22C9CA047709991EE9F3210522BF" media="(min-width: 1200px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-metro-cemoi-cocoa-sa-21.jpg?w=1200&amp;rev=42dfafc4-573a-4069-add5-fffc83636c78&amp;hash=3BD82653B5C8171A2B4D5D81A46B5B1F" media="(min-width: 992px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-metro-cemoi-cocoa-sa-21.jpg?w=992&amp;rev=42dfafc4-573a-4069-add5-fffc83636c78&amp;hash=E16CB839EA036F6B96078021383E6B6F" media="(min-width: 768px)"></source><source srcset="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-metro-cemoi-cocoa-sa-21.jpg?w=700&amp;rev=42dfafc4-573a-4069-add5-fffc83636c78&amp;hash=655DE247D3FAAA3140ACE37795EDECD2" media="(min-width: 320px)"></source><img src="/-/media/project/mag/shared/global/newsroom-media/images/teasers/mpulse-metro-cemoi-cocoa-sa-21.jpg?w=320&rev=42dfafc4-573a-4069-add5-fffc83636c78" class="img-fluid" width="1800" height="900" itemprop="contentUrl" alt="Nachhaltiger Kakao: METRO &amp; CÉMOI für faire Lieferketten" /><span itemprop="height" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="900" /></span><span itemprop="width" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="1800" /></span><meta itemprop="encodingFormat"  content="image/jpeg" /><meta itemprop="contentSize"  content="476626" /><meta itemprop="copyrightNotice"  content="© 2025 METRO AG" /></picture></figure><div class="main_header__content consent-parent video-in-overlay"><div class="container"><h1 class="field-headline">Nachhaltiger Kakao: METRO &amp; CÉMOI für faire Lieferketten</h1><div class="main_header__content__description"><p class="field-subheadline">Schokolade ist wegen ihres Geschmacks und ihrer Vielfalt auf der ganzen Welt beliebt – aber die wichtigste Frage bleibt: Wo kommt der Kakao her und wie wird er hergestellt?</p><a class="btn btn-primary btn-lg" target="_blank" title="METRO Stories" href="https://stories.metroag.de/de/lieferant/wie-sich-cemoi-fuer-eine-nachhaltige-kakao-produktion-an-der-elfenbeinkueste-engagiert"><span>METRO Stories</span><span class="icon_arrow_right"></span></a></div></div></div>        </div>
+    </div>
+</section></div><div class="swiper-pagination"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div></header>
+                </div>
+        </div>
+            
+        </div>
+
+
+<div class="component bread-crumb mb-5 ">
+    <div class="component-content">
+            <nav class="breadcrumb calculating">
+                <div class="container">
+                    <div class="breadcrumb__nav">
+                        <div class="breadcrumb__nav__ellipsis">
+                            <div class="dropdown">
+                                <a href="#" class="link-underlined" id="breadcrumbDropdownBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    …
+                                </a>
+                                <ul class="dropdown-menu breadcrumb__nav__ellipsis__dropdown" aria-labelledby="breadcrumbDropdownBtn"></ul>
+                            </div>
+                        </div>
+                        <ol class="breadcrumb__nav__tree" itemscope itemtype="https://schema.org/BreadcrumbList">
+                                    <li class="breadcrumb__nav__tree__item last home" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<span class="field-navigationtitle" itemprop="name">Start</span>                                            <meta itemprop="position" content="1">                                    </li>
+
+                        </ol>
+                    </div>
+                </div>
+            </nav>
+    </div>
+</div>
+
+
+  <div class="parent-container " id="schnellstart">
+      <div class="component  container sec-mt grid21 ">
+          <div class="row position-relative ">
+
+
+              <div class="component col-md-12 g-2 grids">
+                  <div class=" component-content floating-grid">
+
+
+<div class="headline-with-more cs">
+    <h2>Schnellstart</h2>
+    <div class="seclink my-btn outline"><a class="link-underlined resetov" title="Zum Newsroom" href="https://newsroom.metroag.de/de">Zum Newsroom</a></div>
+</div>
+<div class="headline-desc cs"></div>
+
+                      <div class="row">
+                          <div class="col-md-6 col-xl-8 ">
+
+    <div class="component re-mb">
+        <div class="component-content">
+<ul class="linklist"><li><a title="Jahrespressekonferenz 2025 - Termine" href="https://newsroom.metroag.de/de/termine/jahrespressekonferenz-2025?dt=20251204">Jahrespressekonferenz 2025</a></li><li><a title="Geschäftsbericht 2024/25 - Publikationen" href="https://newsroom.metroag.de/de/downloads?#down_q=Gesch&#228;ftsberichte">Geschäftsbericht 2024/25</a></li><li><a title="METRO AG Aufsichtsrat verlängert Vorstandsverträge bis 2030 - Pressemitteilung" href="https://newsroom.metroag.de/de/news/metro-ag-aufsichtsrat-verlaengert-vorstandsvertraege-bis-2030?dt=20251203">METRO AG Aufsichtsrat verlängert Vorstandsverträge bis 2030</a></li><li><a title="ESG Ratings - Bewertung in relevanten Nachhaltigkeitsindizes und -rankings - Verantwortung" href="https://verantwortung.metroag.de/ansatz/stakeholderbeziehungen/esg-ratings">ESG Ratings</a></li></ul>        </div>
+    </div>
+
+                          </div>
+                          <div class="col-md-6 col-xl-4 ">
+
+    <div class="component mb-4 latest-events re-mb inside-grid">
+        <div class="component-content">
+    <div class="component general-data-component">
+        <div class="component-content">
+<div class="has-additional-link headline-with-more"><div class="headline"></div><div class="seclink"><a class="link-underlined" href="https://newsroom.metroag.de/de/termine#a_q=Pressekonferenz&amp;a_e=0&amp;f_q=Pressekonferenz&amp;f_e=0&amp;u_q=Pressekonferenz&amp;u_e=0&amp;p_q=Pressekonferenz&amp;p_e=0"><span class="arrow"></span></a></div></div>        </div>
+    </div>
+
+
+
+<div class="component search-results re-mb rebrushsearchresults" data-class-variant="rebrushsearchresults" data-properties='{&quot;endpoint&quot;:&quot;/de/magsxa/magsearch/magresults/&quot;,&quot;v&quot;:&quot;{DFAAFD52-3CBD-47E0-923D-C4E537C62684}&quot;,&quot;s&quot;:&quot;{4287FE8E-2273-4E8A-9C7D-6FD7E9CDA626}&quot;,&quot;l&quot;:&quot;de&quot;,&quot;p&quot;:2,&quot;defaultSortOrder&quot;:&quot;Event Start Date,Ascending&quot;,&quot;sig&quot;:&quot;uf&quot;,&quot;itemid&quot;:&quot;{F9C94780-5AFD-48D1-A8BD-043ED63AC8DE}&quot;,&quot;datasourceid&quot;:&quot;{1A9055F1-8EA9-4B59-95FF-DCAD90366D9F}&quot;,&quot;autoFireSearch&quot;:true,&quot;recommendedArticles&quot;:false,&quot;latestMpulseArticles&quot;:false,&quot;showSavedJobs&quot;:false,&quot;showSharedJobs&quot;:false,&quot;wrapper&quot;:&quot;&quot;}'>
+        <div class="component-content">
+            
+            <div class="no-results" style="display: none">
+                Keine Ergebnisse gefunden
+                
+            </div>
+            <div class="progress"></div>
+        </div>
+</div>        </div>
+    </div>
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
   </div>
 
-  <script>
-    (function(){
-      const items = Array.from(document.querySelectorAll('.tile, .rail-btn'));
-      const byId = Object.fromEntries(items.map(el => [el.dataset.id, el]));
-      const info = document.getElementById('info-text');
-      const clock = document.getElementById('clock');
 
-      const descriptions = {
-        hero: 'Hier findest Du gesammelt Deine aktuellsten Aufnahmen, Empfehlungen und bereits gestarteten Inhalte',
-        recording: 'Deine zuletzt aufgenommenen Inhalte. Schnell weitersehen, verwalten und erneut abspielen.',
-        program1: 'Live-Programm und aktuelle Sendungen im Überblick. Direkt in laufende Inhalte einsteigen.',
-        program2: 'Empfohlene laufende Sendungen mit Zeiten, Sendern und Vorschau auf einen Blick.',
-        program3: 'Kompakte Übersicht Deiner aktuellen TV-Sender und laufenden Programminhalte.',
-        program4: 'Jetzt im TV: laufende Serien, Sendungen und Empfehlungen für den direkten Einstieg.',
-        poster1: 'Highlights aus der Videothek mit Filmen, Serien und Premium-Inhalten auf Abruf.',
-        poster2: 'Familien- und Kinderinhalte in der Videothek mit beliebten Film- und Serienformaten.',
-        poster3: 'Filme und Thriller zum Abruf – übersichtlich, hochwertig und sofort verfügbar.',
-        poster4: 'Action-Highlights und Blockbuster jederzeit aus der Videothek starten.',
-        'app-netflix': 'Direkter Zugriff auf beliebte Streaming-Apps und Partnerdienste.',
-        'app-youtube': 'Apps starten, Inhalte öffnen und nahtlos zwischen TV und Streaming wechseln.',
-        'app-dazn': 'Sport- und Entertainment-Apps direkt aus der Startansicht aufrufen.',
-        'app-prime': 'Schneller Zugriff auf Streaming-Partner aus dem App-Bereich.'
-      };
+  <div class="parent-container " id="">
+      <div class="component container sec-mt  ">
+          <div class="row position-relative ">
 
-      let current = document.querySelector('.focused') || byId.hero;
 
-      function setClock(){
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        clock.textContent = `${hh}:${mm}`;
-      }
-      setClock();
-      setInterval(setClock, 30000);
+              <div class="component col-md-12 g-1 grids">
+                  <div class=" component-content">
 
-      function focusEl(el){
-        if(!el) return;
-        items.forEach(item => item.classList.remove('focused'));
-        el.classList.add('focused');
-        current = el;
-        if (descriptions[el.dataset.id]) {
-          info.textContent = descriptions[el.dataset.id];
-        }
-      }
 
-      function move(dir){
-        if(!current) return;
-        const targetId = current.dataset[dir];
-        if(targetId && byId[targetId]){
-          focusEl(byId[targetId]);
-        }
-      }
+<div class="headline-with-more cs">
+    <h2></h2>
+    <div class="seclink my-btn outline"></div>
+</div>
+<div class="headline-desc cs"></div>
 
-      function pulse(el){
-        el.classList.remove('pressed');
-        void el.offsetWidth;
-        el.classList.add('pressed');
-      }
+                      <div class="row">
+                          <div class="col-md-12">
 
-      document.addEventListener('keydown', (e) => {
-        switch(e.key){
-          case 'ArrowUp':
-            e.preventDefault();
-            move('up');
-            break;
-          case 'ArrowDown':
-            e.preventDefault();
-            move('down');
-            break;
-          case 'ArrowLeft':
-            e.preventDefault();
-            move('left');
-            break;
-          case 'ArrowRight':
-            e.preventDefault();
-            move('right');
-            break;
-          case 'Enter':
-          case ' ':
-            e.preventDefault();
-            if(current) pulse(current);
-            break;
-        }
-      });
+    <div class="component video_container re-mb consent-parent mb-4 mp-mb video-in-overlay">
+        <div class="component-content">
+<figure class="video_container" itemscope itemtype="https://schema.org/ImageObject" style="--aspect-ratio: 16/9"><picture class=""><source srcset="/-/media/project/mag/shared/global/newsroom-media/videos/corporate-movie-2024-still-169.jpg?w=1600&amp;rev=bf3b1e18-b9d6-47e6-b59e-bb569fa6b41e&amp;hash=DB163E39F41F4BFFB02DD538F638A63D" media="(min-width: 320px)"></source><img src="/-/media/project/mag/shared/global/newsroom-media/videos/corporate-movie-2024-still-169.jpg?w=320&rev=bf3b1e18-b9d6-47e6-b59e-bb569fa6b41e" class="img-fluid" loading="lazy" width="2560" height="1440" itemprop="contentUrl" alt="METRO – Enabling Moments" /><span itemprop="height" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="1440" /></span><span itemprop="width" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value"  content="2560" /></span><meta itemprop="encodingFormat"  content="image/jpeg" /><meta itemprop="contentSize"  content="835491" /><meta itemprop="copyrightNotice"  content="© 2025 METRO AG" /></picture><div class="disclaimer consentText"><div class="disclaimer__content disclaimer__content--light"><p>Ich akzeptiere YouTube Cookies. Siehe <span style="white-space: nowrap;"><a class="link-underlined" rel="noopener noreferrer" href="https://policies.google.com/privacy?hl=de" target="_blank" title="Google Datenschutzerklärung">Google Datenschutzerkl&auml;rung</a>.</span></p></div></div><video class="teaserLoopVideo d-none" src="/-/media/project/mag/shared/global/newsroom-media/videos/corporate-movie-2024-tloop-169.mp4?rev=440addf4-25bf-4a62-ab5d-e7c78618b24c" muted="true" loop="true" playsinline="true" preload="none"></video><figcaption class="small field-videocaption"><p>Enabling Moments</p></figcaption><div class="btn-iframe-consent control btn btn-play btn-primary " data-toggle="modal" data-target="#id_5bf7e9122e8c44dea1d6ddeaedaf9f6e"><span class="sr-only field-text">Spielen</span></div></figure><div class="modal fade" id="id_5bf7e9122e8c44dea1d6ddeaedaf9f6e" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="id_5bf7e9122e8c44dea1d6ddeaedaf9f6e"><div class="modal-dialog modal-xl modal-dialog-centered" role="document"><div class="modal-content"><div class="modal-header" ratio="16/9"><h4 class="mb-0 field-videotitle">METRO – Enabeling Moments</h4><button class="close" data-dismiss="modal" type="button" aria-label="Close"></button></div><div class="modal-body"><div class="video-fluid " itemscope itemtype="https://schema.org/VideoObject" style="--aspect-ratio: 16/9"><iframe content="https://www.youtube.com/watch?v=POs5gKEtMuw" shorts="16/9" frameborder="0" class="consentIframe in-overlay" data-video-id="POs5gKEtMuw" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" itemprop="contentUrl" allowfullscreen="true" data-element="iframe" data-src-url="//www.youtube.com/embed/POs5gKEtMuw?ecver=2&amp;&amp;autoplay=1" data-provider="youtube" data-attr="src"></iframe><meta itemprop="name" content="METRO – Enabeling Moments"></meta><meta itemprop="thumbnailUrl" content="https://img.youtube.com/vi/POs5gKEtMuw/hqdefault.jpg"></meta><meta itemprop="uploadDate" content="2025-11-12T10:31:16.000Z"></meta><meta  itemprop="description" content='"Enabling Moments"'></div></div></div></div></div>        </div>
+    </div>
 
-      items.forEach(el => {
-        el.addEventListener('mouseenter', () => focusEl(el));
-        el.addEventListener('click', () => {
-          focusEl(el);
-          pulse(el);
-        });
-        el.addEventListener('animationend', () => el.classList.remove('pressed'));
-      });
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 
-      focusEl(current);
-    })();
-  </script>
+
+
+  <div class="parent-container " id="metro-steht-fuer-grosshandel">
+      <div class="component  container sec-mt grid21 ">
+          <div class="row position-relative ">
+
+
+              <div class="component col-md-12 g-2 grids">
+                  <div class=" component-content floating-grid">
+
+
+<div class="headline-with-more cs">
+    <h2>METRO steht für Großhandel</h2>
+    <div class="seclink my-btn outline"></div>
+</div>
+<div class="headline-desc cs"></div>
+
+                      <div class="row">
+                          <div class="col-md-6 col-xl-8 ">
+
+
+
+
+    <div class="component rich-text mb-4 cs mp-mb re-mb">
+        <div class="component-content">
+<p>Gro&szlig;handel ist unsere Leidenschaft. Seit 60 Jahren sind wir die erste Adresse f&uuml;r professionelle Kunden, die bei Lebensmitteln Wert auf hohe Qualit&auml;t sowie attraktive Sortimente und Preise legen. Egal ob es sich um Hotels, Restaurants, Caf&eacute;s oder kleine Lebensmittelh&auml;ndler handelt. Wir verbinden unsere station&auml;ren M&auml;rkte mit einem starken Belieferungsservice und digitalen L&ouml;sungen zu einem einzigartigen Multichannel-Gesch&auml;ftsmodell.</p>        </div>
+    </div>
+
+                          </div>
+                          <div class="col-md-6 col-xl-4 ">
+
+    <div class="component re-mb">
+        <div class="component-content">
+<ul class="linklist"><li><a title="Über uns" href="/de/ueber-uns">Über uns</a></li><li><a title="Strategie" href="/de/ueber-uns/strategie">Strategie</a></li><li><a title="Marken" href="/de/ueber-uns/marken">Marken</a></li></ul>        </div>
+    </div>
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+  <div class="parent-container " id="">
+      <div class="component container sec-mt  ">
+          <div class="row position-relative ">
+
+
+              <div class="component col-md-12 g-1 grids">
+                  <div class=" component-content">
+
+
+<div class="headline-with-more cs">
+    <h2></h2>
+    <div class="seclink my-btn outline"></div>
+</div>
+<div class="headline-desc cs"></div>
+
+                      <div class="row">
+                          <div class="col-md-12">
+
+    <div class="component latest-news re-mb inside-grid">
+        <div class="component-content">
+    <div class="component general-data-component">
+        <div class="component-content">
+<div class="has-additional-link headline-with-more"><div class="headline"><h2 class="font-normal field-title">Pressemitteilungen und Updates</h2></div><div class="seclink"><a class="link-underlined" title="Alle News" href="https://newsroom.metroag.de/de/news">Alle News<span class="arrow"></span></a></div></div>        </div>
+    </div>
+<div class="teaser_slider container"><div class="swiper ">
+
+
+<div class="component search-results re-mb rebrushsearchresults swiper-wrapper" data-class-variant="rebrushsearchresults" data-properties='{&quot;endpoint&quot;:&quot;/de/magsxa/magsearch/magresults/&quot;,&quot;v&quot;:&quot;{5CCFBD43-3822-42E8-AE4E-ED5A2073AC77}&quot;,&quot;s&quot;:&quot;{743507B6-723C-444E-A026-464D8C7C5CE9}&quot;,&quot;l&quot;:&quot;&quot;,&quot;p&quot;:3,&quot;defaultSortOrder&quot;:&quot;Release Date,Descending&quot;,&quot;sig&quot;:&quot;nv&quot;,&quot;itemid&quot;:&quot;{F9C94780-5AFD-48D1-A8BD-043ED63AC8DE}&quot;,&quot;datasourceid&quot;:&quot;{8A806536-FADF-48F9-885E-3187E7DDCA50}&quot;,&quot;autoFireSearch&quot;:true,&quot;recommendedArticles&quot;:false,&quot;latestMpulseArticles&quot;:false,&quot;showSavedJobs&quot;:false,&quot;showSharedJobs&quot;:false,&quot;wrapper&quot;:&quot;1&quot;}'>
+        <div class="component-content">
+            
+            <div class="no-results" style="display: none">
+                Keine Ergebnisse gefunden
+                
+            </div>
+            <div class="progress"></div>
+        </div>
+</div></div></div>        </div>
+    </div>
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+  <div class="parent-container " id="">
+      <div class="component component has-background sec-mt  ">
+              <div class="section-background gridbgc">
+                  <img src="/-/media/project/mag/shared/global/logo/mpulse-artwork-comic.png?h=1077&amp;iar=0&amp;w=1103&amp;rev=94b8555c-a439-4650-bb75-fcb0f3100c73" alt="METRO Stories Kunstwerk Comic" width="1103" height="1077" />
+
+              </div>
+          <div class="row position-relative ">
+
+
+              <div class="component col-md-12 g-1 grids">
+                  <div class="container component-content">
+
+
+<div class="headline-with-more cs">
+    <h2></h2>
+    <div class="seclink my-btn outline"></div>
+</div>
+<div class="headline-desc cs"></div>
+
+                      <div class="row">
+                          <div class="col-md-12">
+
+    <div class="component re-mb mparticleslider">
+        <div class="component-content">
+    <div class="component general-data-component">
+        <div class="component-content">
+<div class="has-additional-link headline-with-more"><div class="headline"><h2 class="font-normal field-title">METRO Stories</h2></div><div class="seclink"><a class="link-underlined" title="Mehr Stories" href="https://stories.metroag.de/">Mehr Stories<span class="arrow"></span></a></div></div>        </div>
+    </div>
+<div class="teaser_slider container"><div class="swiper">
+
+
+<div class="component search-results rebrushsearchresults swiper-wrapper" data-class-variant="rebrushsearchresults" data-properties='{&quot;endpoint&quot;:&quot;/de/magsxa/magsearch/magresults/&quot;,&quot;v&quot;:&quot;{DFAAFD52-3CBD-47E0-923D-C4E537C62684}&quot;,&quot;s&quot;:&quot;&quot;,&quot;l&quot;:&quot;&quot;,&quot;p&quot;:3,&quot;defaultSortOrder&quot;:&quot;Release Date,Descending&quot;,&quot;sig&quot;:&quot;stories&quot;,&quot;itemid&quot;:&quot;{F9C94780-5AFD-48D1-A8BD-043ED63AC8DE}&quot;,&quot;datasourceid&quot;:&quot;{DA4B9386-0987-4637-9AB5-E42BCEE53485}&quot;,&quot;autoFireSearch&quot;:true,&quot;recommendedArticles&quot;:false,&quot;latestMpulseArticles&quot;:true,&quot;showSavedJobs&quot;:false,&quot;showSharedJobs&quot;:false,&quot;wrapper&quot;:&quot;1&quot;}'>
+        <div class="component-content">
+            
+            <div class="no-results" style="display: none">
+                
+                
+            </div>
+            <div class="progress"></div>
+        </div>
+</div></div></div>        </div>
+    </div>
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+        </div>
+    </div>
+
+        </div>
+    </main>
+    <!-- /#content -->
+    <!-- #footer -->
+    <footer>
+        <div id="footer" class="">
+            
+
+
+    <nav class="metro_socials">
+        <span class="h6">Folgen Sie METRO in den Sozialen Medien</span>
+        <ul class="list-unstyled">
+                        <li>
+                            <a title="MPULSE auf facebook" rel="noopener noreferrer" href="https://www.facebook.com/mpulse/" target="_blank">
+                                <span class="socicon-facebook"></span>
+                            </a>
+
+                        </li>
+                        <li>
+                            <a title="MPULSE auf Instagram" rel="noopener noreferrer" href="https://www.instagram.com/metro_mpulse/" target="_blank">
+                                <span class="socicon-instagram"></span>
+                            </a>
+
+                        </li>
+                        <li>
+                            <a title="METRO auf Linkedin" rel="noopener noreferrer" href="https://www.linkedin.com/company/metro-ag" target="_blank">
+                                <span class="socicon-linkedin"></span>
+                            </a>
+
+                        </li>
+                        <li>
+                            <a title="METRO auf TikTok" rel="noopener noreferrer" href="https://www.tiktok.com/@metro_de" target="_blank">
+                                <span class="socicon-tiktok"></span>
+                            </a>
+
+                        </li>
+                        <li>
+                            <a title="METRO auf Youtube" rel="noopener noreferrer" href="https://www.metroag.de/youtube" target="_blank">
+                                <span class="socicon-youtube"></span>
+                            </a>
+
+                        </li>
+        </ul>
+    </nav>
+
+    <div class="main_footer py-4 py-sm-5">
+        <div class="container">
+            <div class="main_footer__nav">
+                <div class="row flex-column-reverse flex-sm-row">
+                    <div class="col-sm-5 col-md-4 col-xl-2">
+                        <div class="main_footer__copyright mt-5 mt-sm-0">
+                            <a href="">
+                                <img loading="lazy" class="main_footer__copyright__metro-logo" src="/-/media/project/mag/shared/global/common/metro-logo-full-white_facelift.svg?rev=54721fe9-023c-410e-a3f1-cc8cbd8a0b81" alt="METRO" height="32" width="133">
+                            </a>
+                            <nav>
+                                <ul class="list-unstyled m-0">
+                                    <li>
+                                            <a class="d-flex align-items-center ghlinks" data-toggle="modal" data-target="#globalHeader">
+                                                
+                                                Alle Websites  <span class="icon_globe"></span>
+                                            </a>
+                                            <div class="modal fade global-content" id="globalHeader" role="dialog" tabindex="-1" aria-labelledby="globalHeader" aria-hidden="true" data-detail="/~/link.aspx?_id=B04C2364F8FF441992A4C5D74869ECC9&amp;_z=z">
+                                                <div class="modal-dialog container modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h3 class="mb-0 gh-title">
+                                                                <img class="main_footer__copyright__metro-logo li" src="/-/media/project/mag/shared/global/common/metro-logo-full_facelift.svg?rev=139269df-1a50-4ca0-a804-a16cbb2b3e1e" alt="METRO">
+                                                                <img class="main_footer__copyright__metro-logo da" src="/-/media/project/mag/shared/global/common/metro-logo-full-white_facelift.svg?rev=54721fe9-023c-410e-a3f1-cc8cbd8a0b81" alt="METRO">
+                                                                <span>Alle Websites </span>
+                                                            </h3>
+
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </li>
+                                            <li><a href="https://www.metroag.de/de/impressum">Impressum</a></li>
+                                            <li><a href="https://www.metroag.de/de/datenschutz">Datenschutz</a></li>
+                                            <li><a href="https://www.metroag.de/de/nutzungsbedingungen">Nutzungsbedingungen</a></li>
+                                            <li><a href="https://www.metroag.de/de/vdp-policy">Schwachstellen melden</a></li>
+                                            <li><a href="https://www.metroag.de/de/kontakt">Kontakt</a></li>
+                                </ul>
+                            </nav>
+                                <a href="/de/copyright"><span class="small" aria-disabled="true">&#169; 2025 METRO AG</span></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-7 col-md-8 col-xl-10 mt-0">
+                        
+                            <nav class="row">
+                                            <div class="col-xl mt-0">
+                                                <section class="collapse-section">
+                                                    <a data-toggle="collapse" href="#footer_nav_1" role="button" aria-expanded="false" aria-controls="footer_nav_1" class="content-collapse">
+                                                        <span class="h6">&#220;ber uns</span>
+                                                    </a>
+                                                    <div class="collapse" id="footer_nav_1" style="">
+
+                                                        <ul class="list-unstyled mb-3 ">
+
+                                                                <li>
+                                                                    <a href="/de/ueber-uns"><span>&#220;ber uns</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/de/ueber-uns/strategie"><span>Strategie</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/de/ueber-uns/marken"><span>Marken</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/de/ueber-uns/vorstand"><span>Vorstand</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/de/ueber-uns/aufsichtsrat"><span>Aufsichtsrat</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/de/ueber-uns/corporate-governance"><span>Corporate Governance</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/de/ueber-uns/compliance"><span>Compliance</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/de/ueber-uns/konzernweiter-datenschutz"><span>Konzernweiter Datenschutz</span></a>
+                                                                </li>
+
+
+                                                        </ul>
+
+
+                                                    </div>
+                                                </section>
+                                            </div>
+                                            <div class="col-xl mt-0">
+                                                <section class="collapse-section">
+                                                    <a data-toggle="collapse" href="#footer_nav_2" role="button" aria-expanded="false" aria-controls="footer_nav_2" class="content-collapse">
+                                                        <span class="h6">Investoren</span>
+                                                    </a>
+                                                    <div class="collapse" id="footer_nav_2" style="">
+
+                                                        <ul class="list-unstyled mb-3 ">
+
+                                                                <li>
+                                                                    <a href="https://investoren.metroag.de/"><span>Investoren</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://investoren.metroag.de/anleihen"><span>Anleihen</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://investoren.metroag.de/news"><span>News</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://investoren.metroag.de/veranstaltungen"><span>Veranstaltungen</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://investoren.metroag.de/downloads"><span>Downloads</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://investoren.metroag.de/kontakte"><span>Kontakte</span></a>
+                                                                </li>
+
+
+                                                        </ul>
+
+
+                                                    </div>
+                                                </section>
+                                            </div>
+                                            <div class="col-xl mt-0">
+                                                <section class="collapse-section">
+                                                    <a data-toggle="collapse" href="#footer_nav_3" role="button" aria-expanded="false" aria-controls="footer_nav_3" class="content-collapse">
+                                                        <span class="h6">Newsroom</span>
+                                                    </a>
+                                                    <div class="collapse" id="footer_nav_3" style="">
+
+                                                        <ul class="list-unstyled mb-3 ">
+
+                                                                <li>
+                                                                    <a href="https://newsroom.metroag.de/de"><span>Newsroom</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://newsroom.metroag.de/de/news"><span>News</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://newsroom.metroag.de/de/termine"><span>Termine</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://newsroom.metroag.de/de/downloads"><span>Publikationen</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://newsroom.metroag.de/de/rechtliche-mitteilungen"><span>Rechtliche Mitteilungen</span></a>
+                                                                </li>
+
+
+                                                        </ul>
+
+
+                                                    </div>
+                                                </section>
+                                            </div>
+                                            <div class="col-xl mt-0">
+                                                <section class="collapse-section">
+                                                    <a data-toggle="collapse" href="#footer_nav_4" role="button" aria-expanded="false" aria-controls="footer_nav_4" class="content-collapse">
+                                                        <span class="h6">Verantwortung</span>
+                                                    </a>
+                                                    <div class="collapse" id="footer_nav_4" style="">
+
+                                                        <ul class="list-unstyled mb-3 ">
+
+                                                                <li>
+                                                                    <a href="https://verantwortung.metroag.de/"><span>Verantwortung</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://verantwortung.metroag.de/ansatz"><span>ESG Strategie</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://verantwortung.metroag.de/esg-prioritaeten"><span>ESG Priorit&#228;ten</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://verantwortung.metroag.de/verpflichtungen"><span>Verpflichtungen</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://verantwortung.metroag.de/publikationen"><span>Publikationen</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://verantwortung.metroag.de/kontakt"><span>Kontakt</span></a>
+                                                                </li>
+
+
+                                                        </ul>
+
+
+                                                    </div>
+                                                </section>
+                                            </div>
+                                            <div class="col-xl mt-0">
+                                                <section class="collapse-section">
+                                                    <a data-toggle="collapse" href="#footer_nav_5" role="button" aria-expanded="false" aria-controls="footer_nav_5" class="content-collapse">
+                                                        <span class="h6">Karriere</span>
+                                                    </a>
+                                                    <div class="collapse" id="footer_nav_5" style="">
+
+                                                        <ul class="list-unstyled mb-3 ">
+
+                                                                <li>
+                                                                    <a href="https://karriere.metroag.de/"><span>Karriere</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://karriere.metroag.de/stellenangebote"><span>Stellenangebote</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://karriere.metroag.de/arbeiten-bei-metro"><span>Arbeiten bei METRO</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://karriere.metroag.de/junge-talente"><span>Junge Talente</span></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://karriere.metroag.de/berufstaetige"><span>Berufst&#228;tige</span></a>
+                                                                </li>
+
+
+                                                        </ul>
+
+
+                                                    </div>
+                                                </section>
+                                            </div>
+
+                            </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </footer>
+    <!-- /#footer -->
+</div>
+<!-- /#wrapper -->
+
+    
+    <script src="/-/media/base-themes/mag-core-libraries/scripts/optimized-min.js?rev=f43964de-c875-4c75-ae40-9388c4884cee&t=20260213T105505Z&hash=B429F2094966A12455757EC8EF77ECAD"></script><script src="/-/media/base-themes/mag-search-theme/scripts/optimized-min.js?rev=2646b1a4-e553-4d23-abfa-8c13a84fa2ac&t=20251112T053324Z&hash=EE2B24F76C4412322AF4D0CA21ABE4EE"></script><script src="/-/media/base-themes/bootstrap-select1-13-14/scripts/optimized-min.js?rev=c24ae79f-74fd-4048-82f8-74634d75bf7c&t=20251112T040052Z&hash=8058543955715E87CEF10513A25E45F2"></script><script src="/-/media/themes/mag/metroag/metro-components/scripts/optimized-min.js?rev=42125b99-3150-49de-b04d-b9fa748e56ea&t=20260325T081352Z&hash=DEE3BF9F180AC63E784C05670A4AE06C"></script><script src="/-/media/themes/mag/metroag/metro-white/scripts/optimized-min.js?rev=634d55f3-5c0f-4cfc-bf23-1baf322520c0&t=20260407T144715Z&hash=C30F2C4F360E057E191EF6833897EE59"></script>    
+    
+    <!-- /#wrapper -->
+    
+
+
+
+<script type="module">
+// select all the elements we want to wrap
+
+	const slides = document.querySelectorAll(".mag-image:not(.disable-popup) picture, .slider picture, .imagecollection .zoom-image ");
+	// loop over the elements
+	slides.forEach((item, index) => {
+	if(item.parentNode.classList.contains('image')|| item.parentNode.classList.contains('m-image')){
+    const img = item.querySelector('img'); // Select the first img tag
+	const obj = item.querySelector('object'); // Select the first object tag
+	let alt, src, width, height, imageSrc;
+	if (img) {
+		alt = img.alt;
+		src = img.src;
+		width = img.getAttribute("width");
+		height = img.getAttribute("height");
+		imageSrc = img.getAttribute("data-pswp-source");
+    }
+	else if (obj) {
+		alt = obj.getAttribute('alt'); // Default alt for SVGs
+		src = obj.getAttribute('data'); // Get the data attribute for the SVG source
+		width = obj.getAttribute("width");
+		height = obj.getAttribute("height");
+            }
+			if (src) {
+				const wrapper = document.createElement("a");
+				wrapper.setAttribute("title", alt);
+				
+				wrapper.setAttribute("class", "pswp-img ");
+				if(obj)
+				{
+				wrapper.classList.add("svg-img");
+				}
+				if (imageSrc)
+				{
+				 wrapper.setAttribute("data-pswp-src", imageSrc);
+				 wrapper.setAttribute("data-target",imageSrc);
+				}
+				else{
+					wrapper.setAttribute("data-target", src);
+					wrapper.setAttribute("data-pswp-src", src);
+					}
+				wrapper.setAttribute("href", "#"); // Set href to '#'
+				if (width) {
+					wrapper.setAttribute("data-pswp-width", width);
+							}
+				if (height) {
+					wrapper.setAttribute("data-pswp-height", height);
+							}
+				item.before(wrapper);
+				if(item.classList.contains('zoom-image'))
+					{
+							wrapper.appendChild(item.parentNode.firstChild);
+							item.remove();
+					}
+					else{
+					// add the element to the wrapper
+					wrapper.appendChild(item);
+					}
+			}
+		}
+	})	;
+
+	// Include Lightbox only when needed
+
+	import PhotoSwipeLightbox from '/-/media/themes/mag/metroag/metro-mpulse/plugins/photoswipe-lightboxesmmin.js?rev=c11d5306e64a4c85ba83b4537fa6ee47';
+
+	import PhotoSwipeDynamicCaption from '/-/media/themes/mag/metroag/metro-mpulse/plugins/photoswipe-dynamic-caption-pluginesmmin.js?rev=1fbe777f8fda43d3b1cf109d16dbccfd';
+
+	const smallScreenPadding = {
+
+		top: 0, bottom: 0, left: 0, right: 0
+
+	};
+
+	const largeScreenPadding = {
+
+		top: 30, bottom: 30, left: 0, right: 0
+
+	};
+
+	const lightbox = new PhotoSwipeLightbox({
+
+		gallery: '.slider,.mag-image:not(.disable-popup),.imagecollection',
+
+	children: '.slick-slide:not(.slick-cloned) a.pswp-img ,.mag-image:not(.disable-popup) a.pswp-img, .imgcollection a.pswp-img',
+
+	tapAction: 'close',
+
+	doubleTapAction: false,
+
+		paddingFn: (viewportSize) => {
+
+		return viewportSize.x < 821 ? smallScreenPadding : largeScreenPadding
+
+		},
+
+	showHideAnimationType: 'zoom',
+
+		pswpModule: () => import('/-/media/themes/mag/metroag/metro-mpulse/plugins/photoswipeesmmin.js?rev=b3688aa722b145a39f939c8f33f9c283')
+
+	});
+
+	const captionPlugin = new PhotoSwipeDynamicCaption(lightbox, {
+
+		mobileLayoutBreakpoint: 821,
+
+	type: 'below',
+
+	mobileCaptionOverlapRatio: 1,
+
+		captionContent: (slide) => {
+
+		if(slide.data.element.nextElementSibling){
+
+			return slide.data.element.nextElementSibling.innerHTML;
+
+		}
+
+		}
+
+	});
+
+	lightbox.on('openingAnimationStart', () => {
+
+		jQuery('body').addClass('photoswipe-open');
+
+	});  
+
+	lightbox.on('closingAnimationStart', () => {
+
+		jQuery('body').removeClass('photoswipe-open');
+
+	jQuery('.pswp').addClass('closing');
+
+	setTimeout(function() {
+
+		jQuery('.pswp').addClass('closed');
+
+		},333)
+
+	});
+
+	lightbox.init();
+</script>
 </body>
 </html>
