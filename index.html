@@ -19,60 +19,59 @@ body {
 }
 
 /* =====================
-   HEADER (optimized)
+   HEADER (FIXED SIZE & DENSITY)
 ===================== */
 .site-header {
   position: absolute;
-  top: 12px;
+  top: 14px;
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);
-  max-width: 1240px;
+  max-width: 1280px;
   background: #ffffff;
   border-radius: 4px;
-  padding: 6px 14px;
+  padding: 10px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   z-index: 20;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 3px 14px rgba(0,0,0,0.08);
 }
 
 .site-header img {
-  height: 24px;
+  height: 28px;
 }
 
 .site-header nav a {
   color: #003c8f;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
-  margin: 0 8px;
+  margin: 0 10px;
   text-decoration: none;
-  white-space: nowrap;
+  line-height: 1;
 }
 
 .site-header nav a::after {
   content: " ▾";
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .site-header .right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: #003c8f;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 /* =====================
-   HERO (farmers image)
+   HERO (TYPOGRAPHY FIXED)
 ===================== */
 .hero {
   position: relative;
-  height: 75vh;
-  min-height: 520px;
+  height: 78vh;
+  min-height: 560px;
   overflow: hidden;
-  background: #000;
 }
 
 .hero img {
@@ -87,9 +86,9 @@ body {
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(0,0,0,0.65) 0%,
-    rgba(0,0,0,0.35) 45%,
-    rgba(0,0,0,0.1) 65%,
+    rgba(0, 60, 143, 0.82) 0%,
+    rgba(0, 60, 143, 0.55) 38%,
+    rgba(0,0,0,0.15) 62%,
     rgba(0,0,0,0) 75%
   );
 }
@@ -102,57 +101,62 @@ body {
 }
 
 .hero-inner {
-  max-width: 560px;
+  max-width: 600px;
   color: white;
-  padding-left: clamp(24px, 6vw, 96px);
+  padding-left: clamp(32px, 7vw, 110px);
 }
 
 .hero h1 {
-  font-size: clamp(30px, 4vw, 44px);
-  margin-bottom: 10px;
+  font-size: clamp(34px, 4.5vw, 48px);
+  font-weight: 700;
+  margin: 0 0 14px 0;
 }
 
 .hero p {
-  font-size: 14px;
-  line-height: 1.55;
-  opacity: 0.95;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 22px 0;
+  max-width: 520px;
 }
 
 .hero .btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 10px;
   background: #0076d6;
-  color: white;
-  padding: 9px 16px;
+  color: #ffffff;
+  padding: 12px 22px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
   text-decoration: none;
 }
 
 /* =====================
    SECTIONS
 ===================== */
+.section {
+  padding: 56px 0;
+}
+
 .container {
-  max-width: 1240px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
-.section {
-  padding: 48px 0;
-}
-
-/* Schnellstart */
+/* =====================
+   SCHNELLSTART (CLEANER)
+===================== */
 .schnellstart {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 32px;
+  gap: 36px;
 }
 
 .schnellstart h2 {
-  margin-bottom: 16px;
+  font-size: 22px;
+  margin-bottom: 18px;
 }
 
 .schnellstart ul {
@@ -162,20 +166,29 @@ body {
 }
 
 .schnellstart li {
-  padding: 12px 16px;
-  background: #e8f2fb;
-  border-bottom: 1px solid #d6e6f5;
-  font-size: 14px;
+  padding: 14px 18px;
+  background: #e9f3fb;
+  border-radius: 4px;
+  font-size: 15px;
+  margin-bottom: 10px;
 }
 
 .event-box {
   background: white;
   border-radius: 4px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 24px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
 }
 
-/* Enabling Moments */
+.event-box strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+/* =====================
+   ENABLING MOMENTS (IMAGE TEASER, NO VIDEO)
+===================== */
 .enabling {
   position: relative;
   border-radius: 6px;
@@ -188,10 +201,16 @@ body {
   object-fit: cover;
 }
 
-.enabling .overlay {
+.enabling::after {
+  content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.35);
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.25),
+    rgba(0,0,0,0)
+  );
 }
 
 .enabling .content {
@@ -205,6 +224,7 @@ body {
 }
 
 .enabling h2 {
+  font-size: 32px;
   margin-bottom: 12px;
 }
 
@@ -214,7 +234,7 @@ body {
 footer {
   background: white;
   text-align: center;
-  padding: 24px;
+  padding: 28px;
   font-size: 13px;
   border-top: 1px solid #e1e1e1;
 }
@@ -238,12 +258,12 @@ footer {
   </a>
 
   <nav>
-    <a href="ueber-uns.html">Über uns</a>
-    <a href="investoren.html">Investoren</a>
-    <a href="verantwortung.html">Verantwortung</a>
-    <a href="newsroom.html">Newsroom</a>
-    <a href="karriere.html">Karriere</a>
-    <a href="kontakt.html">Kontakt</a>
+    <a href="#">Über uns</a>
+    <a href="#">Investoren</a>
+    <a href="#">Verantwortung</a>
+    <a href="#">Newsroom</a>
+    <a href="#">Karriere</a>
+    <a href="#">Kontakt</a>
   </nav>
 
   <div class="right">🔍 🌐</div>
@@ -279,7 +299,7 @@ footer {
 
     <div class="event-box">
       <strong>06 Mai 2026</strong>
-      <p>Halbjahresfinanzbericht H1/Q2 2025/26</p>
+      <p>Halbjahresfinanzbericht H1 / Q2 2025/26</p>
     </div>
   </div>
 </section>
@@ -289,11 +309,10 @@ footer {
   <div class="container">
     <div class="enabling">
       <img src="https://www.metroag.de/-/media/project/mag/shared/global/newsroom-media/videos/corporate-movie-2024-still-169.jpg" alt="">
-      <div class="overlay"></div>
       <div class="content">
         <div>
           <h2>Enabling Moments</h2>
-          <a class="btn" href="#">▶ Spielen</a>
+          <a class="btn" href="#">Mehr erfahren</a>
         </div>
       </div>
     </div>
@@ -307,3 +326,4 @@ footer {
 
 </body>
 </html>
+``
