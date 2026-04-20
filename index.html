@@ -19,7 +19,7 @@ body {
 }
 
 /* =====================
-   HEADER (FIXED SIZE & DENSITY)
+   HEADER (FINAL)
 ===================== */
 .site-header {
   position: absolute;
@@ -30,25 +30,24 @@ body {
   max-width: 1280px;
   background: #ffffff;
   border-radius: 4px;
-  padding: 10px 18px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 20;
+  z-index: 30;
   box-shadow: 0 3px 14px rgba(0,0,0,0.08);
 }
 
 .site-header img {
-  height: 28px;
+  height: 30px;
 }
 
 .site-header nav a {
   color: #003c8f;
-  font-size: 15px;
+  font-size: 15.5px;
   font-weight: 500;
-  margin: 0 10px;
+  margin: 0 12px;
   text-decoration: none;
-  line-height: 1;
 }
 
 .site-header nav a::after {
@@ -58,19 +57,18 @@ body {
 
 .site-header .right {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #003c8f;
+  gap: 14px;
   font-size: 15px;
+  color: #003c8f;
 }
 
 /* =====================
-   HERO (TYPOGRAPHY FIXED)
+   HERO (FINAL BEHAVIOR)
 ===================== */
 .hero {
   position: relative;
   height: 78vh;
-  min-height: 560px;
+  min-height: 580px;
   overflow: hidden;
 }
 
@@ -80,16 +78,16 @@ body {
   object-fit: cover;
 }
 
+/* subtle METRO-style gradient */
 .hero::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    90deg,
-    rgba(0, 60, 143, 0.82) 0%,
-    rgba(0, 60, 143, 0.55) 38%,
-    rgba(0,0,0,0.15) 62%,
-    rgba(0,0,0,0) 75%
+    180deg,
+    rgba(0,0,0,0) 20%,
+    rgba(0,60,143,0.35) 55%,
+    rgba(0,60,143,0.75) 100%
   );
 }
 
@@ -97,40 +95,75 @@ body {
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  padding-bottom: 110px;
 }
 
 .hero-inner {
-  max-width: 600px;
-  color: white;
+  max-width: 620px;
   padding-left: clamp(32px, 7vw, 110px);
+  color: white;
 }
 
 .hero h1 {
-  font-size: clamp(34px, 4.5vw, 48px);
-  font-weight: 700;
-  margin: 0 0 14px 0;
+  font-size: clamp(36px, 4.5vw, 48px);
+  font-weight: 600;
+  margin-bottom: 14px;
 }
 
 .hero p {
   font-size: 16px;
   line-height: 1.6;
-  margin: 0 0 22px 0;
   max-width: 520px;
+  margin-bottom: 22px;
 }
 
 .hero .btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  padding: 12px 24px;
   background: #0076d6;
-  color: #ffffff;
-  padding: 12px 22px;
+  color: white;
   border-radius: 4px;
   font-size: 15px;
   font-weight: 500;
   text-decoration: none;
 }
+
+/* slider dots */
+.slider-dots {
+  position: absolute;
+  bottom: 28px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.slider-dots span {
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+}
+
+.slider-dots span.active {
+  background: #0076d6;
+}
+
+/* arrows */
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+  color: white;
+  padding: 10px;
+}
+
+.slider-arrow.left { left: 12px; }
+.slider-arrow.right { right: 12px; }
 
 /* =====================
    SECTIONS
@@ -146,7 +179,7 @@ body {
 }
 
 /* =====================
-   SCHNELLSTART (CLEANER)
+   SCHNELLSTART (CLEAN)
 ===================== */
 .schnellstart {
   display: grid;
@@ -159,35 +192,24 @@ body {
   margin-bottom: 18px;
 }
 
-.schnellstart ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
 .schnellstart li {
-  padding: 14px 18px;
+  list-style: none;
   background: #e9f3fb;
+  padding: 14px 18px;
   border-radius: 4px;
-  font-size: 15px;
   margin-bottom: 10px;
+  font-size: 15px;
 }
 
 .event-box {
   background: white;
+  padding: 26px;
   border-radius: 4px;
-  padding: 24px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-}
-
-.event-box strong {
-  display: block;
-  font-size: 16px;
-  margin-bottom: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 
 /* =====================
-   ENABLING MOMENTS (IMAGE TEASER, NO VIDEO)
+   ENABLING MOMENTS (IMAGE)
 ===================== */
 .enabling {
   position: relative;
@@ -207,8 +229,8 @@ body {
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(0,0,0,0.65),
-    rgba(0,0,0,0.25),
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.15),
     rgba(0,0,0,0)
   );
 }
@@ -220,7 +242,6 @@ body {
   align-items: center;
   padding-left: 48px;
   color: white;
-  z-index: 2;
 }
 
 .enabling h2 {
@@ -282,6 +303,15 @@ footer {
       <a class="btn" href="#">METRO Stories</a>
     </div>
   </div>
+
+  <div class="slider-arrow left">‹</div>
+  <div class="slider-arrow right">›</div>
+
+  <div class="slider-dots">
+    <span class="active"></span>
+    <span></span>
+    <span></span>
+  </div>
 </section>
 
 <!-- SCHNELLSTART -->
@@ -319,11 +349,9 @@ footer {
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   © 2025 METRO AG – Static GitHub Pages Demo
 </footer>
 
 </body>
 </html>
-``
